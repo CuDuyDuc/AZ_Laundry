@@ -1,11 +1,36 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { NavigationContainer } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import AuthNavigator from './src/navigators/AuthNavigator';
+import { SplashScreen } from './src/screens';
+import { StatusBar } from 'react-native';
 
 const App = () => {
+
+  const [isShowSplash, setIsShowSplash] = useState(true)
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setIsShowSplash(false);
+    }, 2000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   return (
-    <View>
-      <Text>App</Text>
-    </View>
+    <>
+      <StatusBar 
+        barStyle= 'dark-content'
+        backgroundColor= 'transparent'
+        translucent
+      />
+      {!isShowSplash ? (
+      <SplashScreen />
+      ) : (
+      <NavigationContainer>
+        <AuthNavigator />
+      </NavigationContainer>
+      )}
+    </>
   )
 }
 
