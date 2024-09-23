@@ -8,7 +8,7 @@ import TextComponent from './TextComponent'
 interface Props {
     icon?: ReactNode,
     text: string,
-    type?: '#129575' | 'text' | 'link', // button mặc định hoặc kiểu text hoặc link
+    type?: '#00ADEF' | 'text' | 'link', // button mặc định hoặc kiểu text hoặc link
     color?: string,
     styles?: StyleProp<ViewStyle>,
     textColor?: string,
@@ -23,7 +23,7 @@ const ButtonComponent = (props: Props) => {
 
     const {icon, text, type, color, styles, textColor, textStyles, textFont, onPress, iconFlex, disable} = props
 
-    return type === '#129575' ? (
+    return type === '#00ADEF' ? (
         <TouchableOpacity 
             disabled= {disable}
             onPress={onPress}

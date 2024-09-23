@@ -10,7 +10,7 @@ const KeyboardAvoidingViewWrapper = (props: Props) => {
 
     const {children} = props
     return (
-        <KeyboardAvoidingView style = {{flex : 1, backgroundColor: COLORS.WHITE}}>
+        <KeyboardAvoidingView style = {{flex : 1, backgroundColor: COLORS.WHISPER_GRAY}}>
             <ScrollView>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     <View>

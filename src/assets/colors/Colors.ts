@@ -5,7 +5,11 @@ const COLORS = {
     WHITE : '#FFFFFF',
     RED : 'red',
     OCEAN_BLUE: '#007CAB',
-    AZURE_BLUE: '#00ADEF'
+    AZURE_BLUE: '#00ADEF',
+    LIGHT_SKY_BLUE: '#95C9DD',
+    BLUE_GRAY: '#60778C',
+    WHISPER_GRAY:'#F0F0F0',
+    PRIMARY: '#25565F'
 }
 
 export default COLORS;
