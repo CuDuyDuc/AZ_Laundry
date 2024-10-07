@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AZ_Laundry</string>
+    <string name="facebook_app_id">505127202289060</string><string name="facebook_client_token">481d393d73151315eee18529ca7622dd</string>
 </resources>

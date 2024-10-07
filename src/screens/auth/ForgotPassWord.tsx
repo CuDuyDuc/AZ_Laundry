@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native'
+import { View, Text, TouchableOpacity, Image, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { Validate } from '../../utils/validate';
 import { globalStyle } from '../../styles/globalStyle';
@@ -8,6 +8,7 @@ import COLORS from '../../assets/colors/Colors';
 import { FONTFAMILY } from '../../../assets/fonts';
 import { LoadingModal } from '../../modal';
 import IMAGES from '../../assets/images/Images';
+import authenticationAPI from '../../apis/authAPI';
 
 const ForgotPassWord = ({ navigation }: any) => {
     const [email, setEmail] = useState('');
@@ -17,6 +18,20 @@ const ForgotPassWord = ({ navigation }: any) => {
     const handleCheckEmail = () => {
         const isValidEmail = Validate.email(email);
         setIsDisable(!isValidEmail);
+    }
+
+    const handleForgotPassword = async () => {
+        const api = `/forgotPassword`;
+        setIsLoading(true);
+        try {
+            const res: any = await authenticationAPI.HandleAuthentication(api, { email }, 'post');
+            console.log(res);
+            Alert.alert('Send Password to You: ', 'We have sent your email including the new password!');
+            setIsLoading(false);
+        } catch (error) {
+            setIsLoading(false);
+            console.log(`Unable to create new password forgot password api, ${error}`);
+        }
     }
 
     return (
@@ -45,6 +60,7 @@ const ForgotPassWord = ({ navigation }: any) => {
                 <ButtonComponent
                     text='Gửi'
                     type='#00ADEF'
+                    onPress={handleForgotPassword}
                     styles={{ width: '80%' }}
                     disable={isDisable} />
             </SectionComponent>

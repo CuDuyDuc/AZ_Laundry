@@ -1,12 +1,13 @@
-import { View, Text, Image } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { Validate } from '../../utils/validate';
-import { ButtonComponent, InputComponent, KeyboardAvoidingViewWrapper, RowComponent, SectionComponent, TextComponent } from '../../components';
-import IMAGES from '../../assets/images/Images';
-import { LoadingModal } from '../../modal';
-import COLORS from '../../assets/colors/Colors';
 import { Lock, Sms, User } from 'iconsax-react-native';
+import React, { useEffect, useState } from 'react';
+import { Image } from 'react-native';
 import { FONTFAMILY } from '../../../assets/fonts';
+import authenticationAPI from '../../apis/authAPI';
+import COLORS from '../../assets/colors/Colors';
+import IMAGES from '../../assets/images/Images';
+import { ButtonComponent, InputComponent, KeyboardAvoidingViewWrapper, RowComponent, SectionComponent, TextComponent } from '../../components';
+import { LoadingModal } from '../../modal';
+import { Validate } from '../../utils/validate';
 
 interface ErrorMessages {
     email: string;
@@ -15,7 +16,7 @@ interface ErrorMessages {
 }
 
 const initValues = {
-    username: '',
+    fullname: '',
     email: '',
     password: '',
     confirmPass: '',
@@ -89,6 +90,28 @@ const SignUpScreen = ({ navigation }: any) => {
         setErrorMessage(data);
     };
 
+    const handleRegister = async () => {
+        const api = `/verification`;
+        setIsLoading(true);
+        try {
+            const res = await authenticationAPI.HandleAuthentication(
+                api,
+                { email: values.email },
+                'post',
+            );
+
+            setIsLoading(false);
+
+            navigation.navigate('Verification', {
+                code: res.data.code,
+                ...values,
+            });
+        } catch (error) {
+            console.log(error);
+            setIsLoading(false);
+        }
+    };
+
     return (
         <>
             <KeyboardAvoidingViewWrapper>
@@ -104,9 +127,9 @@ const SignUpScreen = ({ navigation }: any) => {
                         font={FONTFAMILY.montserrat_bold}
                         styles={{ marginBottom: 50, textAlign:'center'}} />
                     <InputComponent
-                        value={values.username}
+                        value={values.fullname}
                         placeholder='Họ tên'
-                        onChange={val => handleChangeValue('username', val)}
+                        onChange={val => handleChangeValue('fullname', val)}
                         allowClear
                         backgroundColor={COLORS.WHITE}
                         affix={<User size={22} color={COLORS.BLUE_GRAY} />} />
@@ -153,6 +176,7 @@ const SignUpScreen = ({ navigation }: any) => {
                     <ButtonComponent
                         text='ĐĂNG KÝ'
                         type='#00ADEF'
+                        onPress={handleRegister}
                         disable={isDisable} />
                 </SectionComponent>
                 <SectionComponent styles={{ marginTop: 20 }}>
