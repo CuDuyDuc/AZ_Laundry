@@ -13,11 +13,10 @@ const AuthNavigator = () => {
     const Stack = createNativeStackNavigator();
 
     const checkUserExisting = async () => {
-        const res = await AsyncStorage.getItem('auth');
+        const res = await AsyncStorage.getItem('hasSeenOnboarding');
 
         res && setIsExistingUser(true);
     }
-
     return <Stack.Navigator screenOptions={{
         headerShown: false
     }}>

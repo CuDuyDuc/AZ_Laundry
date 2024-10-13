@@ -127,20 +127,7 @@ const LoginScreen = ({navigation}: any) => {
 
     return (
         <KeyboardAvoidingViewWrapper>
-            <SectionComponent styles={{alignItems:'flex-end', marginTop:50}}>
-                <RowComponent onPress={() => setRememberShop(!rememberShop)}>
-                    <Switch 
-                        trackColor={{ false: COLORS.AZURE_BLUE, true: COLORS.LIGHT_SKY_BLUE }}
-                        thumbColor={rememberShop ? COLORS.AZURE_BLUE : COLORS.LIGHT_SKY_BLUE}
-                        value={rememberShop}
-                        onChange={() => setRememberShop(!rememberShop)}/>
-                    <TextComponent 
-                        text="Tôi là Shop" 
-                        color={COLORS.HEX_BLACK}
-                        font={FONTFAMILY.montserrat_bold}/>
-                </RowComponent>
-            </SectionComponent>
-            <SectionComponent styles={{alignItems:'center'}}>
+            <SectionComponent styles={{alignItems:'center', marginTop:50}}>
                 <Image source={IMAGES.Login}/>
             </SectionComponent>
             <SectionComponent>
