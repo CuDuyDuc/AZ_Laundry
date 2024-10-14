@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # OSX
 #
 .DS_Store
@@ -64,3 +65,7 @@ yarn-error.log
 
 # testing
 /coverage
+=======
+.env
+node_modules/
+>>>>>>> upstream/master
