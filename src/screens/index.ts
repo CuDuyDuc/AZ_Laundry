@@ -5,6 +5,10 @@ import OnBoardingScreen from './auth/OnBoardingScreen';
 import SignUpScreen from './auth/SignUpScreen';
 import ForgotPassWord from './auth/ForgotPassWord';
 import Verification from './auth/Verification';
+import ProfileScreen from './profile/ProfileScreen';
+import NotificationScreen from './notification/NotificationScreen';
+import CartScreen from './cart/CartScreen';
+import AddService from './AddService';
 
 export {
     SplashScreen,
@@ -14,4 +18,8 @@ export {
     Verification,
     ForgotPassWord,
     HomeScreen,
+    ProfileScreen,
+    NotificationScreen,
+    CartScreen,
+    AddService
 }

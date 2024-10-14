@@ -55,7 +55,7 @@ export const globalStyle = StyleSheet.create({
         shadowRadius: 8,
         elevation: 5
     },
-    card:{
-        borderRadius:8
-    }
+    card: {
+        borderRadius: 8
+    },
 })

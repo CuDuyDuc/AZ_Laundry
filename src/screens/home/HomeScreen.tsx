@@ -13,11 +13,15 @@ import { authSelector, removeAuth } from '../../redux/reducers/authReducer';
 import COLORS from '../../assets/colors/Colors';
 import { FONTFAMILY } from '../../../assets/fonts';
 import { Notification } from 'iconsax-react-native';
-import { Image, TouchableOpacity, View } from 'react-native';
+import { Image, TouchableOpacity, View, Dimensions } from 'react-native';
 import Swiper from 'react-native-swiper';
 import IMAGES from '../../assets/images/Images';
-import { globalStyle } from './../../styles/globalStyle';
 import { useRole } from '../../permission/permission';
+import { globalStyle } from '../../styles/globalStyle';
+
+const { width } = Dimensions.get('window');
+const imageWidth = width * 0.916;
+const imageHeight = imageWidth * 0.39;
 
 const HomeScreen = () => {
     const imageSlideArray = [
@@ -30,6 +34,7 @@ const HomeScreen = () => {
     const dispatch = useDispatch();
     const user = useSelector(authSelector);
     const { isUser, isShop, isAdmin } = useRole();
+
     const handleSignOut = async () => {
         dispatch(removeAuth({}));
         await AsyncStorage.removeItem('auth');
@@ -44,9 +49,9 @@ const HomeScreen = () => {
                     flexDirection: 'column',
                     justifyContent: 'center',
                 }}>
-                <RowComponent styles={{ marginTop: 30 }} justify="space-between">
+                <RowComponent styles={{ marginTop: 35 }} justify="space-between">
                     <TextComponent
-                        text={`Hi, ${user.fullname}!!`}
+                        text={`Hi, ${user.fullname}!`}
                         font={FONTFAMILY.montserrat_medium}
                     />
                     <TouchableOpacity>
@@ -57,7 +62,6 @@ const HomeScreen = () => {
             <SectionComponent
                 styles={{ flexDirection: 'row', justifyContent: 'center', marginTop: 15, height: 185 }}>
                 <Swiper
-                    style={{}}
                     removeClippedSubviews={true}
                     loop={true}
                     autoplay={true}
@@ -67,9 +71,23 @@ const HomeScreen = () => {
                     dotColor={COLORS.HEX_LIGHT_GREY}
                     activeDotColor={COLORS.BLUE_GRAY}>
                     {imageSlideArray.map((imageUrl, index) => (
-                        <Image source={imageUrl} key={index} style={[{ width: 350, height: 150 }, globalStyle.card]} resizeMode="cover" />
+                        <Image
+                            source={imageUrl}
+                            key={index}
+                            style={[{ width: imageWidth, height: imageHeight }, globalStyle.card]}
+                            resizeMode="cover"
+                        />
                     ))}
                 </Swiper>
+            </SectionComponent>
+            <SectionComponent>
+                <RowComponent justify='space-between'>
+                    <RowComponent styles={{ backgroundColor: COLORS.WHITE, borderRadius: 16 }}>
+                        <Image source={IMAGES.DanhMuc} style={{ width: 20, height: 20 }} />
+                        <TextComponent text={" Danh mục"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} />
+                    </RowComponent>
+                    <TextComponent text={"Xem tất cả"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} />
+                </RowComponent>
             </SectionComponent>
             <ButtonComponent
                 styles={{ marginTop: 100 }}
