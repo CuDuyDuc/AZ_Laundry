@@ -6,10 +6,22 @@ import COLORS from '../../assets/colors/Colors';
 import IMAGES from '../../assets/images/Images';
 import { TextComponent } from '../../components';
 import { globalStyle } from '../../styles/globalStyle';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OnBoardingScreen = ({ navigation }: any) => {
     const [index, setIndex] = useState(0);
-
+    const handleSkip=async()=>{
+        await AsyncStorage.setItem('hasSeenOnboarding', 'true');
+        navigation.replace('LoginScreen');
+      }
+      const handleNext=async()=>{
+        if(index<2){
+          setIndex(index+1)
+        }else{
+          await AsyncStorage.setItem('hasSeenOnboarding', 'true');
+          navigation.replace('LoginScreen');
+        }
+      }
     return (
         <View style={[globalStyle.container]}>
             <Swiper style={{}}
@@ -24,13 +36,13 @@ const OnBoardingScreen = ({ navigation }: any) => {
                 <Image source={IMAGES.OnBoarding2} style={{ flex: 1, width: '100%', height: '100%' }} />
             </Swiper>
             <View style={[styles.directional]}>
-                <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
+                <TouchableOpacity onPress={handleSkip}>
                     <TextComponent
                         text='Skip'
                         color={COLORS.OCEAN_BLUE}
                         font={FONTFAMILY.montserrat_bold} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => index < 2 ? setIndex(index + 1) : navigation.navigate('LoginScreen')}>
+                <TouchableOpacity onPress={handleNext}>
                     <TextComponent
                         text='Next'
                         color={COLORS.OCEAN_BLUE}

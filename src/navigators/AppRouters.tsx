@@ -29,7 +29,7 @@ const AppRouters = () => {
 
         res && dispatch(addAuth(JSON.parse(res)));
     };
-
+    
     return (
         <>
             {isShowSplash ? (
