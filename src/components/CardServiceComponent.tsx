@@ -1,67 +1,91 @@
-import React from 'react';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
-import SectionComponent from './SectionComponent';
-import TextComponent from './TextComponent';
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import COLORS from '../assets/colors/Colors';
+import serviceAPI from '../apis/serviceAPI'; 
 import { FONTFAMILY } from '../../assets/fonts';
 
-interface CardServiceProps {
-    icon: any; 
-    title: string;
-    storesCount: number;
-    onPress?: () => void;
+interface ServiceType {
+    _id: string;
+    service_type_name: string;
+    service_type_icon: string;  
 }
 
-const CardServiceComponent = (props: CardServiceProps) => {
+const CardServiceComponent = () => {
+    const [typeService, setTypeService] = useState<ServiceType[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
-    const { icon, title, storesCount, onPress } = props;
+    const getDataService_Type = async () => {
+        try {
+            const res = await serviceAPI.HandleService('/get-service-type');
+            const data: ServiceType[] = await res.data;
+            // console.log(data)
+            setTypeService(data);
+            setLoading(false);
+        } catch (error) {
+            console.log('Error fetching service types: ', error);
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        getDataService_Type();
+    }, []);
+
+    const renderItem = ({ item }: { item: ServiceType }) => (
+        <View style={styles.card}>
+            <Image source={{ uri: item.service_type_icon }} style={styles.icon} />
+            <Text style={styles.serviceName}>{item.service_type_name}</Text>
+        </View>
+    );
 
     return (
-        <TouchableOpacity style={styles.card} onPress={onPress}>
-            <SectionComponent styles={styles.iconContainer}>
-                <Image source={icon} style={styles.icon} />
-            </SectionComponent>
-            <TextComponent text={title} color={COLORS.HEX_BLACK} size={16} font={FONTFAMILY.montserrat_bold} styles={styles.title} />
-            <TextComponent text={`${storesCount} Stores`} color={COLORS.HEX_LIGHT_GREY} size={14} styles={styles.storesCount} />
-        </TouchableOpacity>
+        <View style={styles.container}>
+            {loading ? (
+                <ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />
+            ) : (
+                <FlatList
+                    data={typeService}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item._id}
+                    numColumns={3}
+                    columnWrapperStyle={styles.row}
+                    contentContainerStyle={styles.listContent}
+                />
+            )}
+        </View>
     );
-}
-
+};
 
 const styles = StyleSheet.create({
-    card: {
-        backgroundColor: '#fff',
-        borderRadius: 16,
-        padding: 16,
-        alignItems: 'center',
+    container: {
+        flex: 1,
         justifyContent: 'center',
-        width: 120, 
-        height: 120,
-        margin: 10,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 8,
-        elevation: 3,
+        alignItems: 'center',
     },
-    iconContainer: {
-        backgroundColor: '#F0F4FF',
-        borderRadius: 50,
-        padding: 12,
-        marginBottom: 8,
+    listContent: {
+        padding: 10,
+    },
+    row: {
+        justifyContent: 'space-between',
+        marginBottom: 20,
+    },
+    card: {
+        backgroundColor: COLORS.WHITE,
+        borderRadius: 16,
+        padding: 15,
+        alignItems: 'center',
+        width: '30%',
     },
     icon: {
-        width: 32,
-        height: 32,
-        resizeMode: 'contain',
+        width: 50,
+        height: 50,
+        marginBottom: 10,
     },
-    title: {
-        textAlign: 'center',
-        marginBottom: 4,
-    },
-    storesCount: {
+    serviceName: {
+        color: COLORS.OCEAN_BLUE,
+        fontFamily: FONTFAMILY.montserrat_medium,
         textAlign: 'center',
     },
 });
 
-export default CardServiceComponent
+export default CardServiceComponent;

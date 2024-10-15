@@ -1,9 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     ButtonComponent,
+    CardServiceComponent,
     ContainerComponent,
     RowComponent,
     SectionComponent,
@@ -12,12 +13,13 @@ import {
 import { authSelector, removeAuth } from '../../redux/reducers/authReducer';
 import COLORS from '../../assets/colors/Colors';
 import { FONTFAMILY } from '../../../assets/fonts';
-import { Notification } from 'iconsax-react-native';
+import { Icon, Notification } from 'iconsax-react-native';
 import { Image, TouchableOpacity, View, Dimensions } from 'react-native';
 import Swiper from 'react-native-swiper';
 import IMAGES from '../../assets/images/Images';
 import { useRole } from '../../permission/permission';
 import { globalStyle } from '../../styles/globalStyle';
+
 
 const { width } = Dimensions.get('window');
 const imageWidth = width * 0.916;
@@ -40,6 +42,7 @@ const HomeScreen = () => {
         await AsyncStorage.removeItem('auth');
         await GoogleSignin.signOut();
     };
+
     return (
         <ContainerComponent>
             <SectionComponent
@@ -88,6 +91,10 @@ const HomeScreen = () => {
                     </RowComponent>
                     <TextComponent text={"Xem tất cả"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} />
                 </RowComponent>
+            </SectionComponent>
+            <SectionComponent>
+                <CardServiceComponent/>
+                <CardServiceComponent/>
             </SectionComponent>
             <ButtonComponent
                 styles={{ marginTop: 100 }}

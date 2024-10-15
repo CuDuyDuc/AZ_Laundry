@@ -6,6 +6,7 @@ import SpaceComponent from './SpaceComponent';
 import ButtonComponent from './ButtonComponent';
 import TextComponent from './TextComponent';
 import KeyboardAvoidingViewWrapper from './KeyboardAvoidingViewWrapper';
+import CardServiceComponent from './CardServiceComponent';
 
 export {
     ButtonComponent,
@@ -15,5 +16,6 @@ export {
     RowComponent,
     SectionComponent,
     TextComponent,
-    SpaceComponent
+    SpaceComponent, 
+    CardServiceComponent
 }
