@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, Image, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import COLORS from '../assets/colors/Colors';
-import serviceAPI from '../apis/serviceAPI'; 
+import serviceAPI from '../apis/serviceAPI';
 import { FONTFAMILY } from '../../assets/fonts';
 
 interface ServiceType {
     _id: string;
     service_type_name: string;
-    service_type_icon: string;  
+    service_type_icon: string;
 }
 
 const CardServiceComponent = () => {
@@ -18,7 +18,6 @@ const CardServiceComponent = () => {
         try {
             const res = await serviceAPI.HandleService('/get-service-type');
             const data: ServiceType[] = await res.data;
-            // console.log(data)
             setTypeService(data);
             setLoading(false);
         } catch (error) {
@@ -39,31 +38,28 @@ const CardServiceComponent = () => {
     );
 
     return (
-        <View style={styles.container}>
-            {loading ? (
-                <ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />
-            ) : (
-                <FlatList
-                    data={typeService}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item._id}
-                    numColumns={3}
-                    columnWrapperStyle={styles.row}
-                    contentContainerStyle={styles.listContent}
-                />
-            )}
-        </View>
+        <TouchableOpacity>
+            <View style={styles.container}>
+                {loading ? (
+                    <ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />
+                ) : (
+                    <FlatList
+                        data={typeService}
+                        renderItem={renderItem}
+                        keyExtractor={(item) => item._id}
+                        numColumns={3}
+                        columnWrapperStyle={styles.row}
+                    />
+                )}
+            </View>
+        </TouchableOpacity>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    listContent: {
-        padding: 10,
     },
     row: {
         justifyContent: 'space-between',
@@ -72,9 +68,9 @@ const styles = StyleSheet.create({
     card: {
         backgroundColor: COLORS.WHITE,
         borderRadius: 16,
-        padding: 15,
+        padding: 16,
         alignItems: 'center',
-        width: '30%',
+        width: '31%',
     },
     icon: {
         width: 50,
@@ -85,6 +81,7 @@ const styles = StyleSheet.create({
         color: COLORS.OCEAN_BLUE,
         fontFamily: FONTFAMILY.montserrat_medium,
         textAlign: 'center',
+        fontSize: 12
     },
 });
 

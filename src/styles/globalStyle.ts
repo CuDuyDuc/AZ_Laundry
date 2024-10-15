@@ -5,7 +5,7 @@ import { FONTFAMILY } from "../../assets/fonts";
 export const globalStyle = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.WHITE
+        backgroundColor: COLORS.WHISPER_GRAY
     },
     text: {
         fontFamily: FONTFAMILY.montserrat_regular,

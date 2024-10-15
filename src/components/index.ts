@@ -7,6 +7,7 @@ import ButtonComponent from './ButtonComponent';
 import TextComponent from './TextComponent';
 import KeyboardAvoidingViewWrapper from './KeyboardAvoidingViewWrapper';
 import CardServiceComponent from './CardServiceComponent';
+import SwipeComponent from './SwipeComponent';
 
 export {
     ButtonComponent,
@@ -17,5 +18,6 @@ export {
     SectionComponent,
     TextComponent,
     SpaceComponent, 
-    CardServiceComponent
+    CardServiceComponent,
+    SwipeComponent,
 }

@@ -1,42 +1,28 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import React, { useEffect, useState } from 'react';
+import { Notification } from 'iconsax-react-native';
+import React from 'react';
+import { Image, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import { FONTFAMILY } from '../../../assets/fonts';
+import COLORS from '../../assets/colors/Colors';
+import IMAGES from '../../assets/images/Images';
 import {
     ButtonComponent,
     CardServiceComponent,
     ContainerComponent,
     RowComponent,
     SectionComponent,
+    SwipeComponent,
     TextComponent,
 } from '../../components';
-import { authSelector, removeAuth } from '../../redux/reducers/authReducer';
-import COLORS from '../../assets/colors/Colors';
-import { FONTFAMILY } from '../../../assets/fonts';
-import { Icon, Notification } from 'iconsax-react-native';
-import { Image, TouchableOpacity, View, Dimensions } from 'react-native';
-import Swiper from 'react-native-swiper';
-import IMAGES from '../../assets/images/Images';
 import { useRole } from '../../permission/permission';
-import { globalStyle } from '../../styles/globalStyle';
-
-
-const { width } = Dimensions.get('window');
-const imageWidth = width * 0.916;
-const imageHeight = imageWidth * 0.39;
+import { authSelector, removeAuth } from '../../redux/reducers/authReducer';
 
 const HomeScreen = () => {
-    const imageSlideArray = [
-        IMAGES.SlideShow,
-        IMAGES.SlideShow1,
-        IMAGES.SlideShow2,
-    ];
-
-    const [index, setIndex] = useState(0);
     const dispatch = useDispatch();
     const user = useSelector(authSelector);
     const { isUser, isShop, isAdmin } = useRole();
-
     const handleSignOut = async () => {
         dispatch(removeAuth({}));
         await AsyncStorage.removeItem('auth');
@@ -44,7 +30,7 @@ const HomeScreen = () => {
     };
 
     return (
-        <ContainerComponent>
+        <ContainerComponent styleBackground={{ backgroundColor: COLORS.WHISPER_GRAY }} isScroll>
             <SectionComponent
                 styles={{
                     height: 83,
@@ -64,26 +50,9 @@ const HomeScreen = () => {
             </SectionComponent>
             <SectionComponent
                 styles={{ flexDirection: 'row', justifyContent: 'center', marginTop: 15, height: 185 }}>
-                <Swiper
-                    removeClippedSubviews={true}
-                    loop={true}
-                    autoplay={true}
-                    autoplayTimeout={3}
-                    onIndexChanged={num => setIndex(num)}
-                    index={index}
-                    dotColor={COLORS.HEX_LIGHT_GREY}
-                    activeDotColor={COLORS.BLUE_GRAY}>
-                    {imageSlideArray.map((imageUrl, index) => (
-                        <Image
-                            source={imageUrl}
-                            key={index}
-                            style={[{ width: imageWidth, height: imageHeight }, globalStyle.card]}
-                            resizeMode="cover"
-                        />
-                    ))}
-                </Swiper>
+                <SwipeComponent />
             </SectionComponent>
-            <SectionComponent>
+            <SectionComponent styles={{ marginTop: -30 }}>
                 <RowComponent justify='space-between'>
                     <RowComponent styles={{ backgroundColor: COLORS.WHITE, borderRadius: 16 }}>
                         <Image source={IMAGES.DanhMuc} style={{ width: 20, height: 20 }} />
@@ -93,8 +62,10 @@ const HomeScreen = () => {
                 </RowComponent>
             </SectionComponent>
             <SectionComponent>
-                <CardServiceComponent/>
-                <CardServiceComponent/>
+                <CardServiceComponent />
+            </SectionComponent>
+            <SectionComponent styles={{ marginTop: -20 }}>
+                <TextComponent text={"Mách mẹo vặt"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} />
             </SectionComponent>
             <ButtonComponent
                 styles={{ marginTop: 100 }}
