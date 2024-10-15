@@ -10,6 +10,7 @@ import IMAGES from '../../assets/images/Images';
 import {
     ButtonComponent,
     CardServiceComponent,
+    CardTipCompnent,
     ContainerComponent,
     RowComponent,
     SectionComponent,
@@ -38,7 +39,7 @@ const HomeScreen = () => {
                     flexDirection: 'column',
                     justifyContent: 'center',
                 }}>
-                <RowComponent styles={{ marginTop: 35 }} justify="space-between">
+                <RowComponent styles={{ marginTop: 38 }} justify="space-between">
                     <TextComponent
                         text={`Hi, ${user.fullname}!`}
                         font={FONTFAMILY.montserrat_medium}
@@ -54,11 +55,11 @@ const HomeScreen = () => {
             </SectionComponent>
             <SectionComponent styles={{ marginTop: -30 }}>
                 <RowComponent justify='space-between'>
-                    <RowComponent styles={{ backgroundColor: COLORS.WHITE, borderRadius: 16 }}>
+                    <RowComponent styles={{ backgroundColor: COLORS.WHITE, borderRadius: 16, padding: 10 }}>
                         <Image source={IMAGES.DanhMuc} style={{ width: 20, height: 20 }} />
                         <TextComponent text={" Danh mục"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} />
                     </RowComponent>
-                    <TextComponent text={"Xem tất cả"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} />
+                    <TextComponent text={"Xem tất cả"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={14} />
                 </RowComponent>
             </SectionComponent>
             <SectionComponent>
@@ -66,6 +67,9 @@ const HomeScreen = () => {
             </SectionComponent>
             <SectionComponent styles={{ marginTop: -20 }}>
                 <TextComponent text={"Mách mẹo vặt"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} />
+            </SectionComponent>
+            <SectionComponent>
+                <CardTipCompnent/>
             </SectionComponent>
             <ButtonComponent
                 styles={{ marginTop: 100 }}

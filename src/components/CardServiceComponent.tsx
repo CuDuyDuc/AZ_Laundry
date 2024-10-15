@@ -31,10 +31,10 @@ const CardServiceComponent = () => {
     }, []);
 
     const renderItem = ({ item }: { item: ServiceType }) => (
-        <View style={styles.card}>
+        <TouchableOpacity style={styles.card}>
             <Image source={{ uri: item.service_type_icon }} style={styles.icon} />
             <Text style={styles.serviceName}>{item.service_type_name}</Text>
-        </View>
+        </TouchableOpacity>
     );
 
     return (

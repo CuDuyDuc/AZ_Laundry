@@ -2,13 +2,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React, { ReactNode } from 'react';
 import { AddService, CartScreen, HomeScreen, NotificationScreen, ProfileScreen } from '../screens';
 import COLORS from '../assets/colors/Colors';
-import { AddSquare, Home2, Notification, Profile, ShoppingCart } from 'iconsax-react-native';
+import { AddSquare, Clock, Home2, Notification, Profile, ShoppingCart } from 'iconsax-react-native';
 import { View } from 'react-native';
 import { globalStyle } from '../styles/globalStyle';
+import { useRole } from '../permission/permission';
 
 const TabNavigator = () => {
 
     const Tab = createBottomTabNavigator()
+    const { isAdmin, isShop, isUser } = useRole()
 
     return (
         <Tab.Navigator screenOptions={({ route }) => ({
@@ -19,7 +21,7 @@ const TabNavigator = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 backgroundColor: COLORS.WHITE,
-                borderColor: COLORS.WHITE, 
+                borderColor: COLORS.WHITE,
             },
             tabBarIcon: ({ focused, color, size }) => {
                 let icon: ReactNode;
@@ -35,6 +37,9 @@ const TabNavigator = () => {
                     case 'Cart':
                         icon = <ShoppingCart size={size} color={color} variant="Bold" />;
                         break;
+                    case 'History':
+                        icon = <Clock size={size} color={color} variant="Bold" />;
+                        break;
                     case 'Notification':
                         icon = <Notification size={size} color={color} variant="Bold" />;
                         break;
@@ -47,13 +52,13 @@ const TabNavigator = () => {
                                 width: 55,
                                 height: 55,
                                 borderRadius: 10,
-                                backgroundColor: focused ? COLORS.AZURE_BLUE :COLORS.WHITE,
+                                backgroundColor: focused ? COLORS.AZURE_BLUE : COLORS.WHITE,
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 marginBottom: 8,
                                 marginTop: 5
                             }]}>
-                                <AddSquare size={30} color={focused ? COLORS.WHITE :COLORS.AZURE_BLUE} variant='Bold' />
+                                <AddSquare size={30} color={focused ? COLORS.WHITE : COLORS.AZURE_BLUE} variant='Bold' />
                             </View>
                         );
                         return icon;
@@ -76,11 +81,11 @@ const TabNavigator = () => {
             tabBarIconStyle: {
                 marginTop: 4
             },
-            tabBarLabel: () => null, 
+            tabBarLabel: () => null,
         })}>
             <Tab.Screen name='Home' component={HomeScreen} />
-            <Tab.Screen name='Cart' component={CartScreen} />
-            <Tab.Screen name='AddService' component={AddService} />
+            {isUser ? <Tab.Screen name='Cart' component={CartScreen} />:<Tab.Screen name='History' component={CartScreen} />}
+            {isShop&&<Tab.Screen name='AddService' component={AddService} />}
             <Tab.Screen name='Notification' component={NotificationScreen} />
             <Tab.Screen name='Profile' component={ProfileScreen} />
         </Tab.Navigator>

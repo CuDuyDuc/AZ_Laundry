@@ -9,6 +9,7 @@ import ProfileScreen from './profile/ProfileScreen';
 import NotificationScreen from './notification/NotificationScreen';
 import CartScreen from './cart/CartScreen';
 import AddService from './AddService';
+import HistoryScreen from './history/HistoryScreen';
 
 export {
     SplashScreen,
@@ -21,5 +22,6 @@ export {
     ProfileScreen,
     NotificationScreen,
     CartScreen,
-    AddService
+    AddService,
+    HistoryScreen
 }
