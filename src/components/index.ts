@@ -9,6 +9,7 @@ import KeyboardAvoidingViewWrapper from './KeyboardAvoidingViewWrapper';
 import CardServiceComponent from './CardServiceComponent';
 import SwipeComponent from './SwipeComponent';
 import CardTipCompnent from './CardTipCompnent';
+import CardShopComponent from './CardShopComponent';
 
 export {
     ButtonComponent,
@@ -22,4 +23,5 @@ export {
     CardServiceComponent,
     SwipeComponent,
     CardTipCompnent,
+    CardShopComponent,
 }

@@ -1,0 +1,96 @@
+import { Location, Star1 } from 'iconsax-react-native'
+import React, { useEffect, useState } from 'react'
+import { ActivityIndicator, FlatList, Image, TouchableOpacity, View } from 'react-native'
+import { FONTFAMILY } from '../../assets/fonts'
+import authenticationAPI from '../apis/authAPI'
+import COLORS from '../assets/colors/Colors'
+import RowComponent from './RowComponent'
+import TextComponent from './TextComponent'
+import { UserModel } from '../model/user_model'
+interface Props {
+    currentLatitude?: number | null,
+    currentLongitude?: number | null,
+    limit?: number
+}
+
+const CardShopComponent = (props: Props) => {
+    const { currentLatitude, currentLongitude, limit } = props
+    const [shop, setShop] = useState<UserModel[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const getDataShops = async () => {
+        try {
+            const res = await authenticationAPI.HandleAuthentication('/get-shops', {
+                currentLatitude,
+                currentLongitude,
+                limit
+            }, 'post');
+            setShop(res.data);
+            console.log(shop);
+
+            setLoading(false);
+        } catch (error: any) {
+            console.log('Error fetching shops: ', error);
+            setLoading(false);
+        }
+    };
+    const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+        const R = 6371; // Bán kính của Trái Đất tính bằng km
+        const dLat = (lat2 - lat1) * (Math.PI / 180);
+        const dLon = (lon2 - lon1) * (Math.PI / 180);
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        return R * c; // Khoảng cách tính bằng km
+    };
+    useEffect(() => {
+        getDataShops();
+    }, []);
+
+    const renderItem = ({ item }: { item: UserModel }) => {
+
+        const distance = calculateDistance(
+            currentLatitude!,
+            currentLongitude!,
+            item.location.coordinates[1]!,
+            item.location.coordinates[0]!
+        );
+        return (
+            <TouchableOpacity style={{ marginTop: 15, backgroundColor: COLORS.WHITE, padding: 7, borderRadius: 16 }} >
+                <RowComponent >
+                    <Image source={{ uri: item.data_user.thumbnail }} style={{ width: 80, height: 80 }} />
+                    <View style={{ width: '78%', paddingHorizontal: 10 }}>
+                        <TextComponent text={item.data_user.shop_name} color={COLORS.DARK_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
+                        <TextComponent styles={{ paddingVertical: 3 }} text={item.address} color={COLORS.HEX_LIGHT_GRAY} size={13} />
+                        <RowComponent justify='space-between'>
+                            <RowComponent>
+                                <Star1 size={13} variant="Bold" color={COLORS.YELLOW} />
+                                <TextComponent styles={{ marginLeft: 5 }} text={item.data_user.star_rating} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} size={13} />
+                            </RowComponent>
+                            <RowComponent>
+                                <Location size={13} variant="Bold" color={COLORS.HEX_BLACK} />
+                                <TextComponent styles={{ marginLeft: 5 }} text={`${distance.toFixed(2)} Km`} color={COLORS.HEX_LIGHT_GRAY} font={FONTFAMILY.montserrat_medium} size={13} />
+                            </RowComponent>
+                        </RowComponent>
+                    </View>
+                </RowComponent>
+            </TouchableOpacity>
+        )
+    };
+    return (
+        <View  >
+            {loading ? (
+                <ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />
+            ) : (
+                <FlatList
+                    data={shop}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item._id.toString()} />
+            )}
+
+        </View>
+    )
+}
+
+export default CardShopComponent

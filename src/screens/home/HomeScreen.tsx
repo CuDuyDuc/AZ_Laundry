@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { Notification } from 'iconsax-react-native';
-import React from 'react';
-import { Image, TouchableOpacity } from 'react-native';
+import { Location, Notification, Star1 } from 'iconsax-react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, Image, PermissionsAndroid, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { FONTFAMILY } from '../../../assets/fonts';
 import COLORS from '../../assets/colors/Colors';
@@ -10,6 +10,7 @@ import IMAGES from '../../assets/images/Images';
 import {
     ButtonComponent,
     CardServiceComponent,
+    CardShopComponent,
     CardTipCompnent,
     ContainerComponent,
     RowComponent,
@@ -19,17 +20,66 @@ import {
 } from '../../components';
 import { useRole } from '../../permission/permission';
 import { authSelector, removeAuth } from '../../redux/reducers/authReducer';
+import { PERMISSIONS, RESULTS, request } from 'react-native-permissions';
+import { Platform } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
+
+type Coordinates = {
+    latitude: number | null;
+    longitude: number | null;
+};
 
 const HomeScreen = () => {
     const dispatch = useDispatch();
     const user = useSelector(authSelector);
+    const [currentLocation, setCurrentLocation] = useState<Coordinates>({
+        latitude: null,
+        longitude: null,
+    });
     const { isUser, isShop, isAdmin } = useRole();
-    const handleSignOut = async () => {
-        dispatch(removeAuth({}));
-        await AsyncStorage.removeItem('auth');
-        await GoogleSignin.signOut();
+    const requestLocationPermission = async () => {
+        if (Platform.OS === 'android') {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+                {
+                    title: 'Permission to access location',
+                    message: 'We need access to your location for the app to work',
+                    buttonNeutral: 'Ask Me Later',
+                    buttonNegative: 'Cancel',
+                    buttonPositive: 'OK',
+                },
+            );
+            return granted === PermissionsAndroid.RESULTS.GRANTED;
+        } else {
+            const result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+            return result === RESULTS.GRANTED;
+        }
     };
 
+    const getCurrentLocation = async () => {
+        const hasPermission = await requestLocationPermission();
+        if (!hasPermission) {
+            Alert.alert(
+                'Permission Denied',
+                'We need location permission to proceed.',
+            );
+            return;
+        }
+        Geolocation.getCurrentPosition(
+            (position: any) => {
+                const { latitude, longitude } = position.coords;
+                setCurrentLocation({ latitude, longitude });
+            },
+            error => {
+                console.log(error);
+                Alert.alert('Error', 'Unable to retrieve your location.');
+            },
+            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+        );
+    };
+    useEffect(() => {
+        getCurrentLocation();
+    }, [user]);
     return (
         <ContainerComponent styleBackground={{ backgroundColor: COLORS.WHISPER_GRAY }} isScroll>
             <SectionComponent
@@ -39,7 +89,7 @@ const HomeScreen = () => {
                     flexDirection: 'column',
                     justifyContent: 'center',
                 }}>
-                <RowComponent styles={{ marginTop: 38 }} justify="space-between">
+                <RowComponent styles={{ marginTop: 35 }} justify="space-between">
                     <TextComponent
                         text={`Hi, ${user.fullname}!`}
                         font={FONTFAMILY.montserrat_medium}
@@ -55,28 +105,33 @@ const HomeScreen = () => {
             </SectionComponent>
             <SectionComponent styles={{ marginTop: -30 }}>
                 <RowComponent justify='space-between'>
-                    <RowComponent styles={{ backgroundColor: COLORS.WHITE, borderRadius: 16, padding: 10 }}>
+                    <RowComponent styles={{ backgroundColor: COLORS.WHITE, borderRadius: 16 , padding: 10}}>
                         <Image source={IMAGES.DanhMuc} style={{ width: 20, height: 20 }} />
-                        <TextComponent text={" Danh mục"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} />
+                        <TextComponent text={" Danh mục"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15}/>
                     </RowComponent>
-                    <TextComponent text={"Xem tất cả"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={14} />
+                    <TextComponent text={"Xem tất cả"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15}/>
                 </RowComponent>
             </SectionComponent>
             <SectionComponent>
                 <CardServiceComponent />
             </SectionComponent>
             <SectionComponent styles={{ marginTop: -20 }}>
-                <TextComponent text={"Mách mẹo vặt"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} />
+                <TextComponent text={"Mách mẹo vặt"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15}/>
             </SectionComponent>
             <SectionComponent>
-                <CardTipCompnent/>
+                <CardTipCompnent />
             </SectionComponent>
-            <ButtonComponent
-                styles={{ marginTop: 100 }}
-                type="#00ADEF"
-                text="LogOut"
-                onPress={handleSignOut}
-            />
+            <SectionComponent>
+                <RowComponent justify='space-between'>
+                    <TextComponent text={"Cửa hàng nổi bật"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15}/>
+                    <TouchableOpacity>
+                        <TextComponent text={"Xem thêm"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15}/>
+                    </TouchableOpacity>
+                </RowComponent>
+            </SectionComponent>
+            <SectionComponent>
+                <CardShopComponent limit={3} currentLatitude={currentLocation.latitude} currentLongitude={currentLocation.longitude} />
+            </SectionComponent>
         </ContainerComponent>
     );
 };

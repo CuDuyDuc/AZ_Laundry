@@ -10,7 +10,8 @@ const COLORS = {
     BLUE_GRAY: '#60778C',
     WHISPER_GRAY:'#F0F0F0',
     PRIMARY: '#25565F',
-    DARK_BLUE: '#0D0140'
+    DARK_BLUE: '#0D0140',
+    YELLOW: 'yellow'
 }
 
 export default COLORS;

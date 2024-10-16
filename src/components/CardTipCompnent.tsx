@@ -60,7 +60,8 @@ const CardTipCompnent = () => {
                     horizontal
                     data={tip}
                     renderItem={renderItem}
-                    keyExtractor={(item) => item._id.toString()} />
+                    keyExtractor={(item) => item._id.toString()}
+                    showsHorizontalScrollIndicator={false} />
             )}
 
         </View>
