@@ -1,32 +1,29 @@
-import {View, Text, Image} from 'react-native';
-import React from 'react';
-import {
-  ButtonComponent,
-  HeaderComponent,
-  RowComponent,
-  SectionComponent,
-  SpaceComponent,
-  TextComponent,
-} from '../../components';
 import {
   ArrowRight2,
   Book,
   LanguageCircle,
   Logout,
-  LogoutCurve,
   Trash,
-  Unlock,
+  Unlock
 } from 'iconsax-react-native';
+import React from 'react';
+import { Image } from 'react-native';
+import { useSelector } from 'react-redux';
 import COLORS from '../../assets/colors/Colors';
-import AccountFeatureComponent from '../../components/AccountFeatureComponent';
+import {
+  HeaderComponent,
+  RowComponent,
+  SectionComponent,
+  SpaceComponent,
+  TextComponent
+} from '../../components';
 import AccountComponent from '../../components/AccountComponent';
 import { authSelector } from '../../redux/reducers/authReducer';
-import { useSelector } from 'react-redux';
 
-const ProfileScreen = ({navigation}: any) => {
-    const user = useSelector(authSelector);
-    console.log(user);
-    
+const ProfileScreen = ({ navigation }: any) => {
+  const user = useSelector(authSelector);
+  console.log(user);
+
   return (
     <SectionComponent
       styles={{
@@ -47,37 +44,36 @@ const ProfileScreen = ({navigation}: any) => {
           height: 100,
         }}>
         <RowComponent>
-       {user?.photo ? (
-        <Image
-        style={{
-          borderRadius: 40,
-          width: 60,
-          height: 60,
-        }}
-        source={{
-          uri: user.photo,
-        }}
-      />
-       ) : (
-        <Image
-        style={{
-          borderRadius: 40,
-          width: 60,
-          height: 60,
-        }}
-        source={{
-          uri: 'https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png',
-        }}
-      />
-       )}
+          {user?.photo ? (
+            <Image
+              style={{
+                borderRadius: 40,
+                width: 60,
+                height: 60,
+              }}
+              source={{
+                uri: user.photo,
+              }}
+            />
+          ) : (
+            <Image
+              style={{
+                borderRadius: 40,
+                width: 60,
+                height: 60,
+              }}
+              source={{
+                uri: 'https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png',
+              }}
+            />
+          )}
 
-          <SectionComponent
-            styles={{
-              flexDirection: 'column',
-              alignItems: 'start',
-              justifyContent: 'center',
-              height: '100%',
-            }}>
+          <SectionComponent styles={{
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            height: '100%',
+          }}>
             <TextComponent
               text={user?.name}
               size={16}
@@ -86,45 +82,44 @@ const ProfileScreen = ({navigation}: any) => {
               }}
               color="black"
             />
-           {user?.phone ?  <TextComponent
-            text={'0367459404'}
-            size={14}
-            color={COLORS.BLUE_GRAY}
-          /> :  <TextComponent
-          text={'Add new phone number'}
-          size={14}
-          color={COLORS.BLUE_GRAY}
-        />}
+            {user?.phone ? <TextComponent
+              text={'0367459404'}
+              size={14}
+              color={COLORS.BLUE_GRAY}
+            /> : <TextComponent
+              text={'Add new phone number'}
+              size={14}
+              color={COLORS.BLUE_GRAY}
+            />}
           </SectionComponent>
         </RowComponent>
         <ArrowRight2 size={32} color={COLORS.HEX_BLACK} />
       </RowComponent>
       <SpaceComponent height={10} />
       <AccountComponent
-        onPress={() => {}}
+        onPress={() => { }}
         icon={<Book size="28" color={COLORS.AZURE_BLUE} />}
         title="Lịch sử đặt hàng"
-        onPress={() => {}}
       />
       <AccountComponent
         icon={<LanguageCircle size="28" color={COLORS.AZURE_BLUE} />}
         title="Ngôn ngữ"
-        onPress={() => {}}
+        onPress={() => { }}
       />
       <AccountComponent
         icon={<Unlock size="28" color={COLORS.AZURE_BLUE} />}
         title="Đổi mật khẩu"
-        onPress={() => {}}
+        onPress={() => { }}
       />
       <AccountComponent
         icon={<Logout size="28" color={COLORS.AZURE_BLUE} />}
         title="Đăng xuất"
-        onPress={() => {}}
+        onPress={() => { }}
       />
       <AccountComponent
         icon={<Trash size="28" color={COLORS.AZURE_BLUE} />}
         title="Xoá tài khoản"
-        onPress={() => {}}
+        onPress={() => { }}
       />
     </SectionComponent>
   );
