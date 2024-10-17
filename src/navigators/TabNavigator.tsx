@@ -6,6 +6,7 @@ import { AddSquare, Clock, Home2, Notification, Profile, ShoppingCart } from 'ic
 import { View } from 'react-native';
 import { globalStyle } from '../styles/globalStyle';
 import { useRole } from '../permission/permission';
+import TopTabNavigator from '../screens/notification/TopTabNavigator';
 
 const TabNavigator = () => {
 
@@ -86,7 +87,7 @@ const TabNavigator = () => {
             <Tab.Screen name='Home' component={HomeScreen} />
             {isUser ? <Tab.Screen name='Cart' component={CartScreen} />:<Tab.Screen name='History' component={CartScreen} />}
             {isShop&&<Tab.Screen name='AddService' component={AddService} />}
-            <Tab.Screen name='Notification' component={NotificationScreen} />
+            <Tab.Screen name='Notification' component={TopTabNavigator} />
             <Tab.Screen name='Profile' component={ProfileScreen} />
         </Tab.Navigator>
     )
