@@ -11,10 +11,11 @@ interface Props {
     currentLatitude?: number | null,
     currentLongitude?: number | null,
     limit?: number
+    onPress:(item:any)=>void
 }
 
 const CardShopComponent = (props: Props) => {
-    const { currentLatitude, currentLongitude, limit } = props
+    const { currentLatitude, currentLongitude, limit,onPress } = props
     const [shop, setShop] = useState<UserModel[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const getDataShops = async () => {
@@ -25,8 +26,6 @@ const CardShopComponent = (props: Props) => {
                 limit
             }, 'post');
             setShop(res.data);
-            console.log(shop);
-
             setLoading(false);
         } catch (error: any) {
             console.log('Error fetching shops: ', error);
@@ -57,7 +56,7 @@ const CardShopComponent = (props: Props) => {
             item.location.coordinates[0]!
         );
         return (
-            <TouchableOpacity style={{ marginTop: 15, backgroundColor: COLORS.WHITE, padding: 7, borderRadius: 16 }} >
+            <TouchableOpacity onPress={()=>onPress(item)} style={{ marginTop: 15, backgroundColor: COLORS.WHITE, padding: 7, borderRadius: 16 }} >
                 <RowComponent >
                     <Image source={{ uri: item.data_user.thumbnail }} style={{ width: 80, height: 80 }} />
                     <View style={{ width: '78%', paddingHorizontal: 10 }}>
