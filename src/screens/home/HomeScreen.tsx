@@ -154,7 +154,7 @@ const HomeScreen = ({ route, navigation }: any) => {
                     </TouchableOpacity>
                 </RowComponent>
             </SectionComponent>
-            <SectionComponent>
+            <SectionComponent styles = {{marginTop: -20}}>
                 <CardShopComponent onPress={handleDetailShop} limit={3} currentLatitude={currentLocation.latitude} currentLongitude={currentLocation.longitude} />
             </SectionComponent>
         </ContainerComponent>
