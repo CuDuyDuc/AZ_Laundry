@@ -10,6 +10,8 @@ import NotificationScreen from './notification/NotificationScreen';
 import CartScreen from './cart/CartScreen';
 import AddService from './AddService';
 import HistoryScreen from './history/HistoryScreen';
+import ProductTypeScreen from './home/product_type/ProductTypeScreen';
+import DetailsShopScreen from './home/details_shop/DetailsShopScreen';
 
 export {
     SplashScreen,
@@ -23,5 +25,7 @@ export {
     NotificationScreen,
     CartScreen,
     AddService,
-    HistoryScreen
+    HistoryScreen,
+    ProductTypeScreen,
+    DetailsShopScreen
 }

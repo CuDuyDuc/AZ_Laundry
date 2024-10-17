@@ -1,14 +1,14 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { Location, Notification, Star1 } from 'iconsax-react-native';
+import { Notification } from 'iconsax-react-native';
 import React, { useEffect, useState } from 'react';
-import { Alert, Image, PermissionsAndroid, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, PermissionsAndroid, Platform, TouchableOpacity } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
+import { PERMISSIONS, RESULTS, request } from 'react-native-permissions';
 import { useDispatch, useSelector } from 'react-redux';
 import { FONTFAMILY } from '../../../assets/fonts';
+import serviceAPI from '../../apis/serviceAPI';
 import COLORS from '../../assets/colors/Colors';
 import IMAGES from '../../assets/images/Images';
 import {
-    ButtonComponent,
     CardServiceComponent,
     CardShopComponent,
     CardTipCompnent,
@@ -16,26 +16,42 @@ import {
     RowComponent,
     SectionComponent,
     SwipeComponent,
-    TextComponent,
+    TextComponent
 } from '../../components';
+import { service_type } from '../../model/service_type';
 import { useRole } from '../../permission/permission';
-import { authSelector, removeAuth } from '../../redux/reducers/authReducer';
-import { PERMISSIONS, RESULTS, request } from 'react-native-permissions';
-import { Platform } from 'react-native';
-import Geolocation from 'react-native-geolocation-service';
+import { authSelector } from '../../redux/reducers/authReducer';
 
 type Coordinates = {
     latitude: number | null;
     longitude: number | null;
 };
 
-const HomeScreen = () => {
+const HomeScreen = ({ route, navigation }: any) => {
     const dispatch = useDispatch();
     const user = useSelector(authSelector);
     const [currentLocation, setCurrentLocation] = useState<Coordinates>({
         latitude: null,
         longitude: null,
     });
+    const [typeService, setTypeService] = useState<service_type[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+
+    const getDataService_Type = async () => {
+        try {
+            const res = await serviceAPI.HandleService('/get-service-type');
+            const data: service_type[] = await res.data;
+            setTypeService(data);
+            setLoading(false);
+        } catch (error) {
+            console.log('Error fetching service types: ', error);
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        getDataService_Type();
+    }, []);
     const { isUser, isShop, isAdmin } = useRole();
     const requestLocationPermission = async () => {
         if (Platform.OS === 'android') {
@@ -80,6 +96,13 @@ const HomeScreen = () => {
     useEffect(() => {
         getCurrentLocation();
     }, [user]);
+    const handleServiceType=(item:any)=>{
+        navigation.navigate('ProductType', {data:item})
+    }
+    const handleDetailShop=(item:any)=>{
+        navigation.navigate('DetailsShop', {data:item})
+
+    }
     return (
         <ContainerComponent styleBackground={{ backgroundColor: COLORS.WHISPER_GRAY }} isScroll>
             <SectionComponent
@@ -113,7 +136,7 @@ const HomeScreen = () => {
                 </RowComponent>
             </SectionComponent>
             <SectionComponent>
-                <CardServiceComponent />
+                <CardServiceComponent  data={typeService} isLoading={loading} onPress={handleServiceType} />
             </SectionComponent>
             <SectionComponent styles={{ marginTop: -20 }}>
                 <TextComponent text={"Mách mẹo vặt"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15}/>
@@ -130,7 +153,7 @@ const HomeScreen = () => {
                 </RowComponent>
             </SectionComponent>
             <SectionComponent>
-                <CardShopComponent limit={3} currentLatitude={currentLocation.latitude} currentLongitude={currentLocation.longitude} />
+                <CardShopComponent onPress={handleDetailShop} limit={3} currentLatitude={currentLocation.latitude} currentLongitude={currentLocation.longitude} />
             </SectionComponent>
         </ContainerComponent>
     );

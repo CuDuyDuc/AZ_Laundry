@@ -11,7 +11,9 @@ const COLORS = {
     WHISPER_GRAY:'#F0F0F0',
     PRIMARY: '#25565F',
     DARK_BLUE: '#0D0140',
-    YELLOW: 'yellow'
+    YELLOW: 'yellow',
+    TEAL:"#32BEA6",
+    GRAY_WHITE:"#AAA6B9"
 }
 
 export default COLORS;
