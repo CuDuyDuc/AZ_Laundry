@@ -8,7 +8,7 @@ const COLORS = {
     AZURE_BLUE: '#00ADEF',
     LIGHT_SKY_BLUE: '#95C9DD',
     BLUE_GRAY: '#60778C',
-    WHISPER_GRAY:'#F0F0F0',
+    WHISPER_GRAY:'#F9F9F9',
     PRIMARY: '#25565F',
     DARK_BLUE: '#0D0140',
     YELLOW: 'yellow',

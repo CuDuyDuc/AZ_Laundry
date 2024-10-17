@@ -111,6 +111,8 @@ const HomeScreen = ({ route, navigation }: any) => {
                     backgroundColor: COLORS.AZURE_BLUE,
                     flexDirection: 'column',
                     justifyContent: 'center',
+                    borderBottomRightRadius: 16,
+                    borderBottomLeftRadius:16
                 }}>
                 <RowComponent styles={{ marginTop: 35 }} justify="space-between">
                     <TextComponent
@@ -123,7 +125,7 @@ const HomeScreen = ({ route, navigation }: any) => {
                 </RowComponent>
             </SectionComponent>
             <SectionComponent
-                styles={{ flexDirection: 'row', justifyContent: 'center', marginTop: 15, height: 185 }}>
+                styles={{ flexDirection: 'row', justifyContent: 'center', marginTop: 8, height: 185 }}>
                 <SwipeComponent />
             </SectionComponent>
             <SectionComponent styles={{ marginTop: -30 }}>
