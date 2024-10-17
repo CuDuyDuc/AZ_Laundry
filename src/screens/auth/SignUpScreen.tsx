@@ -27,7 +27,7 @@ const SignUpScreen = ({ navigation }: any) => {
     const [values, setValues] = useState(initValues);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<any>();
-    const [isDisable, setIsDisable] = useState(true);
+    const [isDisable , setIsDisable] = useState(true);
 
     useEffect(() => {
         if (

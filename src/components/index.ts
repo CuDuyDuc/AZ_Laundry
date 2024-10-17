@@ -10,7 +10,7 @@ import CardServiceComponent from './CardServiceComponent';
 import SwipeComponent from './SwipeComponent';
 import CardTipCompnent from './CardTipCompnent';
 import CardShopComponent from './CardShopComponent';
-
+import HeaderComponent from './HeaderComponent';
 export {
     ButtonComponent,
     ContainerComponent,
@@ -24,4 +24,5 @@ export {
     SwipeComponent,
     CardTipCompnent,
     CardShopComponent,
+    HeaderComponent
 }
