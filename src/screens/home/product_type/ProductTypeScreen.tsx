@@ -5,7 +5,7 @@ import { FONTFAMILY } from '../../../../assets/fonts';
 import COLORS from '../../../assets/colors/Colors';
 import { CardServiceComponent, ContainerComponent, RowComponent, SectionComponent, TextComponent } from '../../../components';
 import { ProductTypeModel } from '../../../model/product_type';
-import productTypeAPI from '../../../apis/tipAPI copy';
+import productTypeAPI from '../../../apis/product_typeAPI';
 
 const ProductTypeScreen = ({navigation, route}: any) => {
   const {data} = route.params;
