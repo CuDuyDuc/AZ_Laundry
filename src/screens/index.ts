@@ -12,6 +12,8 @@ import AddService from './AddService';
 import HistoryScreen from './history/HistoryScreen';
 import ProductTypeScreen from './home/product_type/ProductTypeScreen';
 import DetailsShopScreen from './home/details_shop/DetailsShopScreen';
+import MessageScreen from './notification/MessageScreen';
+import InfoScreen from './profile/InfoScreen';
 
 export {
     SplashScreen,
@@ -27,5 +29,7 @@ export {
     AddService,
     HistoryScreen,
     ProductTypeScreen,
-    DetailsShopScreen
+    DetailsShopScreen,
+    MessageScreen,
+    InfoScreen,
 }

@@ -11,6 +11,7 @@ import SwipeComponent from './SwipeComponent';
 import CardTipCompnent from './CardTipCompnent';
 import CardShopComponent from './CardShopComponent';
 import HeaderComponent from './HeaderComponent';
+import AccountComponent from './AccountComponent';
 export {
     ButtonComponent,
     ContainerComponent,
@@ -24,5 +25,6 @@ export {
     SwipeComponent,
     CardTipCompnent,
     CardShopComponent,
-    HeaderComponent
+    HeaderComponent, 
+    AccountComponent
 }

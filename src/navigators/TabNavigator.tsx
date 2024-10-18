@@ -1,12 +1,12 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React, { ReactNode } from 'react';
-import { AddService, CartScreen, HomeScreen, NotificationScreen, ProfileScreen } from '../screens';
-import COLORS from '../assets/colors/Colors';
 import { AddSquare, Clock, Home2, Notification, Profile, ShoppingCart } from 'iconsax-react-native';
+import React, { ReactNode } from 'react';
 import { View } from 'react-native';
-import { globalStyle } from '../styles/globalStyle';
+import COLORS from '../assets/colors/Colors';
 import { useRole } from '../permission/permission';
-import TopTabNavigator from '../screens/notification/TopTabNavigator';
+import { AddService, CartScreen, HomeScreen, ProfileScreen } from '../screens';
+import TopTabNavigator from './TopTabNavigator';
+import { globalStyle } from '../styles/globalStyle';
 
 const TabNavigator = () => {
 

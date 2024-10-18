@@ -9,19 +9,18 @@ const App = () => {
 
   return (
     <>
-    <GestureHandlerRootView style={{ flex: 1 }}>
-    <Provider store={store}>
-    <StatusBar
-      barStyle="dark-content"
-      backgroundColor="transparent"
-      translucent />
-    <NavigationContainer>
-      <AppRouters />
-    </NavigationContainer>
-  </Provider>
-    </GestureHandlerRootView>
-  
-  </>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Provider store={store}>
+          <StatusBar
+            barStyle="dark-content"
+            backgroundColor="transparent"
+            translucent />
+          <NavigationContainer>
+            <AppRouters />
+          </NavigationContainer>
+        </Provider>
+      </GestureHandlerRootView>
+    </>
   )
 }
 
