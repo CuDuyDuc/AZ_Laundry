@@ -1,23 +1,9 @@
-import {
-  ArrowRight2,
-  Book,
-  LanguageCircle,
-  Logout,
-  Trash,
-  Unlock
-} from 'iconsax-react-native';
+import {ArrowRight2, Book, LanguageCircle, Logout, Trash, Unlock} from 'iconsax-react-native';
 import React from 'react';
-import { Image } from 'react-native';
+import { Image, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
 import COLORS from '../../assets/colors/Colors';
-import {
-  HeaderComponent,
-  RowComponent,
-  SectionComponent,
-  SpaceComponent,
-  TextComponent
-} from '../../components';
-import AccountComponent from '../../components/AccountComponent';
+import {AccountComponent, HeaderComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent} from '../../components';
 import { authSelector } from '../../redux/reducers/authReducer';
 
 const ProfileScreen = ({ navigation }: any) => {
@@ -30,8 +16,7 @@ const ProfileScreen = ({ navigation }: any) => {
         flex: 1,
         paddingHorizontal: 0,
       }}>
-      <HeaderComponent title="Tài khoản" />
-
+      <HeaderComponent title="Tài khoản" isBack onBack={() => navigation.goBack()} />
       <RowComponent
         onPress={() => {
           console.log('Test Account click!');
@@ -96,31 +81,41 @@ const ProfileScreen = ({ navigation }: any) => {
         <ArrowRight2 size={32} color={COLORS.HEX_BLACK} />
       </RowComponent>
       <SpaceComponent height={10} />
-      <AccountComponent
-        onPress={() => { }}
-        icon={<Book size="28" color={COLORS.AZURE_BLUE} />}
-        title="Lịch sử đặt hàng"
-      />
-      <AccountComponent
-        icon={<LanguageCircle size="28" color={COLORS.AZURE_BLUE} />}
-        title="Ngôn ngữ"
-        onPress={() => { }}
-      />
-      <AccountComponent
-        icon={<Unlock size="28" color={COLORS.AZURE_BLUE} />}
-        title="Đổi mật khẩu"
-        onPress={() => { }}
-      />
-      <AccountComponent
-        icon={<Logout size="28" color={COLORS.AZURE_BLUE} />}
-        title="Đăng xuất"
-        onPress={() => { }}
-      />
-      <AccountComponent
-        icon={<Trash size="28" color={COLORS.AZURE_BLUE} />}
-        title="Xoá tài khoản"
-        onPress={() => { }}
-      />
+      <TouchableOpacity>
+        <AccountComponent
+          onPress={() => { }}
+          icon={<Book size="28" color={COLORS.AZURE_BLUE} />}
+          title="Lịch sử đặt hàng"
+        />
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <AccountComponent
+          icon={<LanguageCircle size="28" color={COLORS.AZURE_BLUE} />}
+          title="Ngôn ngữ"
+          onPress={() => { }}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <AccountComponent
+          icon={<Unlock size="28" color={COLORS.AZURE_BLUE} />}
+          title="Đổi mật khẩu"
+          onPress={() => { }}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <AccountComponent
+          icon={<Logout size="28" color={COLORS.AZURE_BLUE} />}
+          title="Đăng xuất"
+          onPress={() => { }}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <AccountComponent
+          icon={<Trash size="28" color={COLORS.AZURE_BLUE} />}
+          title="Xoá tài khoản"
+          onPress={() => { }}
+        />
+      </TouchableOpacity>
     </SectionComponent>
   );
 };

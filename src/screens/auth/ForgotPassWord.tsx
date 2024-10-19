@@ -1,14 +1,13 @@
-import { View, Text, TouchableOpacity, Image, Alert } from 'react-native'
-import React, { useState } from 'react'
-import { Validate } from '../../utils/validate';
-import { globalStyle } from '../../styles/globalStyle';
-import { ButtonComponent, InputComponent, SectionComponent, TextComponent } from '../../components';
 import { ArrowLeft2, Sms } from 'iconsax-react-native';
-import COLORS from '../../assets/colors/Colors';
+import React, { useState } from 'react';
+import { Alert, Image, TouchableOpacity, View } from 'react-native';
 import { FONTFAMILY } from '../../../assets/fonts';
-import { LoadingModal } from '../../modal';
-import IMAGES from '../../assets/images/Images';
 import authenticationAPI from '../../apis/authAPI';
+import COLORS from '../../assets/colors/Colors';
+import IMAGES from '../../assets/images/Images';
+import { ButtonComponent, InputComponent, SectionComponent, TextComponent } from '../../components';
+import { LoadingModal } from '../../modal';
+import { Validate } from '../../utils/validate';
 
 const ForgotPassWord = ({ navigation }: any) => {
     const [email, setEmail] = useState('');

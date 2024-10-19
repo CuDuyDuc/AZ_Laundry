@@ -1,11 +1,7 @@
-import { ArrowLeft2 } from 'iconsax-react-native';
 import React, { useEffect, useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import { FONTFAMILY } from '../../../../assets/fonts';
-import COLORS from '../../../assets/colors/Colors';
-import { CardServiceComponent, ContainerComponent, RowComponent, SectionComponent, TextComponent } from '../../../components';
-import { ProductTypeModel } from '../../../model/product_type';
 import productTypeAPI from '../../../apis/product_typeAPI';
+import { CardServiceComponent, ContainerComponent, HeaderComponent, SectionComponent } from '../../../components';
+import { ProductTypeModel } from '../../../model/product_type';
 
 const ProductTypeScreen = ({navigation, route}: any) => {
   const {data} = route.params;
@@ -32,24 +28,7 @@ const ProductTypeScreen = ({navigation, route}: any) => {
   }
   return (
     <ContainerComponent>
-      <SectionComponent
-        styles={{
-          height: 83,
-          backgroundColor: COLORS.AZURE_BLUE,
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}>
-        <RowComponent styles={{marginTop: 35}} justify="space-between">
-          <TouchableOpacity onPress={()=>navigation.goBack()}>
-            <ArrowLeft2 size="30" color={COLORS.WHITE} />
-          </TouchableOpacity>
-          <TextComponent
-            text={`${data.service_type_name}`}
-            font={FONTFAMILY.montserrat_medium}
-          />
-          <View></View>
-        </RowComponent>
-      </SectionComponent>
+      <HeaderComponent title={`${data.service_type_name}`} isBack onBack={() => navigation.goBack()} />
       <SectionComponent styles={{marginTop:15}}>
         <CardServiceComponent  data={productType} isLoading={loading} onPress={handleProductType} />
       </SectionComponent>
