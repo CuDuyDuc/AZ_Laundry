@@ -25,7 +25,7 @@ export default function HeaderComponent(props: Props) {
                 borderBottomLeftRadius: 16,
                 borderBottomRightRadius: 16
             }}>
-            <StatusBar barStyle={'light-content'} />
+            <StatusBar barStyle={'light-content'} backgroundColor="transparent" translucent/>
             <RowComponent styles={{ marginTop: 35 }} justify="space-between" >
                 {isBack ? (<TouchableOpacity onPress={onBack}>
                     <ArrowLeft2 size="30" color={COLORS.WHITE} />

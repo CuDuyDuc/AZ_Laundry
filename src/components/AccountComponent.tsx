@@ -1,20 +1,17 @@
+import { ArrowRight2 } from 'iconsax-react-native';
 import React, { ReactNode } from 'react';
-import RowComponent from './RowComponent';
-import { LanguageCircle, ArrowRight2 } from 'iconsax-react-native';
 import COLORS from '../assets/colors/Colors';
+import RowComponent from './RowComponent';
 import SpaceComponent from './SpaceComponent';
 import TextComponent from './TextComponent';
-import { TouchableOpacity } from 'react-native';
 
 interface Props {
   icon?: ReactNode,
   title?: string,
-  onPress: () => void
 }
 const AccountComponent = (props: Props) => {
-  const { icon, title, onPress } = props;
+  const { icon, title } = props;
   return (
-    <TouchableOpacity onPress={onPress}>
       <RowComponent
         justify='space-between'
         styles={{
@@ -35,7 +32,6 @@ const AccountComponent = (props: Props) => {
         </RowComponent>
         <ArrowRight2 size={28} color={COLORS.HEX_BLACK} />
       </RowComponent>
-    </TouchableOpacity>
   )
 };
 

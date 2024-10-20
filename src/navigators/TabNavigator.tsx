@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react';
 import { View } from 'react-native';
 import COLORS from '../assets/colors/Colors';
 import { useRole } from '../permission/permission';
-import { AddService, CartScreen, HomeScreen, ProfileScreen } from '../screens';
+import { AddService, CartScreen, HistoryScreen, HomeScreen, ProfileScreen } from '../screens';
 import TopTabNavigator from './TopTabNavigator';
 import { globalStyle } from '../styles/globalStyle';
 
@@ -12,6 +12,7 @@ const TabNavigator = () => {
 
     const Tab = createBottomTabNavigator()
     const { isAdmin, isShop, isUser } = useRole()
+    console.log({ isAdmin, isShop, isUser });
 
     return (
         <Tab.Navigator screenOptions={({ route }) => ({
@@ -85,8 +86,8 @@ const TabNavigator = () => {
             tabBarLabel: () => null,
         })}>
             <Tab.Screen name='Home' component={HomeScreen} />
-            {isUser ? <Tab.Screen name='Cart' component={CartScreen} />:<Tab.Screen name='History' component={CartScreen} />}
-            {isShop&&<Tab.Screen name='AddService' component={AddService} />}
+            {isUser ? (<Tab.Screen name='Cart' component={CartScreen} />):(<Tab.Screen name='History' component={HistoryScreen} />)}
+            {(isShop || isAdmin) && (<Tab.Screen name='AddService' component={AddService} />)}
             <Tab.Screen name='Notification' component={TopTabNavigator} />
             <Tab.Screen name='Profile' component={ProfileScreen} />
         </Tab.Navigator>
