@@ -103,6 +103,7 @@ const HomeScreen = ({ route, navigation }: any) => {
         navigation.navigate('DetailsShop', {data:item})
 
     }
+
     return (
         <ContainerComponent styleBackground={{ backgroundColor: COLORS.WHISPER_GRAY }} isScroll>
             <SectionComponent
@@ -149,7 +150,7 @@ const HomeScreen = ({ route, navigation }: any) => {
             <SectionComponent>
                 <RowComponent justify='space-between'>
                     <TextComponent text={"Cửa hàng nổi bật"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15}/>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>navigation.navigate('AllStores',{latitude:currentLocation.latitude,longitude:currentLocation.longitude})}>
                         <TextComponent text={"Xem thêm"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15}/>
                     </TouchableOpacity>
                 </RowComponent>
