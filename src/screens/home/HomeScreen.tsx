@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Image, PermissionsAndroid, Platform, TouchableOpacity } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { PERMISSIONS, RESULTS, request } from 'react-native-permissions';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { FONTFAMILY } from '../../../assets/fonts';
 import serviceAPI from '../../apis/serviceAPI';
 import COLORS from '../../assets/colors/Colors';
@@ -19,7 +19,6 @@ import {
     TextComponent
 } from '../../components';
 import { service_type } from '../../model/service_type';
-import { useRole } from '../../permission/permission';
 import { authSelector } from '../../redux/reducers/authReducer';
 
 type Coordinates = {
@@ -28,7 +27,7 @@ type Coordinates = {
 };
 
 const HomeScreen = ({ route, navigation }: any) => {
-    const dispatch = useDispatch();
+
     const user = useSelector(authSelector);
     const [currentLocation, setCurrentLocation] = useState<Coordinates>({
         latitude: null,
@@ -102,8 +101,7 @@ const HomeScreen = ({ route, navigation }: any) => {
         navigation.navigate('DetailsShop', {data:item})
 
     }
-    console.log(user);
-    
+
     return (
         <ContainerComponent styleBackground={{ backgroundColor: COLORS.WHISPER_GRAY }} isScroll>
             <SectionComponent
