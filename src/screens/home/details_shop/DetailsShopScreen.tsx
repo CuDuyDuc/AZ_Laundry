@@ -62,7 +62,7 @@ const DetailsShopScreen = ({navigation, route}: any) => {
         {loading ? (
             <ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} style={{marginTop:83}} />
         ) : (
-            <View style={{backgroundColor:COLORS.WHISPER_GRAY, position:'relative', flex:1}}>
+            <View style={{backgroundColor:COLORS.WHISPER_GRAY,position:'relative', flex:1}}>
                 <ImageBackground source={{uri:details[0].data_user.shop_banner}} style={{width:'100%', height:200}}>
                     <SectionComponent styles={{height: 83,flexDirection: 'column',justifyContent: 'center',}}>
                         <RowComponent styles={{marginTop: 35}} justify="flex-start">
@@ -95,7 +95,7 @@ const DetailsShopScreen = ({navigation, route}: any) => {
                         <ButtonComponent type='link' text='Xem đánh giá' color={COLORS.AZURE_BLUE}/> 
                     </RowComponent>
                 </SectionComponent>
-                <SectionComponent styles={{position:'relative', top:120, paddingBottom: 520}}>
+                <SectionComponent styles={{position:'relative', top:120}}>
                     <CardProductComponent isCart={false} groupProductsByServiceType={groupProductsByServiceType(products)}/>
                 </SectionComponent>
                 <View style={{backgroundColor:COLORS.WHITE, position:'absolute', bottom:0, left:0, right:0, paddingTop:15}}>
