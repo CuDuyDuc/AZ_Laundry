@@ -70,7 +70,7 @@ const ProfileScreen = ({ navigation }: any) => {
                             height: '100%',
                         }}>
                             <TextComponent
-                                text={user?.name}
+                                text={user?.fullname}
                                 size={16}
                                 styles={{ fontWeight: 'bold', }}
                                 color="black"/>
