@@ -8,7 +8,6 @@ import COLORS from '../../../assets/colors/Colors';
 import { ButtonComponent, CardProductComponent, RowComponent, SectionComponent, TextComponent } from '../../../components';
 import { ProductModel } from '../../../model/product';
 import { UserModel } from '../../../model/user_model';
-import { ScrollView } from 'react-native-virtualized-view';
 
 const DetailsShopScreen = ({navigation, route}: any) => {
     const {data} = route.params;
@@ -96,7 +95,7 @@ const DetailsShopScreen = ({navigation, route}: any) => {
                         <ButtonComponent type='link' text='Xem đánh giá' color={COLORS.AZURE_BLUE}/> 
                     </RowComponent>
                 </SectionComponent>
-                <SectionComponent styles={{position:'relative', top:120}}>
+                <SectionComponent styles={{position:'relative', top:120, paddingBottom: 520}}>
                     <CardProductComponent isCart={false} groupProductsByServiceType={groupProductsByServiceType(products)}/>
                 </SectionComponent>
                 <View style={{backgroundColor:COLORS.WHITE, position:'absolute', bottom:0, left:0, right:0, paddingTop:15}}>
