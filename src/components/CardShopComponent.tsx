@@ -1,37 +1,23 @@
 import { Location, Star1 } from 'iconsax-react-native'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { ActivityIndicator, FlatList, Image, TouchableOpacity, View } from 'react-native'
 import { FONTFAMILY } from '../../assets/fonts'
-import authenticationAPI from '../apis/authAPI'
 import COLORS from '../assets/colors/Colors'
+import { useAxiosGetShops } from '../hooks/useAxiosGetShops'
+import { UserModel } from '../model/user_model'
 import RowComponent from './RowComponent'
 import TextComponent from './TextComponent'
-import { UserModel } from '../model/user_model'
 interface Props {
     currentLatitude?: number | null,
     currentLongitude?: number | null,
-    limit?: number
-    onPress:(item:any)=>void
+    limit?: number,
+    onPress:(item:any)=>void,
+    id_product_type?:any
 }
 
 const CardShopComponent = (props: Props) => {
-    const { currentLatitude, currentLongitude, limit,onPress } = props
-    const [shop, setShop] = useState<UserModel[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const getDataShops = async () => {
-        try {
-            const res = await authenticationAPI.HandleAuthentication('/get-shops', {
-                currentLatitude,
-                currentLongitude,
-                limit
-            }, 'post');
-            setShop(res.data);
-            setLoading(false);
-        } catch (error: any) {
-            console.log('Error fetching shops: ', error);
-            setLoading(false);
-        }
-    };
+    const { currentLatitude, currentLongitude, limit,onPress,id_product_type } = props
+    const {shop, loading}= useAxiosGetShops({currentLatitude,currentLongitude,limit,id_product_type})
     const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
         const R = 6371; // Bán kính của Trái Đất tính bằng km
         const dLat = (lat2 - lat1) * (Math.PI / 180);
@@ -43,17 +29,14 @@ const CardShopComponent = (props: Props) => {
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         return R * c; // Khoảng cách tính bằng km
     };
-    useEffect(() => {
-        getDataShops();
-    }, []);
 
     const renderItem = ({ item }: { item: UserModel }) => {
 
         const distance = calculateDistance(
             currentLatitude!,
             currentLongitude!,
-            item.location.coordinates[1]!,
-            item.location.coordinates[0]!
+            item.location?.coordinates[1]!,
+            item.location?.coordinates[0]!
         );
         return (
             <TouchableOpacity onPress={()=>onPress(item)} style={{ marginTop: 15, backgroundColor: COLORS.WHITE, padding: 7, borderRadius: 16 }} >
