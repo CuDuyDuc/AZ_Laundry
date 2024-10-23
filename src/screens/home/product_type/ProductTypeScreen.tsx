@@ -11,7 +11,7 @@ const ProductTypeScreen = ({navigation, route}: any) => {
   const [productType, setProductType] = useState<ProductTypeModel[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const user = useSelector(authSelector);
-  const { isUser, isShop, isAdmin } = useRole();
+  const { isUser, isShop } = useRole();
   const getDataProductType = async () => {
       try {
           const res = await productTypeAPI.HandleProductType(`/get-product-type?id_service_type=${data._id}`);
