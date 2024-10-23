@@ -14,6 +14,7 @@ import HeaderComponent from './HeaderComponent';
 import AccountComponent from './AccountComponent';
 import CardProductComponent from './CardProductComponent';
 import CardProductOfProductTypeComponent from './CardProductOfProductTypeComponent';
+import CardOrderComponent from './CardOrderComponent';
 export {
     ButtonComponent,
     ContainerComponent,
@@ -30,5 +31,6 @@ export {
     HeaderComponent, 
     AccountComponent,
     CardProductComponent,
-    CardProductOfProductTypeComponent
+    CardProductOfProductTypeComponent,
+    CardOrderComponent
 }
