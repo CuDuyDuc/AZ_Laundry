@@ -102,7 +102,8 @@ const HomeScreen = ({ route, navigation }: any) => {
         navigation.navigate('DetailsShop', {data:item})
 
     }
-
+    console.log(user);
+    
     return (
         <ContainerComponent styleBackground={{ backgroundColor: COLORS.WHISPER_GRAY }} isScroll>
             <SectionComponent
