@@ -88,7 +88,7 @@ const ProfileScreen = ({ navigation }: any) => {
                     <ArrowRight2 size={32} color={COLORS.HEX_BLACK} />
                 </RowComponent>
                 <SpaceComponent height={10} />
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => {navigation.navigate('HistoryScreen')}}>
                     <AccountComponent
                         icon={<Book size="28" color={COLORS.AZURE_BLUE} />}
                         title="Lịch sử đặt hàng"
