@@ -15,6 +15,8 @@ import DetailsShopScreen from './home/details_shop/DetailsShopScreen';
 import MessageScreen from './notification/MessageScreen';
 import InfoScreen from './profile/InfoScreen';
 import AllStoresScreen from './home/all_stores/AllStoresScreen';
+import DetailShopOfService from './home/product_type/detail_shop_of_service/DetailShopOfService';
+import ProductOfProductTypeScreen from './home/product_type/detail_shop_of_service/product_of_product_type/ProductOfProductTypeScreen';
 
 export {
     SplashScreen,
@@ -33,5 +35,7 @@ export {
     DetailsShopScreen,
     MessageScreen,
     InfoScreen,
-    AllStoresScreen
+    AllStoresScreen,
+    DetailShopOfService,
+    ProductOfProductTypeScreen
 }

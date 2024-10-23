@@ -79,9 +79,11 @@ const LoginScreen = ({navigation}: any) => {
                 'auth',
                 JSON.stringify(res.data),
             );
-        } catch (error) {
-            setIsLoading(false)
-            console.log(error)
+        } catch (error:any) {
+            await AsyncStorage.removeItem('auth'); 
+            await GoogleSignin.signOut();
+            setIsLoading(false);
+            console.log('Error during Google login:', error);
         }
     }
 
@@ -112,16 +114,18 @@ const LoginScreen = ({navigation}: any) => {
                         data,
                         'post',
                     );
-
+                    console.log(res.message);
                     dispatch(addAuth(res.data));
-
                     await AsyncStorage.setItem('auth', JSON.stringify(res.data));
-
                     setIsLoading(false);
+                    
                 }
             }
-        } catch (error) {
-            console.log(error);
+        } catch (error:any) {
+            await AsyncStorage.removeItem('auth'); 
+            await LoginManager.logOut();
+            setIsLoading(false);
+            console.log('Error during facebook login:', error.response);
         }
     };
 

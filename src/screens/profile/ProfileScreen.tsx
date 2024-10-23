@@ -22,7 +22,7 @@ const ProfileScreen = ({ navigation }: any) => {
     };
 
     const handleSignOut = async () => {
-        await AsyncStorage.setItem('auth', user.email);
+        await AsyncStorage.removeItem('auth'); 
         await GoogleSignin.signOut();
         await LoginManager.logOut();
         dispatch(removeAuth({}));
