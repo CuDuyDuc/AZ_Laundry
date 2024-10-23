@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { View, ScrollView, TouchableOpacity } from 'react-native';
-import { RowComponent, TextComponent, CardOrderComponent, ContainerComponent, HeaderComponent } from '../../components';
+import { TouchableOpacity } from 'react-native';
+import { CardOrderComponent, ContainerComponent, HeaderComponent, RowComponent, TextComponent } from '../../components';
+import { FONTFAMILY } from '../../../assets/fonts';
+import { ScrollView } from 'react-native-virtualized-view';
 import COLORS from '../../assets/colors/Colors';
 
 const orders = [
@@ -30,7 +32,7 @@ const orders = [
   },
 ];
 
-const OrderHistoryScreen: React.FC = () => {
+const OrderHistoryScreen= ({navigation}: any) => {
   const [activeTab, setActiveTab] = useState<string>('Chờ xác nhận');
 
   const filterOrdersByTab = () => {
@@ -39,20 +41,19 @@ const OrderHistoryScreen: React.FC = () => {
 
   return (
     <ContainerComponent>
-      <HeaderComponent title='Thông tin cá nhân' />
-      
-      <RowComponent justify="space-around" styles={{ paddingVertical: 10, backgroundColor: '#fff' }}>
+      <HeaderComponent title='Lịch sử đơn hàng'  isBack onBack={() => navigation.goBack()}/>
+      <RowComponent justify="space-around" styles={{ paddingVertical: 10, backgroundColor: COLORS.WHITE }}>
         {['Chờ xác nhận', 'Chờ lấy hàng', 'Đã xong', 'Đánh giá'].map((tab) => ( // set trạng thái cho tab
           <TouchableOpacity
             key={tab}
             onPress={() => setActiveTab(tab)}
-            style={{ borderBottomWidth: activeTab === tab ? 2 : 0, borderBottomColor: '#2A9DF4' }}
-          >
+            style={{ borderBottomWidth: activeTab === tab ? 2 : 0, borderBottomColor: COLORS.AZURE_BLUE }}>
             <TextComponent
               text={tab}
-              size={14}
-              color={activeTab === tab ? '#2A9DF4' : '#999'}
+              size={13}
+              color={activeTab === tab ? COLORS.AZURE_BLUE : COLORS.HEX_LIGHT_GREY}
               font={activeTab === tab ? 'bold' : 'normal'}
+              styles={{fontFamily: FONTFAMILY.montserrat_bold}}
             />
           </TouchableOpacity>
         ))}
