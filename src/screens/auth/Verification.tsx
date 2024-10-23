@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { ArrowLeft } from 'iconsax-react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, StatusBar, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { FONTFAMILY } from '../../../assets/fonts'
 import authenticationAPI from '../../apis/authAPI'
@@ -10,6 +10,7 @@ import { ButtonComponent, RowComponent, SectionComponent, TextComponent } from '
 import { LoadingModal } from '../../modal'
 import { addAuth } from '../../redux/reducers/authReducer'
 import { globalStyle } from '../../styles/globalStyle'
+import IMAGES from '../../assets/images/Images'
 
 const Verification = ({ navigation, route }: any) => {
     const { code, email, password, fullname} = route.params;
@@ -114,7 +115,8 @@ const Verification = ({ navigation, route }: any) => {
 
     return (
         <View style={globalStyle.container}>
-            <SectionComponent styles = {{backgroundColor: COLORS.WHITE}}>
+            <StatusBar barStyle={"dark-content"}/>
+            <SectionComponent styles = {{backgroundColor: COLORS.WHISPER_GRAY}}>
                 <TouchableOpacity style={{ paddingTop: 50, paddingBottom: 10 }}>
                     <ArrowLeft size={24} color={COLORS.HEX_BLACK}
                         onPress={() => navigation.goBack()} />
