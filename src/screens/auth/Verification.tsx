@@ -225,6 +225,9 @@ const Verification = ({ navigation, route }: any) => {
                     </RowComponent>
                 )}
             </SectionComponent>
+            <SectionComponent styles={{ alignItems: 'center'}}>
+                <Image source={IMAGES.OTP}/>
+            </SectionComponent>
             <LoadingModal visible={isLoading} />
         </View>
     )
