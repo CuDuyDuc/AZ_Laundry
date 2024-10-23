@@ -13,6 +13,7 @@ import CardShopComponent from './CardShopComponent';
 import HeaderComponent from './HeaderComponent';
 import AccountComponent from './AccountComponent';
 import CardProductComponent from './CardProductComponent';
+import CardProductOfProductTypeComponent from './CardProductOfProductTypeComponent';
 export {
     ButtonComponent,
     ContainerComponent,
@@ -28,5 +29,6 @@ export {
     CardShopComponent,
     HeaderComponent, 
     AccountComponent,
-    CardProductComponent
+    CardProductComponent,
+    CardProductOfProductTypeComponent
 }

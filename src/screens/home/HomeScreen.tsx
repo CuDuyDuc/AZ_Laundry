@@ -52,7 +52,6 @@ const HomeScreen = ({ route, navigation }: any) => {
     useEffect(() => {
         getDataService_Type();
     }, []);
-    const { isUser, isShop, isAdmin } = useRole();
     const requestLocationPermission = async () => {
         if (Platform.OS === 'android') {
             const granted = await PermissionsAndroid.request(
@@ -97,7 +96,7 @@ const HomeScreen = ({ route, navigation }: any) => {
         getCurrentLocation();
     }, [user]);
     const handleServiceType=(item:any)=>{
-        navigation.navigate('ProductType', {data:item})
+        navigation.navigate('ProductType', {data:item,latitude:currentLocation.latitude,longitude:currentLocation.longitude})
     }
     const handleDetailShop=(item:any)=>{
         navigation.navigate('DetailsShop', {data:item})
