@@ -1,6 +1,6 @@
 import { CloseSquare, Eye, EyeSlash } from 'iconsax-react-native';
 import React, { ReactNode, useState } from 'react';
-import { KeyboardType, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardType, StyleProp, StyleSheet, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
 import COLORS from '../assets/colors/Colors';
 import { globalStyle } from '../styles/globalStyle';
 
@@ -15,18 +15,21 @@ interface Props {
     type?: KeyboardType,
     onEnd?: () => void,
     backgroundColor?: string,
+    style?: StyleProp<ViewStyle>;
+    styleInput?: StyleProp<ViewStyle>;
+    editKeyboard?: boolean;
 }
 
 const InputComponent = (props: Props) => {
 
-    const { value, onChange, affix, placeholder, suffix, isPassword, allowClear, type, onEnd, backgroundColor} = props;
+    const { value, onChange, affix, placeholder, suffix, isPassword, allowClear, type, onEnd, backgroundColor, style, styleInput, editKeyboard} = props;
 
     const [isShowPass, setIsShowPass] = useState(isPassword ?? false);
     return (
-        <View style = {[styles.inputContainer, { backgroundColor: backgroundColor ?? 'transparent' }]}>
+        <View style = {[styles.inputContainer, { backgroundColor: backgroundColor ?? 'transparent' }, style]}>
             {affix ?? affix}
             <TextInput
-                style = {[styles.input, globalStyle.text]}
+                style = {[styles.input, globalStyle.text, styleInput]}
                 value={value}
                 placeholder={placeholder ?? ''}
                 onChangeText={val => onChange(val)} 
@@ -34,7 +37,8 @@ const InputComponent = (props: Props) => {
                 placeholderTextColor={COLORS.BLUE_GRAY}
                 keyboardType={type ?? 'default'}
                 autoCapitalize="none"
-                onEndEditing={onEnd}/> 
+                onEndEditing={onEnd}
+                editable={editKeyboard ? false : true}/> 
             {suffix ?? suffix}
             <TouchableOpacity onPress={isPassword ? () => setIsShowPass(!isShowPass) : () => onChange('')}>
                 {isPassword ? (

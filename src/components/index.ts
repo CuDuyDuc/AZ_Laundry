@@ -15,6 +15,11 @@ import AccountComponent from './AccountComponent';
 import CardProductComponent from './CardProductComponent';
 import CardProductOfProductTypeComponent from './CardProductOfProductTypeComponent';
 import CardOrderComponent from './CardOrderComponent';
+import LineComponent from './LineComponent';
+import MessageComponent from './MessageComponent';
+import ColumnComponent from './ColumnComponent';
+import CardListFriend from './CardListFriend';
+import CardComponent from './CardComponent';
 export {
     ButtonComponent,
     ContainerComponent,
@@ -32,5 +37,10 @@ export {
     AccountComponent,
     CardProductComponent,
     CardProductOfProductTypeComponent,
-    CardOrderComponent
+    CardOrderComponent,
+    LineComponent,
+    MessageComponent,
+    ColumnComponent,
+    CardListFriend,
+    CardComponent
 }
