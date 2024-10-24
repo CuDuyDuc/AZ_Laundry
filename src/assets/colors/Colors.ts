@@ -14,7 +14,8 @@ const COLORS = {
     YELLOW: 'yellow',
     TEAL:"#32BEA6",
     GRAY_WHITE:"#AAA6B9",
-    DARK_GRAY:"#656565"
+    DARK_GRAY:"#656565",
+    HEX_YELLOW:"#FFC700"
 }
 
 export default COLORS;

@@ -20,7 +20,13 @@ const IMAGES = {
     SlideShow1: require('./slideshow2.png'),
     SlideShow2: require('./slideshow3.png'),
     demoImage:require('./bo_vest.png'),
-    Rectangle:require('./Rectangle.png')
+    Rectangle:require('./Rectangle.png'),
+    avt: require('./avt.png'),
+    star: require('./star.png'),
+    Images: require('./image.png'),
+
+
+
 
 }
 
