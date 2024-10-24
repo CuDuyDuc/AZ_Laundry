@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "785851564656",
+    "project_id": "az-laundry",
+    "storage_bucket": "az-laundry.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:785851564656:android:8e089687fdbf34681e6ab5",
+        "android_client_info": {
+          "package_name": "com.az_laundry"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmk4jWAUvcORx17DpSZv82p4nvSSJytr8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
