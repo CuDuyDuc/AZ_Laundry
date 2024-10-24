@@ -68,7 +68,7 @@ const ProfileScreen = ({ navigation }: any) => {
                             alignItems: 'flex-start',
                             justifyContent: 'center',
                             height: '100%',
-                        }}>
+                            marginTop:20}}>
                             <TextComponent
                                 text={user?.fullname}
                                 size={16}

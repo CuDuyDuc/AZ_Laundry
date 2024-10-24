@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, StyleProp, View, ImageStyle } from 'react-native';
 import { RowComponent, SectionComponent, ButtonComponent, TextComponent } from '../components';
 import COLORS from '../assets/colors/Colors';
+import { FONTFAMILY } from '../../assets/fonts';
 
 interface Order {
     id: string;
@@ -44,8 +45,22 @@ const CardOrderComponent: React.FC<Props> = ({ orders }) => {
                 </RowComponent>
 
                 <RowComponent justify="flex-end" styles={{ marginTop: 15 }}>
-                    <ButtonComponent text="Đặt lại" type="#00ADEF" styles={{ width: 100, marginRight: 10  }} />
-                    <ButtonComponent text="Đánh giá" type="#00ADEF" styles={{ width: 100 }} />
+                    <ButtonComponent 
+                        text="Đặt lại" 
+                        type="#00ADEF" 
+                        textColor={COLORS.AZURE_BLUE} 
+                        textStyles= {{fontFamily: FONTFAMILY.montserrat_medium}} 
+                        styles={{ 
+                            width: "30%", 
+                            marginRight: 10, 
+                            backgroundColor:COLORS.WHITE, 
+                            borderColor: COLORS.AZURE_BLUE, 
+                            borderWidth:1}} />
+                    <ButtonComponent 
+                        text="Đánh giá" 
+                        type="#00ADEF" 
+                        styles={{ width: "30%",}} 
+                        textStyles= {{fontFamily: FONTFAMILY.montserrat_medium}}/>
                 </RowComponent>
             </SectionComponent>
         ));
