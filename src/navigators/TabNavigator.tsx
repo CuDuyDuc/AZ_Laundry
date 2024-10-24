@@ -12,7 +12,6 @@ const TabNavigator = () => {
 
     const Tab = createBottomTabNavigator()
     const { isAdmin, isShop, isUser } = useRole()
-    console.log({ isAdmin, isShop, isUser });
 
     return (
         <Tab.Navigator screenOptions={({ route }) => ({

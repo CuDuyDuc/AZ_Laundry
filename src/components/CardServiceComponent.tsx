@@ -30,8 +30,8 @@ const CardServiceComponent = (props: Props) => {
     }
     return (
       <TouchableOpacity onPress={() => onPress(item)} style={styles.card}>
-        <Image source={{ uri: item.service_type_icon ?? item.product_type_icon }} style={styles.icon} />
-        <Text style={styles.serviceName}>{item.service_type_name ?? item.product_type_name}</Text>
+          <Image source={{ uri: item.service_type_icon ?? item.product_type_icon }} style={styles.icon} />
+          <Text style={styles.serviceName}>{item.service_type_name ?? item.product_type_name}</Text>
       </TouchableOpacity>
     );
   };
@@ -42,11 +42,11 @@ const CardServiceComponent = (props: Props) => {
         <ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />
       ) : (
         <FlatList
-          data={dataWithEmptySlots}
-          renderItem={renderItem}
-          keyExtractor={(item) => item._id.toString()}
-          numColumns={numColumns}
-          columnWrapperStyle={styles.row}
+            data={dataWithEmptySlots}
+            renderItem={renderItem}
+            keyExtractor={(item) => item._id.toString()}
+            numColumns={numColumns}
+            columnWrapperStyle={styles.row}
         />
       )}
     </View>

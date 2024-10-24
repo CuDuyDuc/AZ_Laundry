@@ -1,7 +1,6 @@
 import axios from "axios";
 import queryString from "query-string";
-import { Alert } from "react-native";
-
+import * as Burnt from 'burnt'
 const axiosClient = axios.create({
     paramsSerializer: params => queryString.stringify(params)
 });
@@ -26,6 +25,9 @@ axiosClient.interceptors.response.use(res => {
     throw new Error('Error');
 }, error => {
     console.log(`Error api ${JSON.stringify(error.response.data)}`);
+    Burnt.alert({
+        title:JSON.stringify(error.response.data?.message)
+    })
     throw new Error(JSON.stringify(error.response.data.message));
 });
 

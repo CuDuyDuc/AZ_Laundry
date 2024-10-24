@@ -40,24 +40,20 @@ const OrderHistoryScreen: React.FC = () => {
   return (
     <ContainerComponent>
       <HeaderComponent title='Thông tin cá nhân' />
-      
       <RowComponent justify="space-around" styles={{ paddingVertical: 10, backgroundColor: '#fff' }}>
         {['Chờ xác nhận', 'Chờ lấy hàng', 'Đã xong', 'Đánh giá'].map((tab) => ( // set trạng thái cho tab
           <TouchableOpacity
             key={tab}
             onPress={() => setActiveTab(tab)}
-            style={{ borderBottomWidth: activeTab === tab ? 2 : 0, borderBottomColor: '#2A9DF4' }}
-          >
+            style={{ borderBottomWidth: activeTab === tab ? 2 : 0, borderBottomColor: '#2A9DF4' }}>
             <TextComponent
               text={tab}
               size={14}
               color={activeTab === tab ? '#2A9DF4' : '#999'}
-              font={activeTab === tab ? 'bold' : 'normal'}
-            />
+              font={activeTab === tab ? 'bold' : 'normal'}/>
           </TouchableOpacity>
         ))}
       </RowComponent>
-
       <ScrollView>
         <CardOrderComponent orders={filterOrdersByTab()} />
       </ScrollView>

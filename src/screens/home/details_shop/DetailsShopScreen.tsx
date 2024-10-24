@@ -95,8 +95,8 @@ const DetailsShopScreen = ({navigation, route}: any) => {
                         <ButtonComponent type='link' text='Xem đánh giá' color={COLORS.AZURE_BLUE}/> 
                     </RowComponent>
                 </SectionComponent>
-                <SectionComponent styles={{position:'relative', top:120}}>
-                    <CardProductComponent isCart={false} groupProductsByServiceType={groupProductsByServiceType(products)}/>
+                <SectionComponent styles={{position:'relative', top:120,paddingBottom:520}}>
+                    <CardProductComponent groupProductsByServiceType={groupProductsByServiceType(products)}/>
                 </SectionComponent>
                 <View style={{backgroundColor:COLORS.WHITE, position:'absolute', bottom:0, left:0, right:0, paddingTop:15}}>
                    <SectionComponent>
@@ -110,7 +110,7 @@ const DetailsShopScreen = ({navigation, route}: any) => {
                    </SectionComponent>
                    <SectionComponent>
                         <RowComponent justify='space-between'>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={()=>navigation.navigate('Cart')} >
                                 <ShoppingCart size={40}  color={COLORS.AZURE_BLUE} />
                             </TouchableOpacity>
                             <ButtonComponent styles={{width:'80%'}} type='#00ADEF' text='Đến trang thanh toán'/>
