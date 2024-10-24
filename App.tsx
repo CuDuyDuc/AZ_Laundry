@@ -5,7 +5,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
 import AppRouters from './src/navigators/AppRouters';
 import store from './src/redux/store';
-import { Toaster } from 'burnt/web';
 const App = () => {
 
   return (
