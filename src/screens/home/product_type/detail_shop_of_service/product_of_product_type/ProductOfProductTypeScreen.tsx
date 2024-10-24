@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { ContainerComponent, HeaderComponent, SectionComponent, TextComponent } from '../../../../../components'
-import COLORS from '../../../../../assets/colors/Colors'
 import { FONTFAMILY } from '../../../../../../assets/fonts'
+import productAPI from '../../../../../apis/productAPI'
+import COLORS from '../../../../../assets/colors/Colors'
+import { ContainerComponent, HeaderComponent, SectionComponent, TextComponent } from '../../../../../components'
 import CardProductOfProductType from '../../../../../components/CardProductOfProductTypeComponent'
 import { ProductModel } from '../../../../../model/product'
-import productAPI from '../../../../../apis/productAPI'
 import { useRole } from '../../../../../permission/permission'
-
 const ProductOfProductTypeScreen = ({navigation,route}:any) => {
     const {data, infoShop}=route.params
     
     const [products,setProducts]= useState<ProductModel[]>([])
     const [loading, setLoading] = useState<boolean>(true);
-    const { isUser, isShop } = useRole();
+    const { isUser } = useRole();
     const getDataProducts = async () => {
       try {
           const res = await productAPI.HandleProduct(`/get-product-by-user/${infoShop._id??infoShop.id}/and-product/${data._id}`)
@@ -34,7 +33,7 @@ const ProductOfProductTypeScreen = ({navigation,route}:any) => {
         <TextComponent text={`${isUser?'Danh sách dịch vụ':'Dịch vụ của tôi'}`} color={COLORS.DARK_GRAY} font={FONTFAMILY.montserrat_semibold}/>
         <CardProductOfProductType isLoading={loading} products={products} />
       </SectionComponent>
-  </ContainerComponent>
+    </ContainerComponent>
   )
 }
 

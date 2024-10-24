@@ -8,17 +8,21 @@ import TextComponent from './TextComponent';
 import { FONTFAMILY } from '../../assets/fonts';
 import { AddSquare, Minus } from 'iconsax-react-native';
 import ButtonComponent from './ButtonComponent';
+import { useAxiosAddCart } from '../hooks/useAxiosAddCart';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../redux/reducers/authReducer';
+import { useRole } from '../permission/permission';
 
 interface Props{
     isLoading?:boolean,
     groupProductsByServiceType?:any
-    isCart:boolean
 }
 
 const CardProductComponent = (props:Props) => {
-    const {isLoading,groupProductsByServiceType,isCart}=props
+    const {isLoading,groupProductsByServiceType}=props
     const [expandedGroups, setExpandedGroups] = useState<{ [key: string]: boolean }>({});
-
+    const user = useSelector(authSelector)
+    const {isUser}= useRole()
   // Function to toggle "show more" or "show less"
   const toggleShowMore = (serviceTypeName: string) => {
     setExpandedGroups((prev:any) => ({
@@ -35,21 +39,11 @@ const CardProductComponent = (props:Props) => {
                     <TextComponent styles={{ paddingVertical: 3 }} text={item.short_description} color={COLORS.HEX_LIGHT_GRAY} size={13} />
                     <RowComponent justify='space-between'>
                         <TextComponent text={`${item.product_price} vnđ`} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium}/>
-                        {isCart?(
-                            <RowComponent justify='space-between'>
-                                <TouchableOpacity>
-                                    <Minus size={25} variant='Bold' color={COLORS.GRAY_WHITE} />
-                                </TouchableOpacity>
-                                <TextComponent text={'02'} color={COLORS.GRAY_WHITE} font={FONTFAMILY.montserrat_medium} styles={{marginHorizontal:5}}/>
-                                <TouchableOpacity>
-                                    <AddSquare size={25} variant='Bold' color={COLORS.GRAY_WHITE} />
-                                </TouchableOpacity>
-                        </RowComponent>
-                        ):(
-                            <TouchableOpacity>
+                        {isUser?(
+                            <TouchableOpacity onPress={()=> useAxiosAddCart({id_product:item._id, id_user:user.id,cart_subtotal:item.product_price,product_quantity:1})}>
                                 <AddSquare size={25} variant='Bold' color={COLORS.AZURE_BLUE} />
                             </TouchableOpacity>
-                        )}
+                        ):(<View></View>)}
                     </RowComponent>
                 </View>
             </RowComponent>

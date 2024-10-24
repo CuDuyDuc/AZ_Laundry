@@ -41,12 +41,25 @@ const OrderHistoryScreen= ({navigation}: any) => {
 
   return (
     <ContainerComponent>
+
+      <HeaderComponent title='Thông tin cá nhân' />
+      <RowComponent justify="space-around" styles={{ paddingVertical: 10, backgroundColor: '#fff' }}>
+
       <HeaderComponent title='Lịch sử đơn hàng'  isBack onBack={() => navigation.goBack()}/>
       <RowComponent justify="space-around" styles={{ paddingVertical: 10, backgroundColor: COLORS.WHITE }}>
+
         {['Chờ xác nhận', 'Chờ lấy hàng', 'Đã xong', 'Đánh giá'].map((tab) => ( // set trạng thái cho tab
           <TouchableOpacity
             key={tab}
             onPress={() => setActiveTab(tab)}
+
+            style={{ borderBottomWidth: activeTab === tab ? 2 : 0, borderBottomColor: '#2A9DF4' }}>
+            <TextComponent
+              text={tab}
+              size={14}
+              color={activeTab === tab ? '#2A9DF4' : '#999'}
+              font={activeTab === tab ? 'bold' : 'normal'}/>
+
             style={{ borderBottomWidth: activeTab === tab ? 2 : 0, borderBottomColor: COLORS.AZURE_BLUE }}>
             <TextComponent
               text={tab}
@@ -55,10 +68,10 @@ const OrderHistoryScreen= ({navigation}: any) => {
               font={activeTab === tab ? 'bold' : 'normal'}
               styles={{fontFamily: FONTFAMILY.montserrat_bold}}
             />
+
           </TouchableOpacity>
         ))}
       </RowComponent>
-
       <ScrollView>
         <CardOrderComponent orders={filterOrdersByTab()} />
       </ScrollView>
