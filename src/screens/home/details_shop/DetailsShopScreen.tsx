@@ -16,8 +16,8 @@ const DetailsShopScreen = ({navigation, route}: any) => {
     const [products,setProducts]= useState<ProductModel[]>([])
     const getDataDetailShop = async () => {
         try {
-            const res = await authenticationAPI.HandleAuthentication(`/get-user-by-id?id_user=${data._id}`);
-            const dataShop:UserModel[] = res.data
+            const res:any = await authenticationAPI.HandleAuthentication(`/get-user-by-id?id_user=${data._id}`);
+            const dataShop:UserModel[] = res
             setDetailShop(dataShop)
             setLoading(false);
         } catch (error) {

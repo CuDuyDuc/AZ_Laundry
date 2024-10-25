@@ -4,6 +4,8 @@ import { useChatContext } from '../context/ChatContext';
 import { globalStyle } from '../styles/globalStyle';
 import ColumnComponent from './ColumnComponent';
 import TextComponent from './TextComponent';
+import COLORS from '../assets/colors/Colors';
+import { FONTFAMILY } from '../../assets/fonts';
 
 interface Props {
     image: string;
@@ -39,7 +41,7 @@ const CardListFriend = (props: Props) => {
                         />
                     ) : undefined}
                 </View>
-                <TextComponent text={getLastWord(name)} />
+                <TextComponent text={getLastWord(name)} font={FONTFAMILY.montserrat_medium} color={COLORS.DARK_BLUE}  size={12}/>
             </ColumnComponent>
         </TouchableOpacity>
     );

@@ -36,11 +36,11 @@ const CardProductOfProductType = (props: Props) => {
                         <TextComponent text={`${item.cart_subtotal} vnđ`} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} />
                         <RowComponent justify='space-between'>
                             <TouchableOpacity onPress={()=>onPressMinus && onPressMinus(item)}>
-                                <Minus size={25} variant='Bold' color={COLORS.GRAY_WHITE} />
+                                <Minus size={25} variant='Bold' color={COLORS.AZURE_BLUE} />
                             </TouchableOpacity>
                             <TextComponent text={item.product_quantity.toString()} color={COLORS.GRAY_WHITE} font={FONTFAMILY.montserrat_medium} styles={{ marginHorizontal: 5 }} />
                             <TouchableOpacity onPress={()=>onPressPlus && onPressPlus(item)}>
-                                <AddSquare size={25} variant='Bold' color={COLORS.GRAY_WHITE} />
+                                <AddSquare size={25} variant='Bold' color={COLORS.AZURE_BLUE} />
                             </TouchableOpacity>
                         </RowComponent>
                     </RowComponent>

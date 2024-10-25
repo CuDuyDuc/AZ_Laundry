@@ -10,7 +10,7 @@ import * as Burnt from 'burnt'
 import COLORS from '../../assets/colors/Colors'
 import { FONTFAMILY } from '../../../assets/fonts'
 
-const CartScreen = () => {
+const CartScreen = ({navigation}: any) => {
     const [carts,setCarts]= useState<CartModel[]>([])
     const [loading, setLoading] = useState<boolean>(true);
     const [total, setTotal] = useState<number>(0);
@@ -90,7 +90,7 @@ const CartScreen = () => {
     },[carts])
     return (
         <View style={{backgroundColor:COLORS.WHISPER_GRAY,position:'relative', flex:1}}>
-            <HeaderComponent title={`Giỏ hàng`}  />
+            <HeaderComponent title={`Giỏ hàng`} isBack onBack={() => navigation.goBack()}/>
             <SectionComponent styles={{marginTop:15}}>
                 <CardProductOfProductType onPressPlus={handlePlus} onPressMinus={handleMinus} isCart={true} carts={carts} isLoading={loading}/>
             </SectionComponent>

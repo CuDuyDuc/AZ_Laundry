@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CardComponent, CardListFriend, ContainerComponent, SectionComponent } from '../../components';
 import { useChatContext } from '../../context/ChatContext';
 import { authSelector } from '../../redux/reducers/authReducer';
+import COLORS from '../../assets/colors/Colors';
 
 const MessageScreen = ({navigation}:any) => {
     const dispatch = useDispatch();
@@ -16,7 +17,7 @@ const MessageScreen = ({navigation}:any) => {
     };
     
     return (
-        <ContainerComponent>
+        <ContainerComponent styleBackground={{backgroundColor:COLORS.WHITE}}>
             <SectionComponent styles={{marginTop:20}}>
                 <FlatList
                     horizontal
@@ -25,7 +26,7 @@ const MessageScreen = ({navigation}:any) => {
                     keyExtractor={(item) => item._id.toString()}
                     renderItem={({ item }) => (
                         <CardListFriend
-                            name={item.name}
+                            name={item.fullname}
                             image={item.photo}
                             onPress={() => createChat(user.id, item._id)}
                             idUserPosition={item._id}
