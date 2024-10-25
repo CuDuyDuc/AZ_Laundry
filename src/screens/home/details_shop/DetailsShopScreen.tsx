@@ -103,7 +103,7 @@ const DetailsShopScreen = ({navigation, route}: any) => {
                         <RowComponent justify='space-between'>
                             <RowComponent>
                                 <Message size={18} variant='Bold' color={COLORS.AZURE_BLUE} />
-<TextComponent styles={{ marginLeft: 5 }} text={'Hỗ trợ khách hàng'} color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
+                                <TextComponent styles={{ marginLeft: 5 }} text={'Hỗ trợ khách hàng'} color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
                             </RowComponent>
                             <ButtonComponent type='link' text='Chat với chúng tôi'/>
                         </RowComponent>
