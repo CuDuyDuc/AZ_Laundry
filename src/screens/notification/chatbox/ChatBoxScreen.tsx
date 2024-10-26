@@ -15,7 +15,7 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
     const user = useSelector(authSelector);
     const [sendMessage, setSendMessage] = useState('');
     const [isMessageSent, setIsMessageSent] = useState(false); 
-    const { currentChat, messages, sendTextMessage } = useChatContext();
+    const { currentChat, messages, sendTextMessage,onlineUsers } = useChatContext();
     const { recipientUser } = useAxiosRecipient({ chats: currentChat, user });
     const flatListRef = useRef<FlatList>(null);
     useEffect(() => {
@@ -54,7 +54,7 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
             }, 100);
         }
     }, [isMessageSent]);
-
+    const isActive = onlineUsers.some((user: any) => user?.userId === recipientUser?._id);
     return (
         <View style={{ flex: 1 }}>
             <View style={[globalStyle.shadowCard, { zIndex: 1 }]}>
