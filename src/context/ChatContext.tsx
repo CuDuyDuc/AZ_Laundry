@@ -51,39 +51,39 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
     const [allUsers, setAllUsers] = useState<any>([]);
 
     useEffect(() => {
-        const newSocket = io(appInfo.URL_SOCKET); 
+        const newSocket = io(appInfo.URL_SOCKET);
         setSocket(newSocket);
         return () => {
             newSocket.disconnect();
         };
-    }, [user]); 
+    }, [user]);
 
     useEffect(() => {
         if (socket == null) return;
-        socket.emit('addNewUser', user?.id); 
+        socket.emit('addNewUser', user?.id);
         socket.on('getOnlineUsers', (res: any) => {
             setOnlineUsers(res);
-            
         });
         return () => {
             socket.off('getOnlineUsers');
         };
-    }, [socket]); 
+    }, [socket]);
 
     useEffect(() => {
         if (socket == null) return;
         const recipientId = currentChat?.members?.find((id: any) => id !== user?.id); 
+        console.log(recipientId);
+        
         socket.emit('sendMessage', { ...newMessage, recipientId }); 
     }, [newMessage]);
 
     useEffect(() => {
         if (socket == null) return;
         socket.on('getMessage', (res: any) => {
-            if (currentChat?._id !== res.chatId) return; 
-            setMessages((prev: any) => [...prev, res]); 
-            
+            if (currentChat?._id !== res.chatId) return;
+            setMessages((prev: any) => [...prev, res]);
         });
-        
+
         socket.on('getNotification', (res: any) => {
             const isChatOpen = currentChat?.members.some((id: any) => id === res.senderId);
             if (isChatOpen) {
@@ -104,8 +104,7 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
                 const response: any = await authenticationAPI.HandleAuthentication('/get-users');
                 const pChats = response.filter((u: any) => {
                     let isChatCreated = false;
-                    if(user?.role_id.name_role===u.role_id.name_role) return false
-                    if (user?.id === u._id ) return false;
+                    if (user?.id === u._id) return false;
                     if (userChats) {
                         isChatCreated = userChats?.some((chat: any) => {
                             return chat.members[0] === u._id || chat.members[1] === u._id;
@@ -126,7 +125,6 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
             setIsUserChatsLoading(true);
             try {
                 const response = await chatAPI.HandleChat(`/find-user-chat/${user?.id}`);
-                
                 setUserChats(response);
                 setIsUserChatsLoading(false);
                 setUserChatsError(null);
@@ -218,7 +216,6 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
                 return el;
             }
         });
-        
         updateCurrentChat(desiredChat);
         setNotifications(mNotfications);
     }, []);

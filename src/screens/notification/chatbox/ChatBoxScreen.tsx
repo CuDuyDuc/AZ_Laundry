@@ -15,7 +15,7 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
     const user = useSelector(authSelector);
     const [sendMessage, setSendMessage] = useState('');
     const [isMessageSent, setIsMessageSent] = useState(false); 
-    const { currentChat, messages, sendTextMessage,onlineUsers } = useChatContext();
+    const { currentChat, messages, sendTextMessage } = useChatContext();
     const { recipientUser } = useAxiosRecipient({ chats: currentChat, user });
     const flatListRef = useRef<FlatList>(null);
     useEffect(() => {
@@ -54,10 +54,10 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
             }, 100);
         }
     }, [isMessageSent]);
-    const isActive = onlineUsers.some((user: any) => user?.userId === recipientUser?._id);
+
     return (
         <View style={{ flex: 1 }}>
-            <View style={[globalStyle.shadowCard, { zIndex: 1, width:'100%' }]}>
+            <View style={[globalStyle.shadowCard, { zIndex: 1 }]}>
                 <SectionComponent styles={{ marginTop: 60 }}>
                     <RowComponent>
                         <TouchableOpacity style={{ marginEnd: 20 }} onPress={() => navigation.goBack()}>
@@ -72,7 +72,7 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
                                     />
                                 ) : (
                                     <Image
-                                        source={{uri: 'https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png'}}
+                                        source={{ uri: 'https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png' }}
                                         style={{ marginEnd: 15, width: 35, height: 35, borderRadius: 30 }}
                                     />
                                 )}
@@ -97,7 +97,7 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
                     </RowComponent>
                 </SectionComponent>
             </View>
-            <SectionComponent styles={{ flex: 1,paddingBottom:150 }}>
+            <SectionComponent styles={{ flex: 1 }}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     ref={flatListRef}
@@ -122,8 +122,7 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
                 />
             </SectionComponent>
             <View
-                style={[{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 15 }, globalStyle.shadowCardTop]}
-            >
+                style={[{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 15 }, globalStyle.shadowCardTop]}>
                 <RowComponent justify="space-between">
                     <RowComponent styles={{ marginEnd: 20 }}>
                         <TouchableOpacity style={{ marginEnd: 20 }}>
@@ -139,7 +138,7 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
                             onChange={(e) => setSendMessage(e)}
                             backgroundColor={COLORS.WHISPER_GRAY}
                             placeholder="Nhắn tin"
-                            style={{ width: '70%', minHeight: 40, borderRadius: 20, paddingStart: 5 ,marginTop:8}}
+                            style={{ width: '70%', minHeight: 40, borderRadius: 20, paddingStart: 5 }}
                         />
                         <TouchableOpacity style={{ marginEnd: 20 }} onPress={handleSendMessage}>
                             <Send size="25" color={COLORS.AZURE_BLUE} variant="Bold" />

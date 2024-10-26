@@ -19,7 +19,7 @@ interface Props {
 }
 
 const CardComponent = (props: Props) => {
-    const { chats, user, isRead,onPress } = props;
+    const { chats, user, isRead, onPress } = props;
     const { recipientUser } = useAxiosRecipient({ chats, user });
     const { onlineUsers, notifications, allUsers } = useChatContext();
     const { lastestMessage } = useAxiosLastesMessage(chats);
@@ -47,7 +47,7 @@ const CardComponent = (props: Props) => {
                     {recipientUser?.photo != null ? (
                         <Image source={{ uri: recipientUser.photo }} style={globalStyle.avatarImage} />
                     ) : (
-                        <Image source={{uri: 'https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png'}} style={globalStyle.avatarImage} />
+                        <Image source={{ uri: 'https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png' }} style={globalStyle.avatarImage} />
                     )}
                     {isActive ? <View style={globalStyle.dotGreenActive} /> : undefined}
                 </View>
