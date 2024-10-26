@@ -20,6 +20,8 @@ import MessageComponent from './MessageComponent';
 import ColumnComponent from './ColumnComponent';
 import CardListFriend from './CardListFriend';
 import CardComponent from './CardComponent';
+import BottomSheetComponent from './BottomSheetComponent';
+import ParentComponent from './ParentComponent';
 export {
     ButtonComponent,
     ContainerComponent,
@@ -42,5 +44,7 @@ export {
     MessageComponent,
     ColumnComponent,
     CardListFriend,
-    CardComponent
+    CardComponent,
+    BottomSheetComponent,
+    ParentComponent
 }

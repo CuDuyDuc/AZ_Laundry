@@ -13,6 +13,7 @@ import {
     CardShopComponent,
     CardTipCompnent,
     ContainerComponent,
+    ParentComponent,
     RowComponent,
     SectionComponent,
     SwipeComponent,
@@ -143,7 +144,8 @@ const HomeScreen = ({ route, navigation }: any) => {
                 <TextComponent text={"Mách mẹo vặt"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15}/>
             </SectionComponent>
             <SectionComponent>
-                <CardTipCompnent />
+                {/* <CardTipCompnent /> */}
+                <ParentComponent />
             </SectionComponent>
             <SectionComponent>
                 <RowComponent justify='space-between'>
