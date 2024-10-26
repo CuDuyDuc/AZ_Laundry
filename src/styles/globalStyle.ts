@@ -91,6 +91,15 @@ export const globalStyle = StyleSheet.create({
         bottom: 0,
         right: 0,
     },
+    dotGreenActiveChatBox: {
+        position: 'absolute',
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: 'green',
+        bottom: 0,
+        left:25,
+    },
     dotBlue: {
         position: 'absolute',
         width: 10,

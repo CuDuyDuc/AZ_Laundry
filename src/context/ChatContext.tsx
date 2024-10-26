@@ -63,6 +63,7 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
         socket.emit('addNewUser', user?.id); 
         socket.on('getOnlineUsers', (res: any) => {
             setOnlineUsers(res);
+            
         });
         return () => {
             socket.off('getOnlineUsers');
@@ -72,8 +73,6 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
     useEffect(() => {
         if (socket == null) return;
         const recipientId = currentChat?.members?.find((id: any) => id !== user?.id); 
-        console.log(recipientId);
-        
         socket.emit('sendMessage', { ...newMessage, recipientId }); 
     }, [newMessage]);
 
@@ -105,7 +104,8 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
                 const response: any = await authenticationAPI.HandleAuthentication('/get-users');
                 const pChats = response.filter((u: any) => {
                     let isChatCreated = false;
-                    if (user?.id === u._id) return false;
+                    if(user?.role_id.name_role===u.role_id.name_role) return false
+                    if (user?.id === u._id ) return false;
                     if (userChats) {
                         isChatCreated = userChats?.some((chat: any) => {
                             return chat.members[0] === u._id || chat.members[1] === u._id;
@@ -126,6 +126,7 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
             setIsUserChatsLoading(true);
             try {
                 const response = await chatAPI.HandleChat(`/find-user-chat/${user?.id}`);
+                
                 setUserChats(response);
                 setIsUserChatsLoading(false);
                 setUserChatsError(null);
@@ -217,10 +218,10 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
                 return el;
             }
         });
+        
         updateCurrentChat(desiredChat);
         setNotifications(mNotfications);
     }, []);
-
     return (
         <ChatContext.Provider
             value={{

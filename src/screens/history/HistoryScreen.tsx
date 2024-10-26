@@ -42,9 +42,6 @@ const OrderHistoryScreen= ({navigation}: any) => {
   return (
     <ContainerComponent>
 
-      <HeaderComponent title='Thông tin cá nhân' />
-      <RowComponent justify="space-around" styles={{ paddingVertical: 10, backgroundColor: '#fff' }}>
-
       <HeaderComponent title='Lịch sử đơn hàng'  isBack onBack={() => navigation.goBack()}/>
       <RowComponent justify="space-around" styles={{ paddingVertical: 10, backgroundColor: COLORS.WHITE }}>
 
@@ -58,9 +55,8 @@ const OrderHistoryScreen= ({navigation}: any) => {
               text={tab}
               size={14}
               color={activeTab === tab ? '#2A9DF4' : '#999'}
-              font={activeTab === tab ? 'bold' : 'normal'}/>
-
-            style={{ borderBottomWidth: activeTab === tab ? 2 : 0, borderBottomColor: COLORS.AZURE_BLUE }}>
+              font={activeTab === tab ? 'bold' : 'normal'}
+              styles={{ borderBottomWidth: activeTab === tab ? 2 : 0, borderBottomColor: COLORS.AZURE_BLUE }}/>
             <TextComponent
               text={tab}
               size={13}

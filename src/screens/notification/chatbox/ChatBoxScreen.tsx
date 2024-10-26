@@ -15,10 +15,9 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
     const user = useSelector(authSelector);
     const [sendMessage, setSendMessage] = useState('');
     const [isMessageSent, setIsMessageSent] = useState(false); 
-    const { currentChat, messages, sendTextMessage } = useChatContext();
+    const { currentChat, messages, sendTextMessage,onlineUsers } = useChatContext();
     const { recipientUser } = useAxiosRecipient({ chats: currentChat, user });
     const flatListRef = useRef<FlatList>(null);
-
     useEffect(() => {
         if (messages?.length > 0) {
             setTimeout(() => {
@@ -55,10 +54,10 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
             }, 100);
         }
     }, [isMessageSent]);
-
+    const isActive = onlineUsers.some((user: any) => user?.userId === recipientUser?._id);
     return (
         <View style={{ flex: 1 }}>
-            <View style={[globalStyle.shadowCard, { zIndex: 1 }]}>
+            <View style={[globalStyle.shadowCard, { zIndex: 1, width:'100%' }]}>
                 <SectionComponent styles={{ marginTop: 60 }}>
                     <RowComponent>
                         <TouchableOpacity style={{ marginEnd: 20 }} onPress={() => navigation.goBack()}>
@@ -77,8 +76,13 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
                                         style={{ marginEnd: 15, width: 35, height: 35, borderRadius: 30 }}
                                     />
                                 )}
+                                {isActive ? (
+                                    <View
+                                        style={globalStyle.dotGreenActiveChatBox}
+                                    />
+                                ) : undefined}
                                 <RowComponent justify="space-between" styles={{ flex: 1 }}>
-                                    <TextComponent text={recipientUser?.name} font={FONTFAMILY.montserrat_regular} />
+                                    <TextComponent text={recipientUser?.fullname} font={FONTFAMILY.montserrat_regular} color={COLORS.DARK_BLUE} />
                                     <RowComponent>
                                         <TouchableOpacity style={{ marginEnd: 20 }}>
                                             <Call size="25" color={COLORS.AZURE_BLUE} variant="Bold" />
@@ -93,7 +97,7 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
                     </RowComponent>
                 </SectionComponent>
             </View>
-            <SectionComponent styles={{ flex: 1 }}>
+            <SectionComponent styles={{ flex: 1,paddingBottom:150 }}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     ref={flatListRef}
@@ -129,13 +133,13 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
                             <Image1 size="25" color={COLORS.AZURE_BLUE} variant="Bold" />
                         </TouchableOpacity>
                     </RowComponent>
-                    <RowComponent justify="space-between">
+                    <RowComponent justify="space-between" >
                         <InputComponent
                             value={sendMessage}
                             onChange={(e) => setSendMessage(e)}
-                            backgroundColor={COLORS.HEX_LIGHT_GREY}
+                            backgroundColor={COLORS.WHISPER_GRAY}
                             placeholder="Nhắn tin"
-                            style={{ width: '70%', minHeight: 40, borderRadius: 20, paddingStart: 5 }}
+                            style={{ width: '70%', minHeight: 40, borderRadius: 20, paddingStart: 5 ,marginTop:8}}
                         />
                         <TouchableOpacity style={{ marginEnd: 20 }} onPress={handleSendMessage}>
                             <Send size="25" color={COLORS.AZURE_BLUE} variant="Bold" />

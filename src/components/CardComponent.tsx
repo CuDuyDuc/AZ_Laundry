@@ -28,7 +28,7 @@ const CardComponent = (props: Props) => {
         const sender = allUsers.find((user: any) => user._id === n.senderId);
         return {
             ...n,
-            senderName: sender?.name,
+            senderName: sender?.fullname,
         };
     }); //hàm này gọi ra biết được tên người tin nhắn để có thể thông báo
     const isActive = onlineUsers.some((user: any) => user.userId === recipientUser?._id);
@@ -53,7 +53,7 @@ const CardComponent = (props: Props) => {
                 </View>
                 <View style={{ flex: 1 }}>
                     <RowComponent justify="space-between">
-                        <TextComponent text={recipientUser?.name} font={FONTFAMILY.montserrat_medium} />
+                        <TextComponent text={recipientUser?.fullname} font={FONTFAMILY.montserrat_medium} color={COLORS.DARK_BLUE} />
                         <TextComponent
                             text={moment(lastestMessage?.createdAt).format('HH:mm')}
                             color={isRead ? COLORS.GRAY_WHITE : COLORS.HEX_BLACK}
