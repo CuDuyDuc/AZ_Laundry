@@ -57,6 +57,7 @@ const DetailsShopScreen = ({navigation, route}: any) => {
     useEffect(() => {
         getDataProducts();
     }, []);
+    
   return (
     <>
         {loading ? (
@@ -92,7 +93,9 @@ const DetailsShopScreen = ({navigation, route}: any) => {
                             <ArchiveAdd size={18} color={COLORS.GRAY_WHITE} />
                             <TextComponent styles={{ marginLeft: 5 }} text={details[0].data_user.order_count} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} size={13} />
                         </RowComponent>
-                        <ButtonComponent type='link' text='Xem đánh giá' color={COLORS.AZURE_BLUE}/> 
+                        <ButtonComponent type='link' text='Xem đánh giá' color={COLORS.AZURE_BLUE}  onPress={() => {
+                            navigation.navigate('SeeReviews')
+                        }}/> 
                     </RowComponent>
                 </SectionComponent>
                 <SectionComponent styles={{position:'relative', top:120,paddingBottom:520}}>
@@ -103,7 +106,7 @@ const DetailsShopScreen = ({navigation, route}: any) => {
                         <RowComponent justify='space-between'>
                             <RowComponent>
                                 <Message size={18} variant='Bold' color={COLORS.AZURE_BLUE} />
-<TextComponent styles={{ marginLeft: 5 }} text={'Hỗ trợ khách hàng'} color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
+                                <TextComponent styles={{ marginLeft: 5 }} text={'Hỗ trợ khách hàng'} color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
                             </RowComponent>
                             <ButtonComponent type='link' text='Chat với chúng tôi'/>
                         </RowComponent>

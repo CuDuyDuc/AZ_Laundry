@@ -18,6 +18,7 @@ import AllStoresScreen from './home/all_stores/AllStoresScreen';
 import DetailShopOfService from './home/product_type/detail_shop_of_service/DetailShopOfService';
 import ProductOfProductTypeScreen from './home/product_type/detail_shop_of_service/product_of_product_type/ProductOfProductTypeScreen';
 import ChatBoxScreen from './notification/chatbox/ChatBoxScreen';
+import SeeReviews from './SeeReviews';
 
 export {
     SplashScreen,
@@ -39,5 +40,6 @@ export {
     AllStoresScreen,
     DetailShopOfService,
     ProductOfProductTypeScreen,
-    ChatBoxScreen
+    ChatBoxScreen,
+    SeeReviews
 }
