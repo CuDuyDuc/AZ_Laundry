@@ -3,11 +3,11 @@ import { HeaderComponent } from '../components';
 import { MessageScreen, NotificationScreen } from '../screens';
 import React from 'react';
 
-const TopTabNavigator = () => {
+const TopTabNavigator = ({navigation}:any) => {
 
     const Tab = createMaterialTopTabNavigator();
     return (
-        <ChatContextProvider>
+        <>
             <HeaderComponent title='Thông báo' isBack onBack={() => navigation.goBack()} />
             < Tab.Navigator >
                 <Tab.Screen name="Tin nhắn" component={MessageScreen} />
