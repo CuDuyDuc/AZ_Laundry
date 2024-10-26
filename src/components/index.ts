@@ -22,6 +22,7 @@ import CardListFriend from './CardListFriend';
 import CardComponent from './CardComponent';
 import BottomSheetComponent from './BottomSheetComponent';
 import ParentComponent from './ParentComponent';
+import CheckBoxComponent from './CheckBoxComponent';
 export {
     ButtonComponent,
     ContainerComponent,
@@ -46,5 +47,6 @@ export {
     CardListFriend,
     CardComponent,
     BottomSheetComponent,
-    ParentComponent
+    ParentComponent,
+    CheckBoxComponent
 }

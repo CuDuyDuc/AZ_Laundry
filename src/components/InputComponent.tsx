@@ -22,7 +22,7 @@ interface Props {
   onEnd?: () => void;
   backgroundColor?: string;
   multiline?: boolean;
-  numberOfLines?: Number;
+  numberOfLines?: number;
 }
 
 const InputComponent = (props: Props) => {
@@ -37,7 +37,7 @@ const InputComponent = (props: Props) => {
     type,
     onEnd,
     backgroundColor,
-    multiline,
+    multiline = false,
     numberOfLines,
   } = props;
 
@@ -60,7 +60,7 @@ const InputComponent = (props: Props) => {
         autoCapitalize="none"
         onEndEditing={onEnd}
         multiline={multiline}
-        numberOfLines={1}
+        numberOfLines={numberOfLines}
       />
       {suffix ?? suffix}
       <TouchableOpacity
