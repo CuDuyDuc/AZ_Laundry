@@ -8,6 +8,8 @@ import { FONTFAMILY } from '../../../assets/fonts';
 import serviceAPI from '../../apis/serviceAPI';
 import COLORS from '../../assets/colors/Colors';
 import IMAGES from '../../assets/images/Images';
+PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+
 import {
     CardServiceComponent,
     CardShopComponent,
@@ -20,6 +22,7 @@ import {
 } from '../../components';
 import { service_type } from '../../model/service_type';
 import { authSelector } from '../../redux/reducers/authReducer';
+import Firebase from '../../configs/firebaseConfig';
 
 type Coordinates = {
     latitude: number | null;
@@ -50,6 +53,7 @@ const HomeScreen = ({ route, navigation }: any) => {
 
     useEffect(() => {
         getDataService_Type();
+        Firebase(user?.id)
     }, []);
     const requestLocationPermission = async () => {
         if (Platform.OS === 'android') {
