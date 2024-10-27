@@ -1,78 +1,86 @@
-import React, { useState } from 'react';
-import { TouchableOpacity } from 'react-native';
-import { CardOrderComponent, ContainerComponent, HeaderComponent, RowComponent, TextComponent } from '../../components';
-import { FONTFAMILY } from '../../../assets/fonts';
+import React from 'react';
+import { FlatList, View } from 'react-native';
+import { HeaderComponent, RowComponent, SectionComponent, BoxStatusShopOrderComponent, CardOrderShopComponent } from '../../components';
+import IMAGES from '../../assets/images/Images';
+import { Scroll } from 'iconsax-react-native';
 import { ScrollView } from 'react-native-virtualized-view';
 import COLORS from '../../assets/colors/Colors';
 
-const orders = [
-  {
-    id: '#123456',
-    productName: 'Áo sơ mi trắng',
-    status: 'Chờ xác nhận',
-    price: 150000,
-    quantity: 2,
-    imageUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg',
-  },
-  {
-    id: '#654321',
-    productName: 'Quần jean nam',
-    status: 'Chờ lấy hàng',
-    price: 300000,
-    quantity: 1,
-    imageUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg',
-  },
-  {
-    id: '#789012',
-    productName: 'Váy nữ',
-    status: 'Đã xong',
-    price: 250000,
-    quantity: 1,
-    imageUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg',
-  },
-];
 
-const OrderHistoryScreen= ({navigation}: any) => {
-  const [activeTab, setActiveTab] = useState<string>('Chờ xác nhận');
+const HistoryScreen = ({ navigation }: any) => {
+  const statusList = [
+    { status: 'Tất cả', number: 2 },
+    { status: 'Chờ duyệt', number: 0 },
+    { status: 'Đang giặt', number: 0 },
+    { status: 'Đang giao', number: 0 },
+    { status: 'Hoàn thành', number: 0 },
+    { status: 'Đã hủy', number: 0 },
+  ];
 
-  const filterOrdersByTab = () => {
-    return orders.filter((order) => order.status === activeTab);
+  const orderList = [
+    { id: '#972297A1', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
+    { id: '#972297A2', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
+    { id: '#972297A3', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
+    { id: '#972297A4', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
+    { id: '#972297A5', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
+    { id: '#972297A6', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
+    { id: '#972297A7', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
+    { id: '#972297A8', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
+    { id: '#972297A9', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
+  ];
+
+  // Hàm xử lý khi nhấn vào từng trạng thái
+  const handleStatusPress = (status: string) => {
+    console.log(`Selected status: ${status}`);
+    // Thêm logic để xử lý khi nhấn vào trạng thái, ví dụ: lọc orderList
+  };
+
+  const handleOrderPress = (status: string) => {
+    console.log('Selected order: ', status);
   };
 
   return (
-    <ContainerComponent>
+    <View style={{backgroundColor: COLORS.WHITE}}>
+      <HeaderComponent title="Đơn hàng" isBack onBack={() => navigation.goBack()} />
 
-      <HeaderComponent title='Lịch sử đơn hàng'  isBack onBack={() => navigation.goBack()}/>
-      <RowComponent justify="space-around" styles={{ paddingVertical: 10, backgroundColor: COLORS.WHITE }}>
-
-        {['Chờ xác nhận', 'Chờ lấy hàng', 'Đã xong', 'Đánh giá'].map((tab) => ( // set trạng thái cho tab
-          <TouchableOpacity
-            key={tab}
-            onPress={() => setActiveTab(tab)}
-
-            style={{ borderBottomWidth: activeTab === tab ? 2 : 0, borderBottomColor: '#2A9DF4' }}>
-            <TextComponent
-              text={tab}
-              size={14}
-              color={activeTab === tab ? '#2A9DF4' : '#999'}
-              font={activeTab === tab ? 'bold' : 'normal'}
-              styles={{ borderBottomWidth: activeTab === tab ? 2 : 0, borderBottomColor: COLORS.AZURE_BLUE }}/>
-            <TextComponent
-              text={tab}
-              size={13}
-              color={activeTab === tab ? COLORS.AZURE_BLUE : COLORS.HEX_LIGHT_GREY}
-              font={activeTab === tab ? 'bold' : 'normal'}
-              styles={{fontFamily: FONTFAMILY.montserrat_bold}}
+      <SectionComponent>
+        <FlatList
+          data={statusList}
+          horizontal
+          keyExtractor={(item) => item.status}
+          renderItem={({ item }) => (
+            <BoxStatusShopOrderComponent
+              status={item.status}
+              number={item.number}
+              onPress={() => handleStatusPress(item.status)}
             />
+          )}
+          contentContainerStyle={{ paddingHorizontal: 10 }}
+          showsHorizontalScrollIndicator={false}
+        />
+      </SectionComponent>
 
-          </TouchableOpacity>
-        ))}
-      </RowComponent>
-      <ScrollView>
-        <CardOrderComponent orders={filterOrdersByTab()} />
-      </ScrollView>
-    </ContainerComponent>
+      <SectionComponent styles={{ paddingBottom: 200 }}>
+
+        <FlatList
+          data={orderList}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <CardOrderShopComponent
+              id={item.id}
+              status={item.status}
+              price={item.price}
+              imgUrl={item.imgUrl}
+              dateOrder={item.dateOrder}
+              onPress={() => handleOrderPress(item.id)}
+            />
+          )}
+        />
+
+      </SectionComponent>
+    </View>
   );
 };
 
-export default OrderHistoryScreen;
+export default HistoryScreen;
