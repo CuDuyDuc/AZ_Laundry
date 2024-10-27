@@ -40,7 +40,7 @@ const ProfileScreen = ({ navigation }: any) => {
         <>
             <SectionComponent
                 styles={{ paddingHorizontal: 0,}}>
-                <HeaderComponent title="Tài khoản" isBack onBack={() => navigation.goBack()} />
+                <HeaderComponent title="Tài khoản" isBack onBack={() => navigation.goBack()}/>
                 <RowComponent
                     onPress={() => {
                         console.log('Test Account click!');

@@ -16,8 +16,8 @@ const DetailsShopScreen = ({navigation, route}: any) => {
     const [products,setProducts]= useState<ProductModel[]>([])
     const getDataDetailShop = async () => {
         try {
-            const res = await authenticationAPI.HandleAuthentication(`/get-user-by-id?id_user=${data._id}`);
-            const dataShop:UserModel[] = res.data
+            const res:any = await authenticationAPI.HandleAuthentication(`/get-user-by-id?id_user=${data._id}`);
+            const dataShop:UserModel[] = res
             setDetailShop(dataShop)
             setLoading(false);
         } catch (error) {
@@ -62,11 +62,11 @@ const DetailsShopScreen = ({navigation, route}: any) => {
         {loading ? (
             <ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} style={{marginTop:83}} />
         ) : (
-            <View style={{backgroundColor:COLORS.WHISPER_GRAY, position:'relative', flex:1}}>
+            <View style={{backgroundColor:COLORS.WHISPER_GRAY,position:'relative', flex:1}}>
                 <ImageBackground source={{uri:details[0].data_user.shop_banner}} style={{width:'100%', height:200}}>
                     <SectionComponent styles={{height: 83,flexDirection: 'column',justifyContent: 'center',}}>
                         <RowComponent styles={{marginTop: 35}} justify="flex-start">
-                            <TouchableOpacity onPress={()=>navigation.goBack()}>
+                                <TouchableOpacity onPress={()=>navigation.goBack()}>
                                 <ArrowLeft2 size="30" color={COLORS.WHITE} />
                             </TouchableOpacity>
                         </RowComponent>
@@ -95,22 +95,22 @@ const DetailsShopScreen = ({navigation, route}: any) => {
                         <ButtonComponent type='link' text='Xem đánh giá' color={COLORS.AZURE_BLUE}/> 
                     </RowComponent>
                 </SectionComponent>
-                <SectionComponent styles={{position:'relative', top:120, paddingBottom: 520}}>
-                    <CardProductComponent isCart={false} groupProductsByServiceType={groupProductsByServiceType(products)}/>
+                <SectionComponent styles={{position:'relative', top:120,paddingBottom:520}}>
+                    <CardProductComponent groupProductsByServiceType={groupProductsByServiceType(products)}/>
                 </SectionComponent>
                 <View style={{backgroundColor:COLORS.WHITE, position:'absolute', bottom:0, left:0, right:0, paddingTop:15}}>
                    <SectionComponent>
                         <RowComponent justify='space-between'>
                             <RowComponent>
                                 <Message size={18} variant='Bold' color={COLORS.AZURE_BLUE} />
-                                <TextComponent styles={{ marginLeft: 5 }} text={'Hỗ trợ khách hàng'} color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
+<TextComponent styles={{ marginLeft: 5 }} text={'Hỗ trợ khách hàng'} color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
                             </RowComponent>
                             <ButtonComponent type='link' text='Chat với chúng tôi'/>
                         </RowComponent>
                    </SectionComponent>
                    <SectionComponent>
                         <RowComponent justify='space-between'>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPress={()=>navigation.navigate('Cart')} >
                                 <ShoppingCart size={40}  color={COLORS.AZURE_BLUE} />
                             </TouchableOpacity>
                             <ButtonComponent styles={{width:'80%'}} type='#00ADEF' text='Đến trang thanh toán'/>

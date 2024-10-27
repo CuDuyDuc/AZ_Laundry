@@ -58,4 +58,55 @@ export const globalStyle = StyleSheet.create({
     card: {
         borderRadius: 8
     },
+    column: {
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+    },lineView: {
+        borderBottomWidth: 1,
+        borderBottomColor: 'gray',
+    },
+    avatarImage: {
+        width: 50,
+        height: 50,
+        borderRadius: 30,
+    },
+    shadowCardTop: {
+        backgroundColor: COLORS.WHITE,
+        shadowColor: 'rgba(0, 0, 0, 1)',
+        shadowOffset: {
+            width: 0,
+            height: -10, // Negative value to cast shadow upwards
+        },
+        shadowOpacity: 0.3,
+        shadowRadius: 4.65,
+        elevation: 10,
+    },
+    dotGreenActive: {
+        position: 'absolute',
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: 'green',
+        bottom: 0,
+        right: 0,
+    },
+    dotGreenActiveChatBox: {
+        position: 'absolute',
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: 'green',
+        bottom: 0,
+        left: 25,
+    },
+    dotBlue: {
+        position: 'absolute',
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: COLORS.AZURE_BLUE,
+        bottom: 0,
+        right: 0,
+    },
 })

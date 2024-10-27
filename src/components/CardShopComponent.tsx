@@ -61,7 +61,7 @@ const CardShopComponent = (props: Props) => {
         )
     };
     return (
-        <View  >
+        <View >
             {loading ? (
                 <ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />
             ) : (

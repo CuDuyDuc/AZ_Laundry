@@ -1,36 +1,54 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text, FlatList } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import notifee from '@notifee/react-native'
+import { NotificationModel } from '../../model/notification_model';
+import notificationAPI from '../../apis/notificationApi';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
+import { SectionComponent } from '../../components';
+import NotificationItem from '../../components/NotificationItem';
+import { eventEmitter } from '../../../index.js'
 const NotificationScreen = () => {
-    async function onDisplayNotification() {
-        // Request permissions (required for iOS)
-        await notifee.requestPermission()
-    
-        // Create a channel (required for Android)
-        const channelId = await notifee.createChannel({
-          id: 'default',
-          name: 'Default Channel',
-        });
-    
-        // Display a notification
-        await notifee.displayNotification({
-          title: 'Small Icon',
-          body: 'A notification using the small icon!',
-          android: {
-            channelId,
-            smallIcon: 'ic_launcher', // optional, defaults to 'ic_launcher'.
-            // pressAction is needed if you want the notification to open the app when pressed
-            pressAction: {
-              id: 'default',
-            },
-          },
-        });
-      }
+  const [listNoti, setListNoti] = useState<NotificationModel>();
+  const user = useSelector(authSelector);
+
+  const getListNotification = async () => {
+    const apiNoti = `/get-alls?userId=${user?.id}`;
+      
+      const res = await notificationAPI.HandleNotification
+        (
+        apiNoti,
+      );
+     setListNoti(() => res.data)
+  }
+
+  useEffect(()=> {
+    getListNotification(); 
+        // Lắng nghe sự kiện 'newNotification'
+        const subscription = eventEmitter.on('newNotification', getListNotification);
+
+        // Hủy lắng nghe sự kiện khi component unmount
+        return () => {
+          subscription.off('newNotification', getListNotification);
+        };
+  },[])
       
     return (
-        <View>
-            <Text>NotificationScreen</Text>
-        </View>
+      <FlatList
+      data={listNoti}
+      keyExtractor={(item : any) => item?._id.toString()}
+      renderItem={({item}) => (
+       <SectionComponent>
+       <NotificationItem 
+       title={item?.title}
+       message= {item?.message}
+       onUpdateList={getListNotification}
+       idItem={item?._id}
+       userId={user?.id}
+       />
+       </SectionComponent>
+      )}
+    />
     )
 }
 
