@@ -19,7 +19,11 @@ const IMAGES = {
     SlideShow: require('./slideshow1.png'),
     SlideShow1: require('./slideshow2.png'),
     SlideShow2: require('./slideshow3.png'),
-    demoImage:require('./bo_vest.png')
+    demoImage:require('./bo_vest.png'),
+    iconStatus: require('./iconstatus.png'),
+    iconadress: require('./iconadress.png'),
+    iconpayment: require('./iconpayment.png'),
+    line: require('./line.png'),
 }
 
 export default IMAGES
