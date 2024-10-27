@@ -19,6 +19,7 @@ const COLORS = {
     DARK_GRAY:"#656565",
     BLUE_LIGHT: '#edf3fc',
     GRAY: '#DDDDDD',
+    HEX_YELLOW: "#FFC700"
 }
 
 export default COLORS;
