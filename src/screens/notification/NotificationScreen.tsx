@@ -42,7 +42,7 @@ const NotificationScreen = () => {
             title={item?.title}
             message={item?.message}
             onUpdateList={getListNotification}
-            idItem={item?._id}
+            idItem={item?._id.toString()}
             userId={user?.id}
           />
         </SectionComponent>

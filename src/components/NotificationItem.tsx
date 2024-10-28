@@ -28,7 +28,7 @@ const NotificationItem = (props: Props) => {
       'delete',
     );
     if (res.status == 200) {
-      onUpdateList();
+      onUpdateList?.();
       Burnt.toast({
         title: 'Xoá thành công',
       });

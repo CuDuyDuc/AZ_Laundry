@@ -16,7 +16,7 @@ const firebaseConfig = {
     appId: "1:785851564656:web:317f8d81b801f7391e6ab5",
     measurementId: "G-3C0T7870VZ"
 };
-
+const VAPID_KEY = "BJq-T6nPdw3AvYLNTRVwDLWK6JlveLd0qGkp__eXgwnaJqMHUQxD3RGxa6tU1oRX9rXcLKkLnbYJhcFbK8-Pxbc"
 
 export default function Firebase(userId: string) {
     console.log({userId});
@@ -39,7 +39,7 @@ export default function Firebase(userId: string) {
         const hasPermissions = await messaging().hasPermission();
         function getFCMToken() {
             return messaging().getToken({
-                vapidKey: process.env.VAPID_KEY,
+                vapidKey: VAPID_KEY,
             });
         }
         if (Platform.OS === 'ios') {
