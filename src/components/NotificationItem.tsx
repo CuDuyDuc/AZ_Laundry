@@ -1,13 +1,12 @@
-import React from 'react';
-import {Image, View, StyleSheet, TouchableOpacity, Text} from 'react-native';
-import SectionComponent from './SectionComponent';
-import {appInfo} from '../apis/appInfo';
-import RowComponent from './RowComponent';
-import TextComponent from './TextComponent';
-import {Swipeable} from 'react-native-gesture-handler';
-import notificationAPI from '../apis/notificationApi';
 import * as Burnt from 'burnt';
+import React from 'react';
+import { Image, TouchableOpacity } from 'react-native';
+import { Swipeable } from 'react-native-gesture-handler';
+import notificationAPI from '../apis/notificationApi';
 import COLORS from '../assets/colors/Colors';
+import RowComponent from './RowComponent';
+import SectionComponent from './SectionComponent';
+import TextComponent from './TextComponent';
 interface Props {
   title?: string;
   message?: string;
@@ -46,7 +45,7 @@ const NotificationItem = (props: Props) => {
           height: '100%',
           borderRadius: 10,
         }}>
-        <TextComponent text={'Xoá'}> </TextComponent>
+        <TextComponent text={'Xoá'}/>
       </SectionComponent>
     </TouchableOpacity>
   );
