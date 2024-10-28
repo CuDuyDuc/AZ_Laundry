@@ -39,7 +39,7 @@ export default function Firebase(userId: string) {
         const hasPermissions = await messaging().hasPermission();
         function getFCMToken() {
             return messaging().getToken({
-                vapidKey: VAPID_KEY,
+                vapidKey: process.env.VAPID_KEY,
             });
         }
         if (Platform.OS === 'ios') {

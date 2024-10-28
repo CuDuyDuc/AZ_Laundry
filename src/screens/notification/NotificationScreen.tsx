@@ -8,7 +8,7 @@ import NotificationItem from '../../components/NotificationItem';
 import { NotificationModel } from '../../model/notification_model';
 import { authSelector } from '../../redux/reducers/authReducer';
 const NotificationScreen = () => {
-  const [listNoti, setListNoti] = useState<NotificationModel>();
+  const [listNoti, setListNoti] = useState<NotificationModel[]>();
   const user = useSelector(authSelector);
 
   const getListNotification = async () => {
