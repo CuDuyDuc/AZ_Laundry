@@ -13,8 +13,9 @@ interface Props {
   message?: string;
   idItem?: string;
   userId?: string;
-  onUpdateList?: string;
+  onUpdateList?: () => void;
 }
+
 const NotificationItem = (props: Props) => {
   const {title, message, idItem, userId, onUpdateList} = props;
 

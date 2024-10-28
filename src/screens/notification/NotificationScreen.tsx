@@ -9,7 +9,7 @@ import { SectionComponent } from '../../components';
 import NotificationItem from '../../components/NotificationItem';
 import { eventEmitter } from '../../../index.js'
 const NotificationScreen = () => {
-  const [listNoti, setListNoti] = useState<NotificationModel>();
+  const [listNoti, setListNoti] = useState<NotificationModel[]>();
   const user = useSelector(authSelector);
 
   const getListNotification = async () => {

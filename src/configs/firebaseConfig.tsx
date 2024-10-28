@@ -4,7 +4,6 @@ import 'firebase/analytics';
 
 import { initializeApp } from 'firebase/app';
 import { Platform } from 'react-native';
-import { VAPID_KEY } from '@env';
 import messaging from '@react-native-firebase/messaging';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FirebaseNotiAPI from '../apis/firebaseNotiAPI';
@@ -40,7 +39,7 @@ export default function Firebase(userId: string) {
         const hasPermissions = await messaging().hasPermission();
         function getFCMToken() {
             return messaging().getToken({
-                vapidKey: VAPID_KEY,
+                vapidKey: process.env.VAPID_KEY,
             });
         }
         if (Platform.OS === 'ios') {
