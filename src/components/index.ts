@@ -23,6 +23,8 @@ import CardComponent from './CardComponent';
 import CardOrderDetailComponent from './CardOrderDetailComponent';
 import BoxStatusShopOrderComponent from './BoxStatusShopOrderComponent';
 import CardOrderShopComponent from './CardOrderShopComponent';
+import BottomSheetComponent from './BottomSheetComponent';
+import CheckBoxComponent from './CheckBoxComponent';
 export {
     ButtonComponent,
     ContainerComponent,
@@ -48,5 +50,7 @@ export {
     CardComponent,
     CardOrderDetailComponent,
     BoxStatusShopOrderComponent,
-    CardOrderShopComponent
+    CardOrderShopComponent,
+    BottomSheetComponent,
+    CheckBoxComponent
 }

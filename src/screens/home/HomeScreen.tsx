@@ -1,5 +1,5 @@
 import { Notification } from 'iconsax-react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Image, PermissionsAndroid, Platform, TouchableOpacity } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { PERMISSIONS, RESULTS, request } from 'react-native-permissions';
@@ -11,6 +11,7 @@ import IMAGES from '../../assets/images/Images';
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 import {
+    BottomSheetComponent,
     CardServiceComponent,
     CardShopComponent,
     CardTipCompnent,
@@ -22,6 +23,7 @@ import {
 } from '../../components';
 import { service_type } from '../../model/service_type';
 import { authSelector } from '../../redux/reducers/authReducer';
+import { TipModel } from '../../model/tip_model';
 import Firebase from '../../configs/firebaseConfig';
 
 type Coordinates = {
@@ -38,6 +40,9 @@ const HomeScreen = ({ route, navigation }: any) => {
     });
     const [typeService, setTypeService] = useState<service_type[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+
+    const [selectedTip, setSelectedTip] = useState<TipModel | null>(null);
+    const bottomSheetRef = useRef<any>(null);
 
     const getDataService_Type = async () => {
         try {
@@ -106,8 +111,14 @@ const HomeScreen = ({ route, navigation }: any) => {
 
     }
 
+    
+    const handlePressItem = (item: TipModel) => {
+        setSelectedTip(item);
+        bottomSheetRef.current?.toggleBottomSheet();
+      };
     return (
-        <ContainerComponent styleBackground={{ backgroundColor: COLORS.WHISPER_GRAY }} isScroll>
+        <>
+                <ContainerComponent styleBackground={{ backgroundColor: COLORS.WHISPER_GRAY }} isScroll>
             <SectionComponent
                 styles={{
                     height: 83,
@@ -147,7 +158,7 @@ const HomeScreen = ({ route, navigation }: any) => {
                 <TextComponent text={"Mách mẹo vặt"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15}/>
             </SectionComponent>
             <SectionComponent>
-                <CardTipCompnent />
+                <CardTipCompnent onPress={handlePressItem}/>
             </SectionComponent>
             <SectionComponent>
                 <RowComponent justify='space-between'>
@@ -161,6 +172,9 @@ const HomeScreen = ({ route, navigation }: any) => {
                 <CardShopComponent onPress={handleDetailShop} limit={3} currentLatitude={currentLocation.latitude} currentLongitude={currentLocation.longitude} />
             </SectionComponent>
         </ContainerComponent>
+        <BottomSheetComponent ref={bottomSheetRef} selectedTip={selectedTip} />
+        </>
+
     );
 };
 

@@ -18,11 +18,14 @@ interface Props {
     style?: StyleProp<ViewStyle>;
     styleInput?: StyleProp<ViewStyle>;
     editKeyboard?: boolean;
+    multiline?: boolean;
+    numberOfLines?: number;
 }
 
 const InputComponent = (props: Props) => {
 
-    const { value, onChange, affix, placeholder, suffix, isPassword, allowClear, type, onEnd, backgroundColor, style, styleInput, editKeyboard} = props;
+    const { value, onChange, affix, placeholder, suffix, isPassword, allowClear, type, onEnd, backgroundColor, style, styleInput, editKeyboard,multiline = false,
+        numberOfLines,} = props;
 
     const [isShowPass, setIsShowPass] = useState(isPassword ?? false);
     return (
@@ -38,7 +41,10 @@ const InputComponent = (props: Props) => {
                 keyboardType={type ?? 'default'}
                 autoCapitalize="none"
                 onEndEditing={onEnd}
-                editable={editKeyboard ? false : true}/> 
+                editable={editKeyboard ? false : true}
+                multiline={multiline}
+                numberOfLines={numberOfLines}
+                /> 
             {suffix ?? suffix}
             <TouchableOpacity onPress={isPassword ? () => setIsShowPass(!isShowPass) : () => onChange('')}>
                 {isPassword ? (
