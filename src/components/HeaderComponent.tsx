@@ -1,6 +1,6 @@
-import { ArrowLeft2 } from 'iconsax-react-native';
-import React from 'react';
-import { StatusBar } from 'react-native';
+import { ArrowLeft2, ShoppingCart } from 'iconsax-react-native';
+import React, { ReactNode } from 'react';
+import { StatusBar, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FONTFAMILY } from '../../assets/fonts';
 import COLORS from '../assets/colors/Colors';
@@ -9,11 +9,13 @@ import { RowComponent, SectionComponent, SpaceComponent, TextComponent } from '.
 interface Props {
     title?: string;
     isBack?: Boolean;
-    onBack?: () => void
+    onBack?: () => void;
+    onPress?:()=>void;
+    suffix?: ReactNode
 }
-export default function HeaderComponent(props: Props) {
+const HeaderComponent=(props: Props)=> {
 
-    const { title, isBack, onBack } = props;
+    const { title, isBack, onBack,suffix, onPress } = props;
     return (
         <SectionComponent
             styles={{
@@ -29,14 +31,17 @@ export default function HeaderComponent(props: Props) {
             <RowComponent styles={{ marginTop: 35 }} justify="space-between" >
                 {isBack ? (<TouchableOpacity onPress={onBack}>
                     <ArrowLeft2 size="30" color={COLORS.WHITE} />
-                </TouchableOpacity>) : <SpaceComponent />}
+                </TouchableOpacity>) : <View ></View>}
                 <TextComponent
                     text={title}
                     font={FONTFAMILY.montserrat_medium}
                 />
-                <SpaceComponent />
+                {onPress ? (<TouchableOpacity onPress={onPress}>
+                    <ShoppingCart size="30" color={COLORS.WHITE} />
+                </TouchableOpacity>) : <View ></View>}
             </RowComponent>
         </SectionComponent>
     )
 }
 
+export default HeaderComponent
