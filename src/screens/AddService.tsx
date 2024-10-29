@@ -1,30 +1,32 @@
-import React, {useState} from 'react';
-import {Alert, Image, StyleSheet, TouchableOpacity} from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
+import React, { useState } from 'react';
+import { Alert, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
+import COLORS from '../assets/colors/Colors';
+import IMAGES from '../assets/images/Images';
 import {
   ButtonComponent,
-  ContainerComponent,
   HeaderComponent,
   InputComponent,
   KeyboardAvoidingViewWrapper,
-  RowComponent,
   SectionComponent,
   SpaceComponent,
-  TextComponent,
+  SpinnerComponent,
+  TextComponent
 } from '../components';
-import COLORS from '../assets/colors/Colors';
-import IMAGES from '../assets/images/Images';
 
 const initValues = {
-  serviceName: 'Áo khoác dài',
-  category: 'Giặt hấp > áo',
   image: null as string | null, // Change type to 'string | null'
+  serviceName: 'Áo khoác dài',
+  washing: '',
+  productType: '',
   price: '',
-  description: '',
+  ShortDescription: '',
+  DetailedDescription: '',
 };
 
 const AddService = ({navigation}: any) => {
   const [values, setValues] = useState(initValues);
+  const [selectedValue, setSelectedValue] = useState<string | null>(null);
 
   // Function to open the image library and select an image
   const handleImagePick = async () => {
@@ -57,12 +59,13 @@ const AddService = ({navigation}: any) => {
       Alert.alert('Error', 'Please select an image before saving.');
       return;
     }
-
     const formData = new FormData();
     formData.append('serviceName', values.serviceName);
-    formData.append('category', values.category);
+    formData.append('washing', values.washing);
+    formData.append('productType', values.productType);
     formData.append('price', values.price);
-    formData.append('description', values.description);
+    formData.append('ShortDescription', values.ShortDescription);
+    formData.append('DetailedDescription', values.DetailedDescription);
 
     formData.append('image', {
       uri: values.image,
@@ -91,30 +94,31 @@ const AddService = ({navigation}: any) => {
     }
   };
 
+  const handleChangeValue = (key: string, value: string) => {
+    const data: any = {...values};
+    data[`${key}`] = value;
+    setValues(data);
+  };
+
   return (
-    <ContainerComponent>
+    <KeyboardAvoidingViewWrapper>
       <HeaderComponent
-        title="Chi tiết dịch vụ"
+        title="Thêm dịch vụ"
         isBack
         onBack={() => navigation.goBack()}
       />
-
-      <SectionComponent styles={{marginTop: 40}}>
-        <TextComponent text="Tên Dịch vụ" color={COLORS.HEX_BLACK} size={15} />
-        <InputComponent
-          value={values.serviceName}
-          onChange={text => setValues({...values, serviceName: text})}
-          backgroundColor={COLORS.WHITE}
+      <SectionComponent
+        styles={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: 20,
+        }}>
+        <TextComponent
+          text="Upload Hình Ảnh"
+          color={COLORS.HEX_BLACK}
+          size={15}
         />
-        <TextComponent text="Danh mục" color={COLORS.HEX_BLACK} size={15} />
-        <InputComponent
-          value={values.category}
-          onChange={text => setValues({...values, category: text})}
-          backgroundColor={COLORS.WHITE}
-        />
-        <TextComponent text="Upload hình ảnh:" color={COLORS.HEX_BLACK} />
-
-        {/* TouchableOpacity wraps the image or placeholder to trigger handleImagePick */}
+        <SpaceComponent height={5} />
         <TouchableOpacity onPress={handleImagePick}>
           {values.image ? (
             <Image source={{uri: values.image}} style={styles.image} />
@@ -122,44 +126,86 @@ const AddService = ({navigation}: any) => {
             <Image source={IMAGES.ImgShop1} style={styles.image} />
           )}
         </TouchableOpacity>
-        <SpaceComponent height={20} />
-        <TextComponent text="Giá" color={COLORS.HEX_BLACK} size={15} />
-        <RowComponent justify="space-between">
-          <SectionComponent styles={{flex: 1}}>
-            <InputComponent
-              placeholder="0"
-              value={values.price}
-              onChange={text => setValues({...values, price: text})}
-              backgroundColor={COLORS.WHITE}
-            />
-          </SectionComponent>
-          <SectionComponent styles={{flex: 1}}>
-            <InputComponent
-              placeholder="KG"
-              value={values.price}
-              onChange={text => setValues({...values, price: text})}
-              backgroundColor={COLORS.WHITE}
-            />
-          </SectionComponent>
-        </RowComponent>
-        <TextComponent text="Mô Tả:" color={COLORS.HEX_BLACK} size={15} />
+      </SectionComponent>
+      <SectionComponent>
+        <TextComponent text="Tên Dịch vụ" color={COLORS.HEX_BLACK} size={13} />
+        <SpaceComponent height={10} />
         <InputComponent
-          value={values.description}
-          onChange={text => setValues({...values, description: text})}
+          value={values.serviceName}
+          onChange={val => handleChangeValue('serviceName', val)}
+          allowClear
+          backgroundColor={COLORS.WHITE}
+        />
+
+        <TextComponent text="Loại Giặt" color={COLORS.HEX_BLACK} size={13} />
+        <SpaceComponent height={10} />
+        <SpinnerComponent
+          items={[
+            {label: 'Giặt Hấp', value: 'giat_hap'},
+            {label: 'Giặt Sấy', value: 'giat_say'},
+            {label: 'Giặt Khô', value: 'giat_kho'},
+          ]}
+          placeholder="Loại Giặt: "
+          onValueChange={values => console.log(values)}
+        />
+      </SectionComponent>
+
+      <SectionComponent>
+        <TextComponent
+          text="Loại sản phẩm"
+          color={COLORS.HEX_BLACK}
+          size={13}
+        />
+        <SpaceComponent height={10} />
+        <SpinnerComponent
+          items={[
+            {label: 'áo', value: 'ao'},
+            {label: 'Quần', value: 'quan'},
+            {label: 'Giày dép', value: 'giay_dep'},
+          ]}
+          placeholder="Loại Sản Phẩm: "
+          onValueChange={values => console.log(values)}
+        />
+      </SectionComponent>
+
+      <SectionComponent>
+        <TextComponent text="Giá" color={COLORS.HEX_BLACK} size={13} />
+        <InputComponent
+          placeholder="10000VNd"
+          value={values.price}
+          onChange={val => handleChangeValue("price", val)}
+          backgroundColor={COLORS.WHITE}
+        />
+        <TextComponent text="Mô Tả ngắn" color={COLORS.HEX_BLACK} size={13} />
+        <InputComponent
+          value={values.ShortDescription}
+          onChange={val => handleChangeValue("ShortDescription", val)}
           backgroundColor={COLORS.WHITE}
           multiline={true}
-          numberOfLines={4}
+          numberOfLines={2}
+        />
+        <TextComponent
+          text="Mô Tả chi tiết"
+          color={COLORS.HEX_BLACK}
+          size={13}
+        />
+        <InputComponent
+          value={values.DetailedDescription}
+          onChange={val => handleChangeValue('DetailedDescription', val)}
+          allowClear
+          backgroundColor={COLORS.WHITE}
+          multiline={true}
+          numberOfLines={6}
         />
       </SectionComponent>
       <SectionComponent>
         <ButtonComponent
-          styles={{marginTop: 50}}
-          text="Lưu thay đổi"
+          text="Thêm dịch vụ"
           type="#00ADEF"
           onPress={handleUpload}
         />
       </SectionComponent>
-    </ContainerComponent>
+    </KeyboardAvoidingViewWrapper>
   );
 };
 

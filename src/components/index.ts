@@ -25,6 +25,7 @@ import BoxStatusShopOrderComponent from './BoxStatusShopOrderComponent';
 import CardOrderShopComponent from './CardOrderShopComponent';
 import BottomSheetComponent from './BottomSheetComponent';
 import CheckBoxComponent from './CheckBoxComponent';
+import SpinnerComponent from './SpinnerComponent';
 export {
     ButtonComponent,
     ContainerComponent,
@@ -52,5 +53,7 @@ export {
     BoxStatusShopOrderComponent,
     CardOrderShopComponent,
     BottomSheetComponent,
-    CheckBoxComponent
+    CheckBoxComponent,
+    SpinnerComponent
+
 }
