@@ -1,25 +1,24 @@
-import React, {useState} from 'react';
-import {Alert, Image, StyleSheet, TouchableOpacity} from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
+import React, { useState } from 'react';
+import { Alert, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
+import COLORS from '../assets/colors/Colors';
+import IMAGES from '../assets/images/Images';
 import {
   ButtonComponent,
-  ContainerComponent,
   HeaderComponent,
   InputComponent,
   KeyboardAvoidingViewWrapper,
-  RowComponent,
   SectionComponent,
   SpaceComponent,
   SpinnerComponent,
-  TextComponent,
+  TextComponent
 } from '../components';
-import COLORS from '../assets/colors/Colors';
-import IMAGES from '../assets/images/Images';
 
 const initValues = {
   image: null as string | null, // Change type to 'string | null'
   serviceName: 'Áo khoác dài',
-  category: 'Giặt hấp > áo',
+  washing: '',
+  productType: '',
   price: '',
   ShortDescription: '',
   DetailedDescription: '',
@@ -60,11 +59,10 @@ const AddService = ({navigation}: any) => {
       Alert.alert('Error', 'Please select an image before saving.');
       return;
     }
-    const handleValueChange = (value: string) => {};
-
     const formData = new FormData();
     formData.append('serviceName', values.serviceName);
-    formData.append('category', values.category);
+    formData.append('washing', values.washing);
+    formData.append('productType', values.productType);
     formData.append('price', values.price);
     formData.append('ShortDescription', values.ShortDescription);
     formData.append('DetailedDescription', values.DetailedDescription);
@@ -96,8 +94,14 @@ const AddService = ({navigation}: any) => {
     }
   };
 
+  const handleChangeValue = (key: string, value: string) => {
+    const data: any = {...values};
+    data[`${key}`] = value;
+    setValues(data);
+  };
+
   return (
-    <ContainerComponent isScroll>
+    <KeyboardAvoidingViewWrapper>
       <HeaderComponent
         title="Thêm dịch vụ"
         isBack
@@ -123,13 +127,13 @@ const AddService = ({navigation}: any) => {
           )}
         </TouchableOpacity>
       </SectionComponent>
-
       <SectionComponent>
         <TextComponent text="Tên Dịch vụ" color={COLORS.HEX_BLACK} size={13} />
         <SpaceComponent height={10} />
         <InputComponent
           value={values.serviceName}
-          onChange={text => setValues({...values, serviceName: text})}
+          onChange={val => handleChangeValue('serviceName', val)}
+          allowClear
           backgroundColor={COLORS.WHITE}
         />
 
@@ -169,13 +173,13 @@ const AddService = ({navigation}: any) => {
         <InputComponent
           placeholder="10000VNd"
           value={values.price}
-          onChange={text => setValues({...values, price: text})}
+          onChange={val => handleChangeValue("price", val)}
           backgroundColor={COLORS.WHITE}
         />
         <TextComponent text="Mô Tả ngắn" color={COLORS.HEX_BLACK} size={13} />
         <InputComponent
           value={values.ShortDescription}
-          onChange={text => setValues({...values, ShortDescription: text})}
+          onChange={val => handleChangeValue("ShortDescription", val)}
           backgroundColor={COLORS.WHITE}
           multiline={true}
           numberOfLines={2}
@@ -187,7 +191,8 @@ const AddService = ({navigation}: any) => {
         />
         <InputComponent
           value={values.DetailedDescription}
-          onChange={text => setValues({...values, DetailedDescription: text})}
+          onChange={val => handleChangeValue('DetailedDescription', val)}
+          allowClear
           backgroundColor={COLORS.WHITE}
           multiline={true}
           numberOfLines={6}
@@ -200,7 +205,7 @@ const AddService = ({navigation}: any) => {
           onPress={handleUpload}
         />
       </SectionComponent>
-    </ContainerComponent>
+    </KeyboardAvoidingViewWrapper>
   );
 };
 
