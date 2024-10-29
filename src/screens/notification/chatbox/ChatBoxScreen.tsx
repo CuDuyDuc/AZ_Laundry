@@ -14,8 +14,8 @@ import { globalStyle } from '../../../styles/globalStyle';
 const ChatBoxScreen = ({ navigation, route }: any) => {
     const user = useSelector(authSelector);
     const [sendMessage, setSendMessage] = useState('');
-    const [isMessageSent, setIsMessageSent] = useState(false);
-    const { currentChat, messages, sendTextMessage, onlineUsers } = useChatContext();
+    const [isMessageSent, setIsMessageSent] = useState(false); 
+    const { currentChat, messages, sendTextMessage,onlineUsers } = useChatContext();
     const { recipientUser } = useAxiosRecipient({ chats: currentChat, user });
     const flatListRef = useRef<FlatList>(null);
     useEffect(() => {
@@ -55,10 +55,9 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
         }
     }, [isMessageSent]);
     const isActive = onlineUsers.some((user: any) => user?.userId === recipientUser?._id);
-    
     return (
         <View style={{ flex: 1 }}>
-            <View style={[globalStyle.shadowCard, { zIndex: 1, width: '100%' }]}>
+            <View style={[globalStyle.shadowCard, { zIndex: 1 }]}>
                 <SectionComponent styles={{ marginTop: 60 }}>
                     <RowComponent>
                         <TouchableOpacity style={{ marginEnd: 20 }} onPress={() => navigation.goBack()}>
@@ -98,7 +97,7 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
                     </RowComponent>
                 </SectionComponent>
             </View>
-            <SectionComponent styles={{ flex: 1, paddingBottom: 150 }}>
+            <SectionComponent styles={{ flex: 1 }}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     ref={flatListRef}
@@ -139,7 +138,7 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
                             onChange={(e) => setSendMessage(e)}
                             backgroundColor={COLORS.WHISPER_GRAY}
                             placeholder="Nhắn tin"
-                            style={{ width: '70%', minHeight: 40, borderRadius: 20, paddingStart: 5, marginTop: 8 }}
+                            style={{ width: '70%', minHeight: 40, borderRadius: 20, paddingStart: 5 }}
                         />
                         <TouchableOpacity style={{ marginEnd: 20 }} onPress={handleSendMessage}>
                             <Send size="25" color={COLORS.AZURE_BLUE} variant="Bold" />

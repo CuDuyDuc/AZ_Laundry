@@ -6,6 +6,7 @@ import { ContainerComponent, HeaderComponent, SectionComponent, TextComponent } 
 import CardProductOfProductType from '../../../../../components/CardProductOfProductTypeComponent'
 import { ProductModel } from '../../../../../model/product'
 import { useRole } from '../../../../../permission/permission'
+import { ShoppingCart } from 'iconsax-react-native'
 const ProductOfProductTypeScreen = ({navigation,route}:any) => {
     const {data, infoShop}=route.params
     
@@ -28,7 +29,7 @@ const ProductOfProductTypeScreen = ({navigation,route}:any) => {
     },[])
   return (
     <ContainerComponent>
-      <HeaderComponent title={`${data.id_service_type.service_type_name} > ${data.product_type_name}`} isBack onBack={() => navigation.goBack()} suffix onPress={() => navigation.navigate("Cart")} />
+      <HeaderComponent title={`${data.id_service_type.service_type_name} > ${data.product_type_name}`} isBack onBack={() => navigation.goBack()} />
       <SectionComponent styles={{marginTop:15}}>
         <TextComponent text={`${isUser?'Danh sách dịch vụ':'Dịch vụ của tôi'}`} color={COLORS.DARK_GRAY} font={FONTFAMILY.montserrat_semibold}/>
         <CardProductOfProductType isLoading={loading} products={products} />

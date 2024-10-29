@@ -64,7 +64,7 @@ const DetailsShopScreen = ({navigation, route}: any) => {
             <ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} style={{marginTop:83}} />
         ) : (
             <View style={{backgroundColor:COLORS.WHISPER_GRAY,position:'relative', flex:1}}>
-                <ImageBackground source={{uri:details[0].data_user.shop_banner}} style={{width:'100%', height:200}}>
+                <ImageBackground source={{uri:details[0]?.data_user.shop_banner}} style={{width:'100%', height:200}}>
                     <SectionComponent styles={{height: 83,flexDirection: 'column',justifyContent: 'center',}}>
                         <RowComponent styles={{marginTop: 35}} justify="flex-start">
                                 <TouchableOpacity onPress={()=>navigation.goBack()}>
@@ -76,9 +76,9 @@ const DetailsShopScreen = ({navigation, route}: any) => {
                 <SectionComponent styles={{backgroundColor:COLORS.WHITE,marginHorizontal:40, borderRadius:25,position:'absolute',top:120,left:0,right:0}}>
                     <RowComponent justify='center' styles={{marginVertical:8}}>
                         <Verify size="30" color={COLORS.TEAL} variant='Bold' />
-                        <TextComponent text={details[0].data_user.shop_name} color={COLORS.DARK_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
+                        <TextComponent text={details[0]?.data_user.shop_name} color={COLORS.DARK_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
                     </RowComponent>
-                    <TextComponent text={`Địa chỉ: ${details[0].address}.`} color={COLORS.GRAY_WHITE} size={12}/>
+                    <TextComponent text={`Địa chỉ: ${details[0]?.address}.`} color={COLORS.GRAY_WHITE} size={12}/>
                     <TextComponent text={'Giặt khô, đảm bảo trước khi giao cho khách.'} color={COLORS.HEX_BLACK} size={12} styles={{marginVertical:8}}/>
                     <TextComponent text={'Ủi thẳng, xả cực thơm.'} color={COLORS.HEX_BLACK} size={12}/>
                     <TextComponent text={'99% khách hàng hài lòng về dịch vụ.'} color={COLORS.HEX_BLACK} size={12} styles={{marginVertical:8}}/>
@@ -87,11 +87,11 @@ const DetailsShopScreen = ({navigation, route}: any) => {
                     <RowComponent justify='space-between' >
                         <RowComponent>
                             <Star1 size={18} variant="Bold" color={COLORS.YELLOW} />
-                            <TextComponent styles={{ marginLeft: 5 }} text={details[0].data_user.star_rating} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} size={13} />
+                            <TextComponent styles={{ marginLeft: 5 }} text={details[0]?.data_user.star_rating} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} size={13} />
                         </RowComponent>
                         <RowComponent>
                             <ArchiveAdd size={18} color={COLORS.GRAY_WHITE} />
-                            <TextComponent styles={{ marginLeft: 5 }} text={details[0].data_user.order_count} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} size={13} />
+                            <TextComponent styles={{ marginLeft: 5 }} text={details[0]?.data_user.order_count} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} size={13} />
                         </RowComponent>
                         <ButtonComponent type='link' text='Xem đánh giá' color={COLORS.AZURE_BLUE} onPress={() => {navigation.navigate("SeeReviewsScreen")}}/> 
                     </RowComponent>
@@ -104,7 +104,7 @@ const DetailsShopScreen = ({navigation, route}: any) => {
                         <RowComponent justify='space-between'>
                             <RowComponent>
                                 <Message size={18} variant='Bold' color={COLORS.AZURE_BLUE} />
-<TextComponent styles={{ marginLeft: 5 }} text={'Hỗ trợ khách hàng'} color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
+                                <TextComponent styles={{ marginLeft: 5 }} text={'Hỗ trợ khách hàng'} color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
                             </RowComponent>
                             <ButtonComponent type='link' text='Chat với chúng tôi'/>
                         </RowComponent>
