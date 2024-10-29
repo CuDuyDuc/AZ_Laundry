@@ -1,3 +1,5 @@
+import { G } from "react-native-svg";
+
 const COLORS = {
     HEX_BLACK : '#0C0F14',
     HEX_LIGHT_GRAY : '#52555A',
@@ -16,6 +18,8 @@ const COLORS = {
     GRAY_WHITE:"#AAA6B9",
     DARK_GRAY:"#656565",
     BLUE_LIGHT: '#edf3fc',
+    GRAY: '#DDDDDD',
+    HEX_YELLOW: "#FFC700"
 }
 
 export default COLORS;

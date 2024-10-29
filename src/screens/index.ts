@@ -19,6 +19,12 @@ import DetailShopOfService from './home/product_type/detail_shop_of_service/Deta
 import ProductOfProductTypeScreen from './home/product_type/detail_shop_of_service/product_of_product_type/ProductOfProductTypeScreen';
 import ChatBoxScreen from './notification/chatbox/ChatBoxScreen';
 
+import OrderDetatailsScreen from './profile/OrderDetailsScreen';
+import OrderHistoryScreen from './profile/OrderHistoryScreen';
+import BookingScreen from './home/ServiceBooking/BookingScreen';
+import DateWeek from './home/ServiceBooking/DateWeek';
+import SeeReviewsScreen from './home/SeeReviewsScreen';
+
 export {
     SplashScreen,
     OnBoardingScreen,
@@ -39,5 +45,12 @@ export {
     AllStoresScreen,
     DetailShopOfService,
     ProductOfProductTypeScreen,
-    ChatBoxScreen
+    ChatBoxScreen,
+
+    OrderDetatailsScreen,
+    OrderHistoryScreen,
+    BookingScreen,
+    DateWeek,
+    SeeReviewsScreen
+
 }

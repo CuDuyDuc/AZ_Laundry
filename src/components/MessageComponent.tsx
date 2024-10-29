@@ -1,8 +1,8 @@
-import { View, Text } from 'react-native';
 import React from 'react';
-import TextComponent from './TextComponent';
+import { View } from 'react-native';
 import COLORS from './../assets/colors/Colors';
 import ColumnComponent from './ColumnComponent';
+import TextComponent from './TextComponent';
 
 interface Props {
     text?: string;

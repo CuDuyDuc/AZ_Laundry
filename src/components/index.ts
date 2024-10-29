@@ -20,6 +20,12 @@ import MessageComponent from './MessageComponent';
 import ColumnComponent from './ColumnComponent';
 import CardListFriend from './CardListFriend';
 import CardComponent from './CardComponent';
+import CardOrderDetailComponent from './CardOrderDetailComponent';
+import BoxStatusShopOrderComponent from './BoxStatusShopOrderComponent';
+import CardOrderShopComponent from './CardOrderShopComponent';
+import BottomSheetComponent from './BottomSheetComponent';
+import CheckBoxComponent from './CheckBoxComponent';
+import SpinnerComponent from './SpinnerComponent';
 export {
     ButtonComponent,
     ContainerComponent,
@@ -42,5 +48,12 @@ export {
     MessageComponent,
     ColumnComponent,
     CardListFriend,
-    CardComponent
+    CardComponent,
+    CardOrderDetailComponent,
+    BoxStatusShopOrderComponent,
+    CardOrderShopComponent,
+    BottomSheetComponent,
+    CheckBoxComponent,
+    SpinnerComponent
+
 }

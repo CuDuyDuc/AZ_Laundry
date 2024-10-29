@@ -1,17 +1,16 @@
-import { View, Text, TouchableOpacity, Image, ActivityIndicator, FlatList, Button } from 'react-native'
-import React, { useState } from 'react'
-import { ProductModel } from '../model/product';
-import RowComponent from './RowComponent';
-import IMAGES from '../assets/images/Images';
-import COLORS from '../assets/colors/Colors';
-import TextComponent from './TextComponent';
-import { FONTFAMILY } from '../../assets/fonts';
-import { AddSquare, Minus } from 'iconsax-react-native';
-import ButtonComponent from './ButtonComponent';
-import { useAxiosAddCart } from '../hooks/useAxiosAddCart';
+import { AddSquare } from 'iconsax-react-native';
+import React, { useState } from 'react';
+import { ActivityIndicator, FlatList, Image, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
-import { authSelector } from '../redux/reducers/authReducer';
+import { FONTFAMILY } from '../../assets/fonts';
+import COLORS from '../assets/colors/Colors';
+import { useAxiosAddCart } from '../hooks/useAxiosAddCart';
+import { ProductModel } from '../model/product';
 import { useRole } from '../permission/permission';
+import { authSelector } from '../redux/reducers/authReducer';
+import ButtonComponent from './ButtonComponent';
+import RowComponent from './RowComponent';
+import TextComponent from './TextComponent';
 
 interface Props{
     isLoading?:boolean,
@@ -23,7 +22,6 @@ const CardProductComponent = (props:Props) => {
     const [expandedGroups, setExpandedGroups] = useState<{ [key: string]: boolean }>({});
     const user = useSelector(authSelector)
     const {isUser}= useRole()
-  // Function to toggle "show more" or "show less"
   const toggleShowMore = (serviceTypeName: string) => {
     setExpandedGroups((prev:any) => ({
       ...prev,
