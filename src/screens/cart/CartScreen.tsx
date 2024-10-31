@@ -9,7 +9,6 @@ import CardProductOfProductType from '../../components/CardProductOfProductTypeC
 import * as Burnt from 'burnt'
 import COLORS from '../../assets/colors/Colors'
 import { FONTFAMILY } from '../../../assets/fonts'
-import BookingScreen from '../home/ServiceBooking/BookingScreen'
 
 const CartScreen = ({navigation}: any) => {
     const [carts,setCarts]= useState<CartModel[]>([])
@@ -111,7 +110,7 @@ const CartScreen = ({navigation}: any) => {
                     type="#00ADEF"
                     text="Thanh toán ngay"
                     onPress={() => {
-                    navigation.navigate(BookingScreen);
+                    navigation.navigate("BookingScreen");
                     }}/>
                 </SectionComponent>
             </View>
