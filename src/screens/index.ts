@@ -21,9 +21,9 @@ import ChatBoxScreen from './notification/chatbox/ChatBoxScreen';
 
 import OrderDetatailsScreen from './profile/OrderDetailsScreen';
 import OrderHistoryScreen from './profile/OrderHistoryScreen';
-import BookingScreen from './home/ServiceBooking/BookingScreen';
-import DateWeek from './home/ServiceBooking/DateWeek';
 import SeeReviewsScreen from './home/SeeReviewsScreen';
+import BookingScreen from './cart/ServiceBooking/BookingScreen';
+import DateWeek from './cart/ServiceBooking/DateWeek';
 
 export {
     SplashScreen,
