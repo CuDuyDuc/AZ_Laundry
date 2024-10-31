@@ -1,6 +1,5 @@
-import { View, Text } from 'react-native'
 import React from 'react'
-import { CardShopComponent, ContainerComponent, HeaderComponent, SectionComponent, TextComponent } from '../../../../components'
+import { CardShopComponent, ContainerComponent, HeaderComponent, SectionComponent } from '../../../../components'
 
 const DetailShopOfService = ({navigation,route}:any) => {
   const {data,latitude,longitude}= route.params

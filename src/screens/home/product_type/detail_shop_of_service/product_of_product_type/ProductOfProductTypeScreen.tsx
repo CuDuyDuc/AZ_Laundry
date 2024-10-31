@@ -6,7 +6,6 @@ import { ContainerComponent, HeaderComponent, SectionComponent, TextComponent } 
 import CardProductOfProductType from '../../../../../components/CardProductOfProductTypeComponent'
 import { ProductModel } from '../../../../../model/product'
 import { useRole } from '../../../../../permission/permission'
-import { ShoppingCart } from 'iconsax-react-native'
 const ProductOfProductTypeScreen = ({navigation,route}:any) => {
     const {data, infoShop}=route.params
     

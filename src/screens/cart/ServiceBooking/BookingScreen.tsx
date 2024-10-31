@@ -5,6 +5,7 @@ import {
   Image,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
 } from 'react-native';
 import {FONTFAMILY} from '../../../../assets/fonts';
@@ -96,7 +97,7 @@ const BookingScreen = ({navigation, route}: any) => {
             }}>
             <RowComponent
               justify="space-between"
-              styles={{backgroundColor: COLORS.WHITE, padding: 10}}>
+              styles={{backgroundColor: COLORS.WHITE, paddingVertical: 8, borderRadius: 16}}>
               <TextComponent
                 text="Chọn thời gian nhận đồ"
                 color={COLORS.HEX_LIGHT_GREY}
@@ -105,28 +106,15 @@ const BookingScreen = ({navigation, route}: any) => {
               <ArrowRight2 size={28} color={COLORS.HEX_LIGHT_GREY} />
             </RowComponent>
           </TouchableOpacity>
-          <SectionComponent>
+          <SectionComponent styles= {{paddingHorizontal: 0}}>
             <SpaceComponent height={10} />
             <RowComponent justify="space-between">
-              <Text style={{color: COLORS.AZURE_BLUE, fontSize: 10}}>
-                Giờ gửi: {sendTime}
-              </Text>
-              <Text
-                style={{
-                  color: COLORS.AZURE_BLUE,
-                  fontSize: 10,
-                  marginEnd: 8,
-                }}>
-                Ngày gửi: {moment(sendDate).format('DD-MM-YYYY')}
-              </Text>
+              <TextComponent text={`Giờ gửi: ${sendTime}`} color={COLORS.AZURE_BLUE} size={14}/>
+              <TextComponent text={`Ngày gửi: ${moment(sendDate).format('DD-MM-YYYY')}`} color={COLORS.AZURE_BLUE} size={14}/>
             </RowComponent>
             <RowComponent justify="space-between">
-              <Text style={{color: COLORS.AZURE_BLUE, fontSize: 10}}>
-                Giờ nhận: {receiveTime}
-              </Text>
-              <Text style={{color: COLORS.AZURE_BLUE, fontSize: 10}}>
-                Ngày nhận: {moment(receiveDate).format('DD-MM-YYYY')}
-              </Text>
+              <TextComponent text={`Giờ nhận: ${receiveTime}`} color={COLORS.AZURE_BLUE} size={14}/>
+              <TextComponent text={`Ngày gửi: ${moment(receiveDate).format('DD-MM-YYYY')}`} color={COLORS.AZURE_BLUE} size={14}/>
             </RowComponent>
           </SectionComponent>
           <TextComponent
@@ -136,7 +124,7 @@ const BookingScreen = ({navigation, route}: any) => {
           />
         </SectionComponent>
         <SectionComponent>
-          <RowComponent justify="flex-start">
+          <RowComponent justify="space-between">
             <TouchableOpacity onPress={() => setSelectedProductType('wet')}>
               <CheckBoxComponent
                 icon={
@@ -152,7 +140,6 @@ const BookingScreen = ({navigation, route}: any) => {
                 title="Sản phẩm dạng ướt"
               />
             </TouchableOpacity>
-            <SpaceComponent width={30} />
             <TouchableOpacity onPress={() => setSelectedProductType('dry')}>
               <CheckBoxComponent
                 icon={
@@ -170,12 +157,11 @@ const BookingScreen = ({navigation, route}: any) => {
             </TouchableOpacity>
           </RowComponent>
         </SectionComponent>
-
         <SectionComponent>
           <TextComponent text="Đầu ship" color={COLORS.HEX_BLACK} size={14} />
         </SectionComponent>
         <SectionComponent>
-          <RowComponent justify="flex-start">
+          <RowComponent justify="space-between">
             <TouchableOpacity onPress={() => setSelectedShipOption('oneway')}>
               <CheckBoxComponent
                 icon={
@@ -191,8 +177,6 @@ const BookingScreen = ({navigation, route}: any) => {
                 title="Ship 1 chiều"
               />
             </TouchableOpacity>
-            <SpaceComponent width={85} />
-
             <TouchableOpacity
               onPress={() => setSelectedShipOption('roundtrip')}>
               <CheckBoxComponent
@@ -215,14 +199,19 @@ const BookingScreen = ({navigation, route}: any) => {
           <TextComponent text="Ghi chú" color={COLORS.HEX_BLACK} size={14} />
         </SectionComponent>
         <SectionComponent>
-          <InputComponent
-            placeholder="Nhập ghi chú"
+          <TextInput 
+            placeholder='Nhập ghi chú'
             value={notes}
-            onChange={setNotes}
-            multiline={true}
-            numberOfLines={6}
-            backgroundColor={COLORS.WHITE}
-          />
+            onChangeText={setNotes}
+            multiline = {true}
+            numberOfLines={8}
+            style = {{
+              backgroundColor: COLORS.WHITE, 
+              textAlignVertical: 'top',
+              paddingHorizontal: 20,
+              paddingTop: 10, // Adjust this value to move the text to the top
+              paddingBottom: 0, // Remove bottom padding
+              borderRadius: 16,}}/>
         </SectionComponent>
       </KeyboardAvoidingViewWrapper>
       <SectionComponent>
@@ -234,7 +223,7 @@ const BookingScreen = ({navigation, route}: any) => {
           size={12}
         />
         <SpaceComponent height={20} />
-        <ButtonComponent type="#00ADEF" text="Tiêp theo" />
+        <ButtonComponent type="#00ADEF" text="Tiếp theo" />
       </SectionComponent>
     </>
   );

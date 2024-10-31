@@ -1,5 +1,6 @@
+import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   Platform,
@@ -9,19 +10,16 @@ import {
   View,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
-import ContainerComponent from '../../../components/ContainerComponent';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { FONTFAMILY } from '../../../../assets/fonts';
+import COLORS from '../../../assets/colors/Colors';
 import {
-  ButtonComponent,
   HeaderComponent,
   RowComponent,
   SectionComponent,
   SpaceComponent,
-  TextComponent,
+  TextComponent
 } from '../../../components';
-import COLORS from '../../../assets/colors/Colors';
-import {FONTFAMILY} from '../../../../assets/fonts';
-import {globalStyle} from '../../../styles/globalStyle';
+import ContainerComponent from '../../../components/ContainerComponent';
 
 const {width, height} = Dimensions.get('window');
 
@@ -123,7 +121,7 @@ export default function DateWeek({ref, navigation}: any) {
           />
           <RowComponent justify="space-between">
             <TextComponent
-              text="ngày Gửi đồ"
+              text="Ngày gửi đồ"
               color={COLORS.HEX_BLACK}
               size={14}
             />
@@ -188,7 +186,7 @@ export default function DateWeek({ref, navigation}: any) {
             color={COLORS.HEX_LIGHT_GREY}
             size={14}
           />
-          <SpaceComponent height={10} />
+          <SpaceComponent height={20} />
           <TouchableOpacity
             style={styles.timePickerButton}
             onPress={() => setShowSendTimePicker(true)}>
@@ -211,7 +209,7 @@ export default function DateWeek({ref, navigation}: any) {
         <SectionComponent>
           <RowComponent justify="space-between">
             <TextComponent
-              text="Ngày Nhận đồ"
+              text="Ngày nhận đồ"
               color={COLORS.HEX_BLACK}
               size={14}
             />
@@ -229,6 +227,7 @@ export default function DateWeek({ref, navigation}: any) {
             loop={false}
             showsPagination={false}
             height={height * 0.2}
+            style={{ marginHorizontal: 16 }}
             onIndexChanged={handleReceiveWeekChange}>
             {weeks.receiveWeeks.map((dates, index) => (
               <RowComponent styles={styles.itemRow} key={index}>
@@ -280,7 +279,7 @@ export default function DateWeek({ref, navigation}: any) {
             color={COLORS.HEX_LIGHT_GREY}
             size={14}
           />
-          <SpaceComponent height={10} />
+          <SpaceComponent height={20} />
           <TouchableOpacity
             style={styles.timePickerButton}
             onPress={() => setShowReceiveTimePicker(true)}>
