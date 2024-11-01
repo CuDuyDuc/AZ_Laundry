@@ -6,6 +6,7 @@ import authenticationAPI from '../apis/authAPI';
 import chatAPI from '../apis/chatAPI';
 import messageAPI from '../apis/messageAPI';
 import { authSelector } from '../redux/reducers/authReducer';
+import { log } from 'console';
 
 interface ChatContextType {
     userChats: any;
@@ -105,6 +106,7 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
                 const pChats = response.filter((u: any) => {
                     let isChatCreated = false;
                     if (user?.id === u._id) return false;
+                    if (user?.role_id.name_role === u.role_id.name_role || u.role_id.name_role==="admin") return false
                     if (userChats) {
                         isChatCreated = userChats?.some((chat: any) => {
                             return chat.members[0] === u._id || chat.members[1] === u._id;

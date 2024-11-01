@@ -102,14 +102,13 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
                         <CardProductComponent groupProductsByServiceType={groupProductsByServiceType(products)} />
                     </SectionComponent>
                     <View style={{ backgroundColor: COLORS.WHITE, position: 'absolute', bottom: 0, left: 0, right: 0, paddingTop: 15 }}>
-                        <SectionComponent>
-                            <RowComponent justify='space-between'>
+                        <SectionComponent styles={{ justifyContent: 'flex-start' }}>
+                            <TouchableOpacity>
                                 <RowComponent>
                                     <Message size={18} variant='Bold' color={COLORS.AZURE_BLUE} />
                                     <TextComponent styles={{ marginLeft: 5 }} text={'Hỗ trợ khách hàng'} color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
                                 </RowComponent>
-                                <ButtonComponent type='link' text='Chat với chúng tôi' />
-                            </RowComponent>
+                            </TouchableOpacity>
                         </SectionComponent>
                         <SectionComponent>
                             <RowComponent justify='space-between'>
