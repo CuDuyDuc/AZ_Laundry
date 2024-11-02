@@ -44,6 +44,7 @@ const NotificationScreen = () => {
             onUpdateList={getListNotification}
             idItem={item?._id.toString()}
             userId={user?.id}
+            status={item?.notiStatus}
           />
         </SectionComponent>
       )}

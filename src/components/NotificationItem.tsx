@@ -12,11 +12,12 @@ interface Props {
   message?: string;
   idItem?: string;
   userId?: string;
+  status?: string;
   onUpdateList?: () => void;
 }
 
 const NotificationItem = (props: Props) => {
-  const {title, message, idItem, userId, onUpdateList} = props;
+  const {title, message, idItem, userId, onUpdateList, status} = props;
 
   const handleDeleteNotification = async () => {
     const res = await notificationAPI.HandleNotification(
@@ -34,6 +35,21 @@ const NotificationItem = (props: Props) => {
       });
     }
   };
+
+  const markNotificationAsRead = async() => {
+    const res = await notificationAPI.HandleNotification(
+      '/update-mark-read',
+      {
+        userId: userId,
+        notificationDetailsId: idItem,
+      },
+      'patch',
+    );
+    if (res.status == 200) {
+      onUpdateList?.();
+    }
+  }
+
   // Hàm để render thùng rác khi vuốt sang trái
   const renderRightActions = () => (
     <TouchableOpacity onPress={handleDeleteNotification}>
@@ -53,12 +69,13 @@ const NotificationItem = (props: Props) => {
 
   return (
     <Swipeable renderRightActions={renderRightActions}>
+      <TouchableOpacity onPress={markNotificationAsRead}>
       <RowComponent
         justify="space-between"
         styles={{
           paddingVertical: 15,
           paddingHorizontal: 10,
-          backgroundColor: 'white',
+          backgroundColor: status === 'unread' ? COLORS.HEX_LIGHT_GREY : COLORS.WHITE,
           borderRadius: 10,
         }}>
         <RowComponent>
@@ -93,6 +110,7 @@ const NotificationItem = (props: Props) => {
           </SectionComponent>
         </RowComponent>
       </RowComponent>
+      </TouchableOpacity>
     </Swipeable>
   );
 };
