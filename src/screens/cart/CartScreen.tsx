@@ -9,7 +9,6 @@ import CardProductOfProductType from '../../components/CardProductOfProductTypeC
 import * as Burnt from 'burnt'
 import COLORS from '../../assets/colors/Colors'
 import { FONTFAMILY } from '../../../assets/fonts'
-import BookingScreen from '../home/ServiceBooking/BookingScreen'
 
 const CartScreen = ({navigation}: any) => {
     const [carts,setCarts]= useState<CartModel[]>([])
@@ -73,6 +72,9 @@ const CartScreen = ({navigation}: any) => {
     const handlePlus = async (data: CartModel) => {
         updateData(data,true)
     }
+    const handleDelete = async(data:CartModel)=>{
+        deleteData(data._id)
+    }
     const handleMinus = async (data: CartModel) => {
         if(data.product_quantity>1){
             updateData(data,false)
@@ -80,6 +82,7 @@ const CartScreen = ({navigation}: any) => {
             deleteData(data._id)
         }
     }
+
     const totalCartSubtotal = carts.reduce((total, item) => {
         return total + item.cart_subtotal;
       }, 0);
@@ -93,7 +96,7 @@ const CartScreen = ({navigation}: any) => {
         <View style={{backgroundColor:COLORS.WHISPER_GRAY,position:'relative', flex:1}}>
             <HeaderComponent title={`Giỏ hàng`} isBack onBack={() => navigation.goBack()}/>
             <SectionComponent styles={{marginTop:15}}>
-                <CardProductOfProductType onPressPlus={handlePlus} onPressMinus={handleMinus} isCart={true} carts={carts} isLoading={loading}/>
+                <CardProductOfProductType onPressDelete={handleDelete} onPressPlus={handlePlus} onPressMinus={handleMinus} isCart={true} carts={carts} isLoading={loading}/>
             </SectionComponent>
             <View style={{backgroundColor:COLORS.WHITE, position:'absolute', bottom:0, left:0, right:0, paddingTop:15}}>
                 <SectionComponent>
@@ -107,7 +110,7 @@ const CartScreen = ({navigation}: any) => {
                     type="#00ADEF"
                     text="Thanh toán ngay"
                     onPress={() => {
-                    navigation.navigate(BookingScreen);
+                    navigation.navigate("BookingScreen");
                     }}/>
                 </SectionComponent>
             </View>

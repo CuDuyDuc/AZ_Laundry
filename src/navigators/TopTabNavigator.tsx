@@ -3,7 +3,7 @@ import { HeaderComponent } from '../components';
 import { MessageScreen, NotificationScreen } from '../screens';
 import React from 'react';
 
-const TopTabNavigator = ({ navigation }: any) => {
+const TopTabNavigator = ({navigation}:any) => {
 
     const Tab = createMaterialTopTabNavigator();
     return (

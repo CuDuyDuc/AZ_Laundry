@@ -13,7 +13,6 @@ class NotificationService {
     // Request notification permissions
     static async requestPermissions(): Promise<void> {
         const permission = await notifee.requestPermission();
-        return permission;
     }
 
     // Display a local notification
@@ -26,10 +25,7 @@ class NotificationService {
             name: 'A-Z Laundry',
             importance: AndroidImportance.HIGH,
         });
-        const trigger = {
-            type: TriggerType.TIMESTAMP,
-            timestamp: Date.now() - 480000,
-        };
+
         
         await notifee.displayNotification({
             title,
@@ -40,10 +36,10 @@ class NotificationService {
                 largeIcon: 'https://cdn-icons-png.flaticon.com/256/5103/5103880.png',
                 pressAction: {
                     id: 'default',
-                trigger,
-                },
-
+                },              
                 importance: AndroidImportance.HIGH,
+                timestamp: Date.now() - 480000,
+                showTimestamp:true,
             },
         });
     }

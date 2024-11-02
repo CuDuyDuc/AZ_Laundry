@@ -14,7 +14,7 @@ export const useAxiosAddCart=async(props:Props)=>{
         const res = await cartAPI.HandleCart('/add-product-cart', {
             id_user, id_product, product_quantity, cart_subtotal
         }, 'post');
-        if (res) { 
+        if (res) {
             toast('Thêm vào giỏ hàng thành công')
         }
     } catch (error) {

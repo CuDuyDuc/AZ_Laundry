@@ -10,12 +10,12 @@ interface Props {
     title?: string;
     isBack?: Boolean;
     onBack?: () => void;
-    suffix?: ReactNode, 
-    onPress?: () => void;
+    onPress?:()=>void;
+    suffix?: ReactNode
 }
-export default function HeaderComponent(props: Props) {
+const HeaderComponent=(props: Props)=> {
 
-    const { title, isBack, onBack, suffix , onPress} = props;
+    const { title, isBack, onBack,suffix, onPress } = props;
     return (
         <SectionComponent
             styles={{
@@ -31,16 +31,17 @@ export default function HeaderComponent(props: Props) {
             <RowComponent styles={{ marginTop: 35 }} justify="space-between" >
                 {isBack ? (<TouchableOpacity onPress={onBack}>
                     <ArrowLeft2 size="30" color={COLORS.WHITE} />
-                </TouchableOpacity>) : <View />}
+                </TouchableOpacity>) : <View ></View>}
                 <TextComponent
                     text={title}
                     font={FONTFAMILY.montserrat_medium}
                 />
-                {suffix ? (<TouchableOpacity onPress={onPress}>
+                {onPress ? (<TouchableOpacity onPress={onPress}>
                     <ShoppingCart size="30" color={COLORS.WHITE} />
-                </TouchableOpacity>) : <View />}
+                </TouchableOpacity>) : <View ></View>}
             </RowComponent>
         </SectionComponent>
     )
 }
 
+export default HeaderComponent

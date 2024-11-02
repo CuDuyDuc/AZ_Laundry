@@ -28,7 +28,7 @@ const ProductOfProductTypeScreen = ({navigation,route}:any) => {
     },[])
   return (
     <ContainerComponent>
-      <HeaderComponent title={`${data.id_service_type.service_type_name} > ${data.product_type_name}`} isBack onBack={() => navigation.goBack()} suffix onPress={() => navigation.navigate("Cart")} />
+      <HeaderComponent title={`${data.id_service_type.service_type_name} > ${data.product_type_name}`} onPress={()=>navigation.navigate('Cart')} isBack onBack={() => navigation.goBack()} />
       <SectionComponent styles={{marginTop:15}}>
         <TextComponent text={`${isUser?'Danh sách dịch vụ':'Dịch vụ của tôi'}`} color={COLORS.DARK_GRAY} font={FONTFAMILY.montserrat_semibold}/>
         <CardProductOfProductType isLoading={loading} products={products} />

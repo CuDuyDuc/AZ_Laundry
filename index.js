@@ -6,7 +6,7 @@ import messaging from '@react-native-firebase/messaging';
 import notifee, {
   EventType,
 } from '@notifee/react-native';
-import NotificationService from '../AZ_Laundry/src/utils/NotificationService';
+import NotificationService from './src/utils/NotificationService';
 var EventEmitter = require('eventemitter3');
 
 export const eventEmitter = new EventEmitter();

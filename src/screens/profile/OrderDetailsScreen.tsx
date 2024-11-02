@@ -1,9 +1,8 @@
-import { Button, Image, TouchableOpacity, View } from 'react-native';
-import { ButtonComponent, CardOrderDetailComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../components';
+import { Image, View } from 'react-native';
 import { FONTFAMILY } from '../../../assets/fonts';
-import { ScrollView } from 'react-native-virtualized-view';
 import COLORS from '../../assets/colors/Colors';
 import IMAGES from '../../assets/images/Images';
+import { ButtonComponent, CardOrderDetailComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../components';
 
 const OrderDetatailsScreen = ({ navigation }: any) => {
 

@@ -1,10 +1,8 @@
+import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
-import { CardOrderComponent, ContainerComponent, HeaderComponent, RowComponent, TextComponent } from '../../components';
-import { FONTFAMILY } from '../../../assets/fonts';
 import { ScrollView } from 'react-native-virtualized-view';
 import COLORS from '../../assets/colors/Colors';
-import { Image } from 'react-native-svg';
-import { useState } from 'react';
+import { CardOrderComponent, ContainerComponent, HeaderComponent, RowComponent, TextComponent } from '../../components';
 
 const orders = [
   {

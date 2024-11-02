@@ -37,6 +37,10 @@ const NotificationItem = (props: Props) => {
   };
 
   const markNotificationAsRead = async() => {
+    console.log(
+    'Check read'
+    );
+    
     const res = await notificationAPI.HandleNotification(
       '/update-mark-read',
       {
@@ -69,7 +73,7 @@ const NotificationItem = (props: Props) => {
 
   return (
     <Swipeable renderRightActions={renderRightActions}>
-      <TouchableOpacity onPress={markNotificationAsRead}>
+      <TouchableOpacity onPress={status === 'unread' ?  markNotificationAsRead : () => {}}>
       <RowComponent
         justify="space-between"
         styles={{

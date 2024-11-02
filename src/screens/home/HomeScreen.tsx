@@ -1,5 +1,5 @@
 import { Notification } from 'iconsax-react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Image, PermissionsAndroid, Platform, TouchableOpacity } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { PERMISSIONS, RESULTS, request } from 'react-native-permissions';
@@ -11,6 +11,7 @@ import IMAGES from '../../assets/images/Images';
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 import {
+    BottomSheetComponent,
     CardServiceComponent,
     CardShopComponent,
     CardTipCompnent,
@@ -22,6 +23,7 @@ import {
 } from '../../components';
 import { service_type } from '../../model/service_type';
 import { authSelector } from '../../redux/reducers/authReducer';
+import { TipModel } from '../../model/tip_model';
 import Firebase from '../../configs/firebaseConfig';
 import notificationAPI from '../../apis/notificationApi';
 import { eventEmitter } from '../../..';
@@ -40,7 +42,10 @@ const HomeScreen = ({ route, navigation }: any) => {
     });
     const [typeService, setTypeService] = useState<service_type[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [notificationCount, setNotificationCount] = useState<number>(0);
+    const [notificationCount, setNotificationCount] = useState<number>();
+    const [selectedTip, setSelectedTip] = useState<TipModel | null>(null);
+    const bottomSheetRef = useRef<any>(null);
+
     const getDataService_Type = async () => {
         try {
             const res = await serviceAPI.HandleService('/get-service-type');
@@ -117,30 +122,37 @@ const HomeScreen = ({ route, navigation }: any) => {
     useEffect(() => {
         getCurrentLocation();
     }, [user]);
-    const handleServiceType=(item:any)=>{
-        navigation.navigate('ProductType', {data:item,latitude:currentLocation.latitude,longitude:currentLocation.longitude})
+    const handleServiceType = (item: any) => {
+        navigation.navigate('ProductType', { data: item, latitude: currentLocation.latitude, longitude: currentLocation.longitude })
     }
-    const handleDetailShop=(item:any)=>{
-        navigation.navigate('DetailsShop', {data:item})
+    const handleDetailShop = (item: any) => {
+        navigation.navigate('DetailsShop', { data: item })
+
     }
 
+
+    const handlePressItem = (item: TipModel) => {
+        setSelectedTip(item);
+        bottomSheetRef.current?.toggleBottomSheet();
+    };
     return (
-        <ContainerComponent styleBackground={{ backgroundColor: COLORS.WHISPER_GRAY }} isScroll>
-            <SectionComponent
-                styles={{
-                    height: 83,
-                    backgroundColor: COLORS.AZURE_BLUE,
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    borderBottomRightRadius: 16,
-                    borderBottomLeftRadius:16
-                }}>
-                <RowComponent styles={{ marginTop: 35 }} justify="space-between">
-                    <TextComponent
-                        text={`Hi, ${user.fullname}!`}
-                        font={FONTFAMILY.montserrat_medium}
-                    />
-                    <TouchableOpacity>
+        <>
+            <ContainerComponent styleBackground={{ backgroundColor: COLORS.WHISPER_GRAY }} isScroll>
+                <SectionComponent
+                    styles={{
+                        height: 83,
+                        backgroundColor: COLORS.AZURE_BLUE,
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        borderBottomRightRadius: 16,
+                        borderBottomLeftRadius: 16
+                    }}>
+                    <RowComponent styles={{ marginTop: 35 }} justify="space-between">
+                        <TextComponent
+                            text={`Hi, ${user.fullname}!`}
+                            font={FONTFAMILY.montserrat_medium}
+                        />
+                            <TouchableOpacity>
                         <Notification size="30" color={COLORS.WHITE} />
                         { (
                         <SectionComponent styles={{
@@ -159,42 +171,44 @@ const HomeScreen = ({ route, navigation }: any) => {
                         </SectionComponent>
                     )}
                     </TouchableOpacity>
-                </RowComponent>
-            </SectionComponent>
-            <SectionComponent
-                styles={{ flexDirection: 'row', justifyContent: 'center', marginTop: 8, height: 185 }}>
-                <SwipeComponent />
-            </SectionComponent>
-            <SectionComponent styles={{ marginTop: -30 }}>
-                <RowComponent justify='space-between'>
-                    <RowComponent styles={{ backgroundColor: COLORS.WHITE, borderRadius: 16 , padding: 10}}>
-                        <Image source={IMAGES.DanhMuc} style={{ width: 20, height: 20 }} />
-                        <TextComponent text={" Danh mục"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15}/>
                     </RowComponent>
-                    <TextComponent text={"Xem tất cả"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15}/>
-                </RowComponent>
-            </SectionComponent>
-            <SectionComponent>
-                <CardServiceComponent  data={typeService} isLoading={loading} onPress={handleServiceType} />
-            </SectionComponent>
-            <SectionComponent styles={{ marginTop: -20 }}>
-                <TextComponent text={"Mách mẹo vặt"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15}/>
-            </SectionComponent>
-            <SectionComponent>
-                <CardTipCompnent />
-            </SectionComponent>
-            <SectionComponent>
-                <RowComponent justify='space-between'>
-                    <TextComponent text={"Cửa hàng nổi bật"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15}/>
-                    <TouchableOpacity onPress={()=>navigation.navigate('AllStores',{latitude:currentLocation.latitude,longitude:currentLocation.longitude})}>
-                        <TextComponent text={"Xem thêm"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15}/>
-                    </TouchableOpacity>
-                </RowComponent>
-            </SectionComponent>
-            <SectionComponent styles = {{marginTop: -20}}>
-                <CardShopComponent onPress={handleDetailShop} limit={3} currentLatitude={currentLocation.latitude} currentLongitude={currentLocation.longitude} />
-            </SectionComponent>
-        </ContainerComponent>
+                </SectionComponent>
+                <SectionComponent
+                    styles={{ flexDirection: 'row', justifyContent: 'center', marginTop: 8, height: 185 }}>
+                    <SwipeComponent />
+                </SectionComponent>
+                <SectionComponent styles={{ marginTop: -30 }}>
+                    <RowComponent justify='space-between'>
+                        <RowComponent styles={{ backgroundColor: COLORS.WHITE, borderRadius: 16, padding: 10 }}>
+                            <Image source={IMAGES.DanhMuc} style={{ width: 20, height: 20 }} />
+                            <TextComponent text={" Danh mục"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15} />
+                        </RowComponent>
+                        <TextComponent text={"Xem tất cả"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15} />
+                    </RowComponent>
+                </SectionComponent>
+                <SectionComponent>
+                    <CardServiceComponent data={typeService} isLoading={loading} onPress={handleServiceType} />
+                </SectionComponent>
+                <SectionComponent styles={{ marginTop: -20 }}>
+                    <TextComponent text={"Mách mẹo vặt"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15} />
+                </SectionComponent>
+                <SectionComponent>
+                    <CardTipCompnent onPress={handlePressItem} />
+                </SectionComponent>
+                <SectionComponent>
+                    <RowComponent justify='space-between'>
+                        <TextComponent text={"Cửa hàng nổi bật"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15} />
+                        <TouchableOpacity onPress={() => navigation.navigate('AllStores', { latitude: currentLocation.latitude, longitude: currentLocation.longitude })}>
+                            <TextComponent text={"Xem thêm"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15} />
+                        </TouchableOpacity>
+                    </RowComponent>
+                </SectionComponent>
+                <SectionComponent styles={{ marginTop: -20 }}>
+                    <CardShopComponent onPress={handleDetailShop} limit={3} currentLatitude={currentLocation.latitude} currentLongitude={currentLocation.longitude} />
+                </SectionComponent>
+            </ContainerComponent>
+            <BottomSheetComponent ref={bottomSheetRef} selectedTip={selectedTip} />
+        </>
     );
 };
 
