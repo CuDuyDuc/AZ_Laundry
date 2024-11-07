@@ -1,46 +1,77 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
-import { HeaderComponent, RowComponent, SectionComponent, BoxStatusShopOrderComponent, CardOrderShopComponent } from '../../components';
-import IMAGES from '../../assets/images/Images';
-import { Scroll } from 'iconsax-react-native';
-import { ScrollView } from 'react-native-virtualized-view';
+import { HeaderComponent, SectionComponent, BoxStatusShopOrderComponent, CardOrderShopComponent } from '../../components';
 import COLORS from '../../assets/colors/Colors';
-
+import { PaymentModel } from '../../model/payment_model';
+import paymentAPI from '../../apis/paymentAPI';
+import { useFocusEffect } from '@react-navigation/native';
 
 const HistoryScreen = ({ navigation }: any) => {
-  const statusList = [
-    { status: 'Tất cả', number: 2 },
+  const [payment, setPayment] = useState<PaymentModel[]>([]);
+  const [filteredPayment, setFilteredPayment] = useState<PaymentModel[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string | null>('Tất cả'); // Trạng thái được chọn
+  const [statusList, setStatusList] = useState([
+    { status: 'Tất cả', number: 0 },
     { status: 'Chờ duyệt', number: 0 },
     { status: 'Đang giặt', number: 0 },
     { status: 'Đang giao', number: 0 },
     { status: 'Hoàn thành', number: 0 },
     { status: 'Đã hủy', number: 0 },
-  ];
+  ]);
 
-  const orderList = [
-    { id: '#972297A1', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
-    { id: '#972297A2', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
-    { id: '#972297A3', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
-    { id: '#972297A4', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
-    { id: '#972297A5', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
-    { id: '#972297A6', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
-    { id: '#972297A7', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
-    { id: '#972297A8', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
-    { id: '#972297A9', status: 'Chờ duyệt', price: 300000, imgUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg', dateOrder: '28/09/2024' },
-  ];
-
-  // Hàm xử lý khi nhấn vào từng trạng thái
   const handleStatusPress = (status: string) => {
+    setSelectedStatus(status);
     console.log(`Selected status: ${status}`);
-    // Thêm logic để xử lý khi nhấn vào trạng thái, ví dụ: lọc orderList
+
+    if (status === 'Tất cả') {
+      setFilteredPayment(payment);
+      console.log('Payment data:', payment);
+    } else {
+      console.log(`Selected status 1: ${status}`);
+      const filtered = payment.filter((item) => item.confirmationStatus == status);
+      setFilteredPayment(filtered);
+      console.log('Filtered data:', filtered);
+    }
   };
 
-  const handleOrderPress = (status: string) => {
-    console.log('Selected order: ', status);
+  const handleOrderPress = (id: string) => {
+    console.log('Selected payment: ', id);
   };
+
+  const getDataPayment = async () => {
+    try {
+      const res: any = await paymentAPI.HandlePayment(`/get-order`);
+      const data: PaymentModel[] = res.data;
+      setPayment(data);
+      setFilteredPayment(data);
+
+      // Đếm số lượng đơn hàng theo từng trạng thái
+      const updatedStatusList = statusList.map((statusItem) => {
+        if (statusItem.status === 'Tất cả') {
+          return { ...statusItem, number: data.length };
+        }
+        const count = data.filter((item) => item.confirmationStatus == statusItem.status).length;
+        return { ...statusItem, number: count };
+      });
+
+      setStatusList(updatedStatusList);
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  };
+
+  useEffect(() => {
+    getDataPayment();
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getDataPayment();
+    }, [])
+  );
 
   return (
-    <View style={{backgroundColor: COLORS.WHITE}}>
+    <View style={{ backgroundColor: COLORS.WHITE, flex: 1 }}>
       <HeaderComponent title="Đơn hàng" isBack onBack={() => navigation.goBack()} />
 
       <SectionComponent>
@@ -53,6 +84,7 @@ const HistoryScreen = ({ navigation }: any) => {
               status={item.status}
               number={item.number}
               onPress={() => handleStatusPress(item.status)}
+              isSelected={selectedStatus === item.status}
             />
           )}
           contentContainerStyle={{ paddingHorizontal: 10 }}
@@ -61,23 +93,21 @@ const HistoryScreen = ({ navigation }: any) => {
       </SectionComponent>
 
       <SectionComponent styles={{ paddingBottom: 200 }}>
-
         <FlatList
-          data={orderList}
+          data={filteredPayment}
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item._id.toString()}
           renderItem={({ item }) => (
             <CardOrderShopComponent
-              id={item.id}
-              status={item.status}
-              price={item.price}
+              id={item._id.toString()}
+              status={item.confirmationStatus.toString()}
+              price={item.data_payment.total}
               imgUrl={item.imgUrl}
-              dateOrder={item.dateOrder}
-              onPress={() => handleOrderPress(item.id)}
+              dateOrder={new Date(item.createdAt).toLocaleDateString('vi-VN')}
+              onPress={() => handleOrderPress(item._id.toString())}
             />
           )}
         />
-
       </SectionComponent>
     </View>
   );

@@ -1,125 +1,127 @@
-import { TouchableOpacity } from 'react-native';
-import { CardOrderComponent, ContainerComponent, HeaderComponent, RowComponent, TextComponent } from '../../components';
+import { FlatList, Image, TouchableOpacity, View } from 'react-native';
+import { ButtonComponent, CardOrderComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../components';
 import { FONTFAMILY } from '../../../assets/fonts';
-import { ScrollView } from 'react-native-virtualized-view';
 import COLORS from '../../assets/colors/Colors';
-import { Image } from 'react-native-svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import paymentAPI from '../../apis/paymentAPI';
+import { useFocusEffect } from '@react-navigation/native';
+import React from 'react';
 
-const orders = [
-  {
-    id: '#123456',
-    productName: 'Áo sơ mi trắng',
-    status: 'Chờ xác nhận',
-    price: 150000,
-    quantity: 2,
-    imageUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg',
-  },
-  {
-    id: '#654321',
-    productName: 'Quần jean nam',
-    status: 'Chờ lấy hàng',
-    price: 300000,
-    quantity: 1,
-    imageUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg',
-  },
-  {
-    id: '#789012',
-    productName: 'Váy nữ',
-    status: 'Chờ xác nhận',
-    price: 250000,
-    quantity: 1,
-    imageUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg',
-  },
-  {
-    id: '#789013',
-    productName: 'Váy nữ',
-    status: 'Chờ xác nhận',
-    price: 250000,
-    quantity: 1,
-    imageUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg',
-  },
-  {
-    id: '#789014',
-    productName: 'Váy nữ',
-    status: 'Chờ xác nhận',
-    price: 250000,
-    quantity: 1,
-    imageUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg',
-  },
-  {
-    id: '#789015',
-    productName: 'Váy nữ',
-    status: 'Chờ xác nhận',
-    price: 250000,
-    quantity: 1,
-    imageUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg',
-  },
-  {
-    id: '#789016',
-    productName: 'Váy nữ',
-    status: 'Đã xong',
-    price: 250000,
-    quantity: 1,
-    imageUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg',
-  },
-  {
-    id: '#789017',
-    productName: 'Váy nữ',
-    status: 'Đã xong',
-    price: 250000,
-    quantity: 1,
-    imageUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg',
-  },
-  {
-    id: '#789018',
-    productName: 'Váy nữ',
-    status: 'Chờ xác nhận',
-    price: 250000,
-    quantity: 1,
-    imageUrl: 'https://product.hstatic.net/1000360022/product/untitled-1_5e528fba12a8424da3337e0a0766b434.jpg',
-  },
-];
+const OrderHistoryScreen = ({ navigation }: any) => {
+  const [payment, setPayment] = useState();
+  const [filteredPayment, setFilteredPayment] = useState([]);
+  const [activeTab, setActiveTab] = useState("Chờ xác nhận");
 
-const OrderHistoryScreen= ({navigation}: any) => {
-  const [activeTab, setActiveTab] = useState<string>('Chờ xác nhận');
-
-  const filterOrdersByTab = () => {
-    return orders.filter((order) => order.status === activeTab);
+  const getDataPayment = async () => {
+    try {
+      const res: any = await paymentAPI.HandlePayment(`/get-order`);
+      const data = res.data;
+      setPayment(data);
+      console.log('Payment data 1:', data);
+    } catch (error) {
+      console.log('Error: ', error);
+    }
   };
 
-  const tabs = [
-    { key: 'Chờ xác nhận', label: 'Chờ xác nhận', Image: require('../../assets/images/bo_vest.png') },
-    { key: 'Chờ lấy hàng', label: 'Chờ lấy hàng'},
-    { key: 'Đã xong', label: 'Đã xong'},
-    { key: 'Đánh giá', label: 'Đánh giá' },
-  ];
+  const onOrderPress = (id: string) => {
+    navigation.navigate('OrderDetatailsScreen', { paymentId: id });
+  }
+
+  const filterOrdersByStatus = (status: string) => {
+    
+  };
+
+  useEffect(() => {
+    getDataPayment();
+  }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getDataPayment(); // Gọi lại hàm lấy dữ liệu khi màn hình này được focus
+    }, [])
+  );
+
+
+  console.log('Payment data 11111111111111:', payment);
 
   return (
-    <ContainerComponent isScroll styleBackground={{backgroundColor: COLORS.WHITE}}>
+    <ContainerComponent isScroll styleBackground={{ backgroundColor: COLORS.WHITE }}>
+      <HeaderComponent title='Lịch sử đơn hàng' isBack onBack={() => navigation.goBack()} />
+        {/* Tab Navigation */}
+      {/* <SectionComponent>
+        <RowComponent justify="space-around">
+          {["Chờ xác nhận", "Chờ lấy hàng", "Đã xong", "Đánh giá"].map((status) => (
+            <TouchableOpacity key={status} onPress={() => filterOrdersByStatus(status)}>
+              <TextComponent
+                text={status}
+                size={16}
+                color={activeTab === status ? COLORS.AZURE_BLUE : COLORS.BLUE_GRAY}
+                styles={{ fontFamily: FONTFAMILY.montserrat_medium }}
+              />
+            </TouchableOpacity>
+          ))}
+        </RowComponent>
+      </SectionComponent> */}
 
-      <HeaderComponent title='Lịch sử đơn hàng'  isBack onBack={() => navigation.goBack()}/>
-      <RowComponent justify="space-around" styles={{ paddingVertical: 10, backgroundColor: COLORS.WHITE }}>
+      <TouchableOpacity >
 
-        {tabs.map((tab) => ( // set trạng thái cho tab
-          <TouchableOpacity
-            key={tab.key}
-            onPress={() => setActiveTab(tab.key)}
+        <SectionComponent >
+          <FlatList
+            data={payment}
+            keyExtractor={(item) => item._id.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => onOrderPress(item._id.toString())}>
+                <View style={{ backgroundColor: COLORS.WHITE, borderRadius: 8 }}>
+                  {/* Hiển thị ID đơn hàng */}
+                  <TextComponent text={`#${item._id}`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
 
-            style={{ borderBottomWidth: activeTab === tab.key ? 2 : 0, borderBottomColor: '#2A9DF4' }}>
-            <TextComponent
-              text={tab.key}
-              size={14}
-              color={activeTab === tab.key ? '#2A9DF4' : '#999'}
-              font={activeTab === tab.key ? 'bold' : 'normal'}
-              styles={{ borderBottomWidth: activeTab === tab.key ? 2 : 0, borderBottomColor: COLORS.AZURE_BLUE }}/>
+                  {/* Hiển thị danh sách sản phẩm trong id_cart */}
+                  <FlatList
+                    data={Array.isArray(item.id_cart) ? item.id_cart : []} // Duyệt qua từng giỏ hàng (cart) trong đơn hàng
+                    keyExtractor={(cartItem) => cartItem._id.toString()}
+                    renderItem={({ item: cartItem }) => (
+                      <CardOrderComponent
+                        imgUrl={cartItem.id_product.product_photo[0]}
+                        name={cartItem.id_product.product_name}
+                        short_description={cartItem.id_product.short_description}
+                        status={item.confirmationStatus} // Lấy status từ đơn hàng chính
+                        total={cartItem.cart_subtotal}
+                        quantity={cartItem.product_quantity}
+                        id={cartItem._id.toString()}
+                      />
+                    )}
+                  />
 
-          </TouchableOpacity>
-        ))}
-      </RowComponent>
-      <ScrollView>
-        <CardOrderComponent orders={filterOrdersByTab()} onPress={() => {navigation.navigate('OrderDetatailsScreen')}}/>
-      </ScrollView>
+                  {item.confirmationStatus == 'Hoàn thành' && (
+                    <RowComponent justify="flex-end" styles={{ marginTop: 5, marginBottom: 20 }}>
+                      <ButtonComponent
+                        text="Đặt lại"
+                        type="#00ADEF"
+                        textColor={COLORS.AZURE_BLUE}
+                        textStyles={{ fontFamily: FONTFAMILY.montserrat_medium }}
+                        styles={{
+                          width: "30%",
+                          marginRight: 10,
+                          backgroundColor: COLORS.WHITE,
+                          borderColor: COLORS.AZURE_BLUE,
+                          borderWidth: 1
+                        }}
+                      />
+                      <ButtonComponent
+                        text="Đánh giá"
+                        type="#00ADEF"
+                        styles={{ width: "30%" }}
+                        textStyles={{ fontFamily: FONTFAMILY.montserrat_medium }}
+                      />
+                    </RowComponent>
+                  )}
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        </SectionComponent>
+
+      </TouchableOpacity>
     </ContainerComponent>
   );
 };
