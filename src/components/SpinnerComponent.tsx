@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleProp, StyleSheet, TextStyle} from 'react-native';
+import { StyleSheet } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import COLORS from '../assets/colors/Colors';
 interface props {

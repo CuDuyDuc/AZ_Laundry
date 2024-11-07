@@ -1,7 +1,7 @@
 import { ArrowLeft2, Call, Camera, Image as Image1, Send, Video, } from 'iconsax-react-native';
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react';
-import { FlatList, Image, Keyboard, TouchableOpacity, View } from 'react-native';
+import { FlatList, Image, Keyboard, StatusBar, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { FONTFAMILY } from '../../../../assets/fonts';
 import COLORS from '../../../assets/colors/Colors';
@@ -14,8 +14,8 @@ import { globalStyle } from '../../../styles/globalStyle';
 const ChatBoxScreen = ({ navigation, route }: any) => {
     const user = useSelector(authSelector);
     const [sendMessage, setSendMessage] = useState('');
-    const [isMessageSent, setIsMessageSent] = useState(false); 
-    const { currentChat, messages, sendTextMessage,onlineUsers } = useChatContext();
+    const [isMessageSent, setIsMessageSent] = useState(false);
+    const { currentChat, messages, sendTextMessage, onlineUsers } = useChatContext();
     const { recipientUser } = useAxiosRecipient({ chats: currentChat, user });
     const flatListRef = useRef<FlatList>(null);
     useEffect(() => {
@@ -57,6 +57,7 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
     const isActive = onlineUsers.some((user: any) => user?.userId === recipientUser?._id);
     return (
         <View style={{ flex: 1 }}>
+            <StatusBar barStyle={'dark-content'} />
             <View style={[globalStyle.shadowCard, { zIndex: 1 }]}>
                 <SectionComponent styles={{ marginTop: 60 }}>
                     <RowComponent>
@@ -122,7 +123,7 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
                 />
             </SectionComponent>
             <View
-                style={[{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 15 }, globalStyle.shadowCardTop]}>
+                style={[{ position: 'absolute', bottom: 0, left: 0, right: 0, paddingHorizontal: 15 }, globalStyle.shadowCardTop]}>
                 <RowComponent justify="space-between">
                     <RowComponent styles={{ marginEnd: 20 }}>
                         <TouchableOpacity style={{ marginEnd: 20 }}>
@@ -131,14 +132,12 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
                         <TouchableOpacity>
                             <Image1 size="25" color={COLORS.AZURE_BLUE} variant="Bold" />
                         </TouchableOpacity>
-                    </RowComponent>
-                    <RowComponent justify="space-between" >
                         <InputComponent
                             value={sendMessage}
                             onChange={(e) => setSendMessage(e)}
                             backgroundColor={COLORS.WHISPER_GRAY}
                             placeholder="Nhắn tin"
-                            style={{ width: '70%', minHeight: 40, borderRadius: 20, paddingStart: 5 }}
+                            style={{ width: '74%', minHeight: 40, borderRadius: 20, paddingStart: 5, marginTop: 20 }}
                         />
                         <TouchableOpacity style={{ marginEnd: 20 }} onPress={handleSendMessage}>
                             <Send size="25" color={COLORS.AZURE_BLUE} variant="Bold" />

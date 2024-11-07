@@ -1,5 +1,7 @@
 import React from 'react';
-import {FlatList, Image, StyleSheet, View} from 'react-native';
+import { FlatList, Image, StyleSheet, View } from 'react-native';
+import { FONTFAMILY } from '../../../assets/fonts';
+import COLORS from '../../assets/colors/Colors';
 import IMAGES from '../../assets/images/Images';
 import {
   ContainerComponent,
@@ -9,9 +11,6 @@ import {
   SpaceComponent,
   TextComponent,
 } from '../../components';
-import COLORS from '../../assets/colors/Colors';
-import {FONTFAMILY} from '../../../assets/fonts';
-import {Star1} from 'iconsax-react-native';
 
 const reviews = [
   {
