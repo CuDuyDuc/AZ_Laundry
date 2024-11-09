@@ -112,12 +112,11 @@ const ChatBoxScreen = ({ navigation }: any) => {
                     </RowComponent>
                 </SectionComponent>
             </View>
-            <SectionComponent styles={{ flex: 1 }}>
+            <SectionComponent styles={{ flex: 0.9 }}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     ref={flatListRef}
                     style={{ flex: 1 }}
-                    contentContainerStyle={{ paddingBottom: 70 }}
                     data={messages}
                     keyExtractor={(item) => item._id.toString()}
                     renderItem={({ item }) => (
