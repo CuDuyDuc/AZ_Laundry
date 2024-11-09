@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import COLORS from '../assets/colors/Colors';
 import IMAGES from '../assets/images/Images';
@@ -176,7 +176,7 @@ const AddService = ({navigation}: any) => {
           onChange={val => handleChangeValue("price", val)}
           backgroundColor={COLORS.WHITE}
         />
-        <TextComponent text="Mô Tả ngắn" color={COLORS.HEX_BLACK} size={13} />
+        <TextComponent text="Mô tả ngắn" color={COLORS.HEX_BLACK} size={13} />
         <InputComponent
           value={values.ShortDescription}
           onChange={val => handleChangeValue("ShortDescription", val)}
@@ -185,18 +185,22 @@ const AddService = ({navigation}: any) => {
           numberOfLines={2}
         />
         <TextComponent
-          text="Mô Tả chi tiết"
+          text="Mô tả chi tiết"
           color={COLORS.HEX_BLACK}
           size={13}
         />
-        <InputComponent
+        <TextInput 
           value={values.DetailedDescription}
-          onChange={val => handleChangeValue('DetailedDescription', val)}
-          allowClear
-          backgroundColor={COLORS.WHITE}
-          multiline={true}
-          numberOfLines={6}
-        />
+          onChangeText={val => handleChangeValue('DetailedDescription', val)}
+          style = {{
+            backgroundColor: COLORS.WHITE, 
+            textAlignVertical: 'top',
+            paddingHorizontal: 20,
+            paddingTop: 10, 
+            paddingBottom: 0, 
+            borderRadius: 16,}}
+            multiline={true}
+            numberOfLines={6}/>
       </SectionComponent>
       <SectionComponent>
         <ButtonComponent

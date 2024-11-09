@@ -11,13 +11,22 @@ import { useAxiosRecipient } from '../../../hooks/useAxiosRecipient';
 import { authSelector } from '../../../redux/reducers/authReducer';
 import { globalStyle } from '../../../styles/globalStyle';
 
-const ChatBoxScreen = ({ navigation, route }: any) => {
+
+const MessageComponentMemo = React.memo(MessageComponent);
+const ChatBoxScreen = ({ navigation }: any) => {
     const user = useSelector(authSelector);
     const [sendMessage, setSendMessage] = useState('');
     const [isMessageSent, setIsMessageSent] = useState(false);
-    const { currentChat, messages, sendTextMessage, onlineUsers } = useChatContext();
+    const { currentChat, messages, sendTextMessage, onlineUsers,markMessagesAsRead,setCurrentChat } = useChatContext();
     const { recipientUser } = useAxiosRecipient({ chats: currentChat, user });
     const flatListRef = useRef<FlatList>(null);
+
+    useEffect(() => {
+        if (currentChat && messages.some((msg:any) => msg.isRead === false)) {
+            markMessagesAsRead(currentChat._id); 
+        }
+    }, [currentChat, messages]);
+
     useEffect(() => {
         if (messages?.length > 0) {
             setTimeout(() => {
@@ -25,6 +34,11 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
             }, 100);
         }
     }, [messages]);
+    useEffect(() => {
+        return () => {
+            setCurrentChat(null); // Đặt lại currentChat khi rời khỏi màn hình
+        };
+    }, []);
 
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -109,14 +123,12 @@ const ChatBoxScreen = ({ navigation, route }: any) => {
                     renderItem={({ item }) => (
                         <RowComponent
                             justify={item?.senderId === user?.id ? 'flex-end' : 'flex-start'}
-                            styles={{ marginBottom: 25 }}
-                        >
+                            styles={{ marginBottom: 25 }}>
                             <MessageComponent
                                 text={item?.text}
                                 backgroundColor={item?.senderId === user?.id ? COLORS.AZURE_BLUE : COLORS.HEX_LIGHT_GREY}
                                 colorText={item?.senderId === user?.id ? COLORS.WHITE : COLORS.HEX_BLACK}
-                                timeCurrent={moment(item?.createdAt).format('HH:mm')}
-                            />
+                                timeCurrent={moment(item?.createdAt).format('HH:mm')}/>
                         </RowComponent>
                     )}
                     onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}

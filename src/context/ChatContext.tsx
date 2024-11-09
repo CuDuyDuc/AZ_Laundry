@@ -6,7 +6,6 @@ import authenticationAPI from '../apis/authAPI';
 import chatAPI from '../apis/chatAPI';
 import messageAPI from '../apis/messageAPI';
 import { authSelector } from '../redux/reducers/authReducer';
-import { log } from 'console';
 
 interface ChatContextType {
     userChats: any;
@@ -23,8 +22,10 @@ interface ChatContextType {
     socket: any;
     notifications: any;
     allUsers: any;
-    markAllNotificationsAsRead: any;
     markNotificationAsRead: any;
+    markThisUserNotificationsAsRead:any;
+    markMessagesAsRead:any;
+    setCurrentChat:any;
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -50,7 +51,6 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [notifications, setNotifications] = useState<any>([]);
     const [allUsers, setAllUsers] = useState<any>([]);
-
     useEffect(() => {
         const newSocket = io(appInfo.URL_SOCKET);
         setSocket(newSocket);
@@ -81,12 +81,15 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
     useEffect(() => {
         if (socket == null) return;
         socket.on('getMessage', (res: any) => {
-            if (currentChat?._id !== res.chatId) return;
-            setMessages((prev: any) => [...prev, res]);
+            if (currentChat?._id !== res.chatId) {
+                setMessages((prev: any) => [...prev, { ...res, isRead: false }]);
+            } else {
+                setMessages((prev: any) => [...prev, { ...res, isRead: true }]);
+            }
         });
-
         socket.on('getNotification', (res: any) => {
             const isChatOpen = currentChat?.members.some((id: any) => id === res.senderId);
+            
             if (isChatOpen) {
                 setNotifications((prev: any) => [{ ...res, isRead: true }, ...prev]);
             } else {
@@ -193,23 +196,18 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
             }
         }
     }, []);
-    const markAllNotificationsAsRead = useCallback((notifications: any) => {
-        const mNotfications = notifications.map((n: any) => {
-            return { ...n, isRead: true };
-        });
-        setNotifications(mNotfications);
-    }, []);
     const markNotificationAsRead = useCallback(({ n, userChats, user, notifications }: any) => {
-        const desiredChat = userChats.find((chat: any) => {
-            const chatMembers = [user.id, n.senderId];
+        const desiredChat = userChats?.find((chat: any) => {
+            const chatMembers = [user.id, n?.senderId];
             const isDesiredChat = chat?.members.every((member: any) => {
                 return chatMembers.includes(member);
             });
             return isDesiredChat;
         });
 
-        const mNotfications = notifications.map((el: any) => {
-            if (n.senderId === el.senderId) {
+        const mNotfications = notifications?.map((el: any) => {
+            
+            if (n?.senderId === el.senderId) {
                 return {
                     ...n,
                     isRead: true,
@@ -218,8 +216,30 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
                 return el;
             }
         });
+        
         updateCurrentChat(desiredChat);
         setNotifications(mNotfications);
+    }, []);
+    const markMessagesAsRead = useCallback(async (chatId: string) => {
+        try {
+            // Cập nhật trạng thái isRead cho các tin nhắn trong local state
+            setMessages((prevMessages: any) =>
+                prevMessages.map((msg: any) =>
+                    msg.chatId === chatId && !msg.isRead
+                        ? { ...msg, isRead: true }
+                        : msg
+                )
+            );
+        } catch (error) {
+            console.error("Error marking messages as read:", error);
+        }
+    }, []);
+    const markThisUserNotificationsAsRead = useCallback(({ thisUserNotifications, notifications }:any) => {
+        const updatedNotifications = notifications.map((el:any) => {
+            const shouldMarkAsRead = thisUserNotifications.some((n:any) => n.senderId === el.senderId);
+            return shouldMarkAsRead ? { ...el, isRead: true } : el;
+        });
+        setNotifications(updatedNotifications);
     }, []);
     return (
         <ChatContext.Provider
@@ -238,8 +258,10 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
                 socket,
                 notifications,
                 allUsers,
-                markAllNotificationsAsRead,
                 markNotificationAsRead,
+                markThisUserNotificationsAsRead,
+                markMessagesAsRead,
+                setCurrentChat
             }}
         >
             {children}
