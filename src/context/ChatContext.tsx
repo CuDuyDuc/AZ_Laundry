@@ -24,6 +24,8 @@ interface ChatContextType {
     allUsers: any;
     markAllNotificationsAsRead: any;
     markNotificationAsRead: any;
+    setNotifications: React.Dispatch<any>
+
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -209,7 +211,7 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
         const mNotfications = notifications.map((el: any) => {
             if (n.senderId === el.senderId) {
                 return {
-                    ...n,
+                    ...el,
                     isRead: true,
                 };
             } else {
@@ -238,6 +240,7 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
                 allUsers,
                 markAllNotificationsAsRead,
                 markNotificationAsRead,
+                setNotifications
             }}
         >
             {children}

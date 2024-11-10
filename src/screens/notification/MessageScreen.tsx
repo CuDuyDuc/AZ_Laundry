@@ -10,8 +10,16 @@ const MessageScreen = ({navigation}:any) => {
     const dispatch = useDispatch();
     const user = useSelector(authSelector);
 
-    const { userChats, potentialChats, createChat, updateCurrentChat } =useChatContext();
+    const { userChats, potentialChats, createChat, updateCurrentChat ,notifications, setNotifications} =useChatContext();
+
+    const markNotificationAsRead = (chatId: string) => {
+        const updatedNotifications = notifications.map((notification: any) =>
+            notification.chatId === chatId ? { ...notification, isRead: true } : notification
+        );
+        setNotifications(updatedNotifications);
+    };
     const handleChatBoxs = (item: any) => {
+        markNotificationAsRead(item._id); 
         updateCurrentChat(item);
         navigation.navigate('ChatScreen');
     };

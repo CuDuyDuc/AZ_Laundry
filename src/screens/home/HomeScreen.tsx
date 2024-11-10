@@ -8,6 +8,7 @@ import { FONTFAMILY } from '../../../assets/fonts';
 import serviceAPI from '../../apis/serviceAPI';
 import COLORS from '../../assets/colors/Colors';
 import IMAGES from '../../assets/images/Images';
+import * as Burnt from "burnt";
 PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
 
 import {
@@ -25,12 +26,12 @@ import { service_type } from '../../model/service_type';
 import { authSelector } from '../../redux/reducers/authReducer';
 import { TipModel } from '../../model/tip_model';
 import Firebase from '../../configs/firebaseConfig';
+import authenticationAPI from '../../apis/authAPI';
 
 type Coordinates = {
     latitude: number | null;
     longitude: number | null;
 };
-
 const HomeScreen = ({ route, navigation }: any) => {
 
     const user = useSelector(authSelector);
@@ -58,7 +59,7 @@ const HomeScreen = ({ route, navigation }: any) => {
 
     useEffect(() => {
         getDataService_Type();
-        Firebase(user?.id)
+        // Firebase(user?.id)
     }, []);
     const requestLocationPermission = async () => {
         if (Platform.OS === 'android') {
@@ -100,9 +101,39 @@ const HomeScreen = ({ route, navigation }: any) => {
             { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
         );
     };
+    const addAddressByCoordinates = async()=>{
+        console.log(user);
+        
+        try {
+            const respones = await authenticationAPI.HandleAuthentication('/add-address-by-id-user',{
+                id_user:user.id,
+                longitude:currentLocation.longitude,
+                latitude:currentLocation.latitude,
+                addToStart:true
+            },'post')
+            if(respones){
+                Burnt.toast({
+                    title: "Cập nhật địa chỉ",
+                    
+                });
+            }else{
+                console.log('Sai dòng 118')
+            }
+        } catch (error) {
+            console.log(error);
+            
+        }
+    }
     useEffect(() => {
         getCurrentLocation();
+       
     }, [user]);
+    useEffect(()=>{
+        if(currentLocation.longitude||currentLocation.latitude){
+            console.log(currentLocation.longitude);
+            addAddressByCoordinates()
+        }
+    },[currentLocation.latitude,currentLocation.longitude,user])
     const handleServiceType = (item: any) => {
         navigation.navigate('ProductType', { data: item, latitude: currentLocation.latitude, longitude: currentLocation.longitude })
     }
@@ -110,8 +141,6 @@ const HomeScreen = ({ route, navigation }: any) => {
         navigation.navigate('DetailsShop', { data: item })
 
     }
-
-
     const handlePressItem = (item: TipModel) => {
         setSelectedTip(item);
         bottomSheetRef.current?.toggleBottomSheet();

@@ -13,7 +13,8 @@ const NotificationScreen = () => {
 
   const getListNotification = async () => {
     const apiNoti = `/get-alls?userId=${user?.id}`;
-
+    console.log(user);
+    
     const res = await notificationAPI.HandleNotification
       (
         apiNoti,
@@ -22,14 +23,14 @@ const NotificationScreen = () => {
   }
 
   useEffect(() => {
-    getListNotification();
-    // Lắng nghe sự kiện 'newNotification'
-    const subscription = eventEmitter.on('newNotification', getListNotification);
+    // getListNotification();
+    // // Lắng nghe sự kiện 'newNotification'
+    // const subscription = eventEmitter.on('newNotification', getListNotification);
 
-    // Hủy lắng nghe sự kiện khi component unmount
-    return () => {
-      subscription.off('newNotification', getListNotification);
-    };
+    // // Hủy lắng nghe sự kiện khi component unmount
+    // return () => {
+    //   subscription.off('newNotification', getListNotification);
+    // };
   }, [])
 
   return (
