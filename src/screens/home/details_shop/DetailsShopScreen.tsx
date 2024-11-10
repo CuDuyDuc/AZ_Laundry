@@ -8,12 +8,19 @@ import COLORS from '../../../assets/colors/Colors';
 import { ButtonComponent, CardProductComponent, RowComponent, SectionComponent, TextComponent } from '../../../components';
 import { ProductModel } from '../../../model/product';
 import { UserModel } from '../../../model/user_model';
+import { useChatContext } from '../../../context/ChatContext';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../../redux/reducers/authReducer';
+import chatAPI from '../../../apis/chatAPI';
 
 const DetailsShopScreen = ({ navigation, route }: any) => {
     const { data } = route.params;
     const [details, setDetailShop] = useState<UserModel[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [products, setProducts] = useState<ProductModel[]>([])
+    const { createChat, notifications, allUsers,markNotificationAsRead,userChats,updateCurrentChat} =useChatContext();
+    const user = useSelector(authSelector);
+    const [chat,setChats]= useState<any>([])
     const getDataDetailShop = async () => {
         try {
             const res: any = await authenticationAPI.HandleAuthentication(`/get-user-by-id?id_user=${data._id}`);
@@ -25,7 +32,16 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
             setLoading(false);
         }
     };
-
+    const getChats = async()=>{
+        try {
+            const res: any = await chatAPI.HandleChat(`/find-chat/${user.id}/${data._id}`) ;
+            setChats(res)
+            setLoading(false);
+        } catch (error) {
+            console.log('Error fetching shop: ', error);
+            setLoading(false);
+        }
+    }
     const groupProductsByServiceType = (products: ProductModel[]) => {
         const groupedData: { [key: string]: ProductModel[] } = {};
 
@@ -54,12 +70,39 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
 
     useEffect(() => {
         getDataDetailShop();
+        getChats();
     }, []);
 
     useEffect(() => {
         getDataProducts();
     }, []);
-
+    const HandleChatBox=()=>{
+        if(!chat){
+            createChat(user.id, data._id)
+            getChats();
+        }
+        const modifiedNotifications= notifications?.map((n:any) => {
+            const sender =allUsers?.find((user:any) => user.id===n.senderId);
+                return {
+                    ...n, 
+                    senderName: sender?.fullname,
+                };
+        })
+        if(modifiedNotifications||notifications){
+            const matchedNotification = modifiedNotifications?.find((n: any) => {
+                return chat[0]?.members.includes(n?.senderId)
+        });
+            if(matchedNotification){
+                markNotificationAsRead({ n: matchedNotification,userChats,user,notifications})
+            }
+        }
+        
+        updateCurrentChat(chat[0]);
+        navigation.navigate('ChatScreen');
+        
+       
+        
+    }
     return (
         <>
             {loading ? (
@@ -102,14 +145,13 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
                         <CardProductComponent groupProductsByServiceType={groupProductsByServiceType(products)} />
                     </SectionComponent>
                     <View style={{ backgroundColor: COLORS.WHITE, position: 'absolute', bottom: 0, left: 0, right: 0, paddingTop: 15 }}>
-                        <SectionComponent>
-                            <RowComponent justify='space-between'>
+                        <SectionComponent styles={{ justifyContent: 'flex-start' }}>
+                            <TouchableOpacity onPress={HandleChatBox}>
                                 <RowComponent>
                                     <Message size={18} variant='Bold' color={COLORS.AZURE_BLUE} />
                                     <TextComponent styles={{ marginLeft: 5 }} text={'Hỗ trợ khách hàng'} color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
                                 </RowComponent>
-                                <ButtonComponent type='link' text='Chat với chúng tôi' />
-                            </RowComponent>
+                            </TouchableOpacity>
                         </SectionComponent>
                         <SectionComponent>
                             <RowComponent justify='space-between'>
