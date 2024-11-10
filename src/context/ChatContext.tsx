@@ -23,6 +23,10 @@ interface ChatContextType {
     notifications: any;
     allUsers: any;
     markNotificationAsRead: any;
+    markThisUserNotificationsAsRead:any;
+    markMessagesAsRead:any;
+    setCurrentChat:any;
+
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -256,6 +260,10 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
                 notifications,
                 allUsers,
                 markNotificationAsRead,
+                markThisUserNotificationsAsRead,
+                markMessagesAsRead,
+                setCurrentChat
+
             }}
         >
             {children}
