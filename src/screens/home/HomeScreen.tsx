@@ -112,10 +112,10 @@ const HomeScreen = ({ route, navigation }: any) => {
     }
 
 
-    const handlePressItem = (item: TipModel) => {
-        setSelectedTip(item);
-        bottomSheetRef.current?.toggleBottomSheet();
-    };
+    // const handlePressItem = (item: TipModel) => {
+    //     setSelectedTip(item);
+    //     bottomSheetRef.current?.toggleBottomSheet();
+    // };
     return (
         <>
             <ContainerComponent styleBackground={{ backgroundColor: COLORS.WHISPER_GRAY }} isScroll>
@@ -158,7 +158,7 @@ const HomeScreen = ({ route, navigation }: any) => {
                     <TextComponent text={"Mách mẹo vặt"} color={COLORS.OCEAN_BLUE} font={FONTFAMILY.montserrat_medium} size={15} />
                 </SectionComponent>
                 <SectionComponent>
-                    <CardTipCompnent onPress={handlePressItem} />
+                    <CardTipCompnent />
                 </SectionComponent>
                 <SectionComponent>
                     <RowComponent justify='space-between'>
