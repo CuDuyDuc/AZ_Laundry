@@ -37,7 +37,7 @@ const CardOrderShopComponent = (props: Props) => {
                     </RowComponent>
                     <RowComponent justify="space-between">
                         <TextComponent text="Tổng thanh toán" color={COLORS.BLUE_GRAY} size={15} font={FONTFAMILY.montserrat_bold} />
-                        <TextComponent text={`${price}đ`} color={COLORS.HEX_BLACK} styles={{ marginRight: 30 }} size={15} />
+                        <TextComponent text={`${price.toLocaleString('vi-VN')} VND`} color={COLORS.HEX_BLACK} styles={{ marginRight: 30 }} size={15} />
                     </RowComponent>
                     <RowComponent justify="space-between">
                         <TextComponent text="Trạng thái" color={COLORS.BLUE_GRAY} size={15} font={FONTFAMILY.montserrat_bold} />

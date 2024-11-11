@@ -24,7 +24,7 @@ const CardOrderDetailComponent = (props: Props) => {
           <View style={{ width: '78%' }}>
             <TextComponent text={productName} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold}/>
             <TextComponent text={short_description} size={16} color={COLORS.HEX_BLACK} />
-            <TextComponent text={`${price}đ`} size={18} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold}/>
+            <TextComponent text={`${price.toLocaleString('vi-VN')} VND`} size={18} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold}/>
           </View>
         </RowComponent>
 

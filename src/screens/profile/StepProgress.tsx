@@ -7,14 +7,18 @@ interface Step {
   completed: boolean;
 }
 
-const steps: Step[] = [
-  { title: 'Chờ xác nhận', completed: true },
-  { title: 'Chờ lấy hàng', completed: true },
-  { title: 'Đã xong', completed: true },
-  { title: 'Đánh giá', completed: false },
-];
+interface StepProgressProps {
+  status: string;
+}
 
-const StepProgress = () => {
+const StepProgress: React.FC<StepProgressProps> = ({ status }) => {
+  const steps: Step[] = [
+    { title: 'Chờ duyệt', completed: status == 'Chờ duyệt' || status == 'Đang giặt' || status == 'Đang giao' || status == 'Hoàn thành' },
+    { title: 'Đang giặt', completed: status == 'Đang giặt' || status == 'Đang giao' || status == 'Hoàn thành' },
+    { title: 'Đang giao', completed: status == 'Đang giao' || status == 'Hoàn thành' },
+    { title: 'Hoàn thành', completed: status == 'Hoàn thành' },
+  ];
+
   return (
     <View style={styles.container}>
       {steps.map((step, index) => (

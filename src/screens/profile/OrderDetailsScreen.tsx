@@ -77,7 +77,9 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
       <HeaderComponent title='Chi tiết đơn hàng' isBack onBack={() => navigation.goBack()} />
 
       <SectionComponent>
-        <StepProgress />
+
+        <StepProgress status={payment.length > 0 ? payment[0].confirmationStatus : ''} />
+
         <TextComponent text={`Sản phẩm(${totalProducts})`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} styles={{ marginBottom: 20, marginTop: 10 }} />
         <RowComponent>
           <FlatList
@@ -160,15 +162,15 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
             </RowComponent>
             <RowComponent justify="space-between" styles={{ alignItems: 'center', marginBottom: 15 }}>
               <TextComponent text="Giao hàng" size={16} color={COLORS.HEX_BLACK} />
-              <TextComponent text={payment.length > 0 ? payment[0].data_payment.shipping_fee : ""} size={16} color={COLORS.HEX_BLACK} />
+              <TextComponent text={payment.length > 0 ? `${payment[0].data_payment.shipping_fee.toLocaleString('vi-VN')} VND` : ""} size={16} color={COLORS.HEX_BLACK} />
             </RowComponent>
             <RowComponent justify="space-between" styles={{ alignItems: 'center', marginBottom: 15 }}>
               <TextComponent text="Giảm giá" size={16} color={COLORS.HEX_BLACK} />
-              <TextComponent text={payment.length > 0 ? payment[0].data_payment.discount : ""} size={16} color={COLORS.HEX_BLACK} />
+              <TextComponent text={payment.length > 0 ? `${payment[0].data_payment.discount.toLocaleString('vi-VN')} VND` : ""} size={16} color={COLORS.HEX_BLACK} />
             </RowComponent>
             <RowComponent justify="space-between" styles={{ alignItems: 'center', marginBottom: 15 }}>
               <TextComponent text="Tổng tiền" size={16} color={COLORS.HEX_BLACK} />
-              <TextComponent text={payment.length > 0 ? payment[0].data_payment.total : ""} size={18} color={COLORS.RED} />
+              <TextComponent text={payment.length > 0 ? `${payment[0].data_payment.total.toLocaleString('vi-VN')} VND` : ""} size={18} color={COLORS.RED} />
             </RowComponent>
           </SectionComponent>
         </SectionComponent>

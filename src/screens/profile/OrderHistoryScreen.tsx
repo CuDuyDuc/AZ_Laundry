@@ -1,34 +1,64 @@
-import { FlatList, Image, TouchableOpacity, View } from 'react-native';
-import { ButtonComponent, CardOrderComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../components';
+import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native';
+import { BoxStatusShopOrderComponent, ButtonComponent, CardOrderComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../components';
 import { FONTFAMILY } from '../../../assets/fonts';
 import COLORS from '../../assets/colors/Colors';
 import { useEffect, useState } from 'react';
 import paymentAPI from '../../apis/paymentAPI';
 import { useFocusEffect } from '@react-navigation/native';
 import React from 'react';
+import { PaymentModel } from '../../model/payment_model';
 
 const OrderHistoryScreen = ({ navigation }: any) => {
-  const [payment, setPayment] = useState();
-  const [filteredPayment, setFilteredPayment] = useState([]);
-  const [activeTab, setActiveTab] = useState("Chờ xác nhận");
+  const [payment, setPayment] = useState<PaymentModel[]>([]);
+  const [filteredPayment, setFilteredPayment] = useState<PaymentModel[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<string>('Tất cả');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [statusList, setStatusList] = useState([
+    { status: 'Tất cả', number: 0 },
+    { status: 'Chờ duyệt', number: 0 },
+    { status: 'Đang giặt', number: 0 },
+    { status: 'Đang giao', number: 0 },
+    { status: 'Hoàn thành', number: 0 },
+    { status: 'Đã hủy', number: 0 },
+  ]);
 
-  const getDataPayment = async () => {
-    try {
-      const res: any = await paymentAPI.HandlePayment(`/get-order`);
-      const data = res.data;
-      setPayment(data);
-      console.log('Payment data 1:', data);
-    } catch (error) {
-      console.log('Error: ', error);
+  const handleStatusPress = (status: string) => {
+    setSelectedStatus(status);
+
+    if (status === 'Tất cả') {
+      setFilteredPayment(payment);
+    } else {
+      const filtered = payment.filter((item) => item.confirmationStatus == status);
+      setFilteredPayment(filtered);
     }
   };
 
   const onOrderPress = (id: string) => {
     navigation.navigate('OrderDetatailsScreen', { paymentId: id });
-  }
+  };
 
-  const filterOrdersByStatus = (status: string) => {
-    
+  const getDataPayment = async () => {
+    try {
+      setLoading(true);
+      const res: any = await paymentAPI.HandlePayment(`/get-order`);
+      const data: PaymentModel[] = res.data;
+      setPayment(data);
+      setFilteredPayment(data);
+
+      // Update status counts
+      const updatedStatusList = statusList.map((statusItem) => {
+        if (statusItem.status === 'Tất cả') {
+          return { ...statusItem, number: data.length };
+        }
+        const count = data.filter((item) => item.confirmationStatus == statusItem.status).length;
+        return { ...statusItem, number: count };
+      });
+      setStatusList(updatedStatusList);
+    } catch (error) {
+      console.log('Error: ', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -37,54 +67,53 @@ const OrderHistoryScreen = ({ navigation }: any) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      getDataPayment(); // Gọi lại hàm lấy dữ liệu khi màn hình này được focus
+      getDataPayment();
     }, [])
   );
 
-
-  console.log('Payment data 11111111111111:', payment);
-
   return (
     <ContainerComponent isScroll styleBackground={{ backgroundColor: COLORS.WHITE }}>
-      <HeaderComponent title='Lịch sử đơn hàng' isBack onBack={() => navigation.goBack()} />
-        {/* Tab Navigation */}
-      {/* <SectionComponent>
-        <RowComponent justify="space-around">
-          {["Chờ xác nhận", "Chờ lấy hàng", "Đã xong", "Đánh giá"].map((status) => (
-            <TouchableOpacity key={status} onPress={() => filterOrdersByStatus(status)}>
-              <TextComponent
-                text={status}
-                size={16}
-                color={activeTab === status ? COLORS.AZURE_BLUE : COLORS.BLUE_GRAY}
-                styles={{ fontFamily: FONTFAMILY.montserrat_medium }}
-              />
-            </TouchableOpacity>
-          ))}
-        </RowComponent>
-      </SectionComponent> */}
+      <HeaderComponent title="Lịch sử đơn hàng" isBack onBack={() => navigation.goBack()} />
 
-      <TouchableOpacity >
+      <SectionComponent>
+        <FlatList
+          data={statusList}
+          horizontal
+          keyExtractor={(item) => item.status}
+          renderItem={({ item }) => (
+            <BoxStatusShopOrderComponent
+              status={item.status}
+              number={item.number}
+              onPress={() => handleStatusPress(item.status)}
+              isSelected={selectedStatus === item.status}
+            />
+          )}
+          contentContainerStyle={{ paddingHorizontal: 10 }}
+          showsHorizontalScrollIndicator={false}
+        />
+      </SectionComponent>
 
+      {loading ? (
+        <ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />
+      ) : filteredPayment.length ? (
         <SectionComponent >
           <FlatList
-            data={payment}
+            data={filteredPayment}
             keyExtractor={(item) => item._id.toString()}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => onOrderPress(item._id.toString())}>
                 <View style={{ backgroundColor: COLORS.WHITE, borderRadius: 8 }}>
-                  {/* Hiển thị ID đơn hàng */}
                   <TextComponent text={`#${item._id}`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
 
-                  {/* Hiển thị danh sách sản phẩm trong id_cart */}
                   <FlatList
-                    data={Array.isArray(item.id_cart) ? item.id_cart : []} // Duyệt qua từng giỏ hàng (cart) trong đơn hàng
+                    data={Array.isArray(item.id_cart) ? item.id_cart : []}
                     keyExtractor={(cartItem) => cartItem._id.toString()}
                     renderItem={({ item: cartItem }) => (
                       <CardOrderComponent
                         imgUrl={cartItem.id_product.product_photo[0]}
                         name={cartItem.id_product.product_name}
                         short_description={cartItem.id_product.short_description}
-                        status={item.confirmationStatus} // Lấy status từ đơn hàng chính
+                        status={item.confirmationStatus}
                         total={cartItem.cart_subtotal}
                         quantity={cartItem.product_quantity}
                         id={cartItem._id.toString()}
@@ -104,7 +133,7 @@ const OrderHistoryScreen = ({ navigation }: any) => {
                           marginRight: 10,
                           backgroundColor: COLORS.WHITE,
                           borderColor: COLORS.AZURE_BLUE,
-                          borderWidth: 1
+                          borderWidth: 1,
                         }}
                       />
                       <ButtonComponent
@@ -120,8 +149,9 @@ const OrderHistoryScreen = ({ navigation }: any) => {
             )}
           />
         </SectionComponent>
-
-      </TouchableOpacity>
+      ) : (
+        <TextComponent text="Không có đơn hàng nào" />
+      )}
     </ContainerComponent>
   );
 };

@@ -9,7 +9,7 @@ import { useFocusEffect } from '@react-navigation/native';
 const HistoryScreen = ({ navigation }: any) => {
   const [payment, setPayment] = useState<PaymentModel[]>([]);
   const [filteredPayment, setFilteredPayment] = useState<PaymentModel[]>([]);
-  const [selectedStatus, setSelectedStatus] = useState<string | null>('Tất cả'); // Trạng thái được chọn
+  const [selectedStatus, setSelectedStatus] = useState<string>('Tất cả'); // Trạng thái được chọn
   const [statusList, setStatusList] = useState([
     { status: 'Tất cả', number: 0 },
     { status: 'Chờ duyệt', number: 0 },
