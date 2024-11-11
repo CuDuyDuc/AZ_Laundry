@@ -7,7 +7,6 @@ import TopTabNavigator from './TopTabNavigator'
 
 
 const MainNavigator = () => {
-
     const Stack = createNativeStackNavigator()
     return (
         <ChatContextProvider>

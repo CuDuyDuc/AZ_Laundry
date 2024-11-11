@@ -45,7 +45,6 @@ export const globalStyle = StyleSheet.create({
     },
     shadowCard: {
         backgroundColor: COLORS.WHITE,
-        marginRight: 7,
         shadowColor: 'rgba(0, 0, 0.5)',
         shadowOffset: {
             width: 0,

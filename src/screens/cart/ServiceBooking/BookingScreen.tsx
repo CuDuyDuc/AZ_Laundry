@@ -209,8 +209,8 @@ const BookingScreen = ({navigation, route}: any) => {
               backgroundColor: COLORS.WHITE, 
               textAlignVertical: 'top',
               paddingHorizontal: 20,
-              paddingTop: 10, // Adjust this value to move the text to the top
-              paddingBottom: 0, // Remove bottom padding
+              paddingTop: 10, 
+              paddingBottom: 0, 
               borderRadius: 16,}}/>
         </SectionComponent>
       </KeyboardAvoidingViewWrapper>
