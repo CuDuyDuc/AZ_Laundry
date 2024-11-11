@@ -24,7 +24,8 @@ const IMAGES = {
     iconadress: require('./iconadress.png'),
     iconpayment: require('./iconpayment.png'),
     line: require('./line.png'),
-    star: require("./star.png")
+    star: require("./star.png"),
+    check: require("./check.png"),
 }
 
 export default IMAGES

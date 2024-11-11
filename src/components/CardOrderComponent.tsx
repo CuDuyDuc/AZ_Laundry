@@ -1,79 +1,43 @@
 import React from 'react';
-import { Image, StyleProp, View, ImageStyle, TouchableOpacity } from 'react-native';
+import { Image, View, FlatList, TouchableOpacity } from 'react-native';
 import { RowComponent, SectionComponent, ButtonComponent, TextComponent } from '../components';
 import COLORS from '../assets/colors/Colors';
-import { FONTFAMILY } from '../../assets/fonts';
-
-interface Order {
-    id: string;
-    productName: string;
-    status: string;
-    price: number;
-    quantity: number;
-    imageUrl: string;
-}
 
 interface Props {
-    orders: Order[];
-    onPress: () => void;
+    id: string;
+    imgUrl?: string;
+    name: string;
+    short_description: string;
+    status: string;
+    total: number;
+    quantity: number;
 }
 
-const CardOrderComponent: React.FC<Props> = ({ orders, onPress }) => {
+const Test = (props: Props) => {
+    const { imgUrl, name, short_description, status, total, quantity } = props
+    return (
+            <SectionComponent>
 
-    const renderOrders = () => {
-        return orders.map((order) => (
-            <SectionComponent key={order.id} styles={{ marginLeft: 30, marginRight: 30 }}>
-                
-                <TouchableOpacity onPress={onPress}>
-                    <RowComponent justify="space-between" styles={{ alignItems: 'center' }}>
-                        <TextComponent text={order.id} size={16} color={COLORS.BLUE_GRAY} />
-                    </RowComponent>
-
-                    <RowComponent justify="space-between" styles={{ marginTop: 10 }}>
-                        <Image
-                            source={{ uri: order.imageUrl || 'https://' }}
-                            style={{ width: 80, height: 80, resizeMode: 'contain' } as StyleProp<ImageStyle>}
+                <RowComponent justify="space-between" styles={{ marginTop: 10 }}>
+                    <Image
+                        source={{ uri: imgUrl }}
+                        style={{ width: 80, height: 80, resizeMode: 'contain' }}
+                    />
+                    <View style={{ flex: 1, marginLeft: 10 }}>
+                        <TextComponent text={name} size={16} color={COLORS.BLUE_GRAY} />
+                        <TextComponent text={short_description} size={14} color={COLORS.GRAY_WHITE} />
+                        <TextComponent text={status} size={14} color={COLORS.BLUE_GRAY} />
+                        <TextComponent
+                            text={`${total.toLocaleString('vi-VN')} VND`}
+                            size={16}
+                            color={COLORS.RED}
                         />
-                        <View style={{ flex: 1, marginLeft: 10 }}>
-                            <TextComponent text={order.productName} size={16} color={COLORS.BLUE_GRAY} />
-                            <TextComponent text="Giặt hấp" size={14} color={COLORS.GRAY_WHITE} />
-                            <TextComponent text={order.status} size={14} color={COLORS.BLUE_GRAY} />
-                            <TextComponent
-                                text={`${order.price.toLocaleString('vi-VN')} VND`}
-                                size={16}
-                                color={COLORS.RED}
-                            />
-                        </View>
-                        <TextComponent text={`SL: ${order.quantity}`} size={16} color={COLORS.BLUE_GRAY} />
-                    </RowComponent>
-                </TouchableOpacity>
-
-                <RowComponent justify="flex-end" styles={{ marginTop: 15 }}>
-                    <ButtonComponent
-                        text="Đặt lại"
-                        type="#00ADEF"
-                        textColor={COLORS.AZURE_BLUE}
-                        textStyles={{ fontFamily: FONTFAMILY.montserrat_medium }}
-                        styles={{
-                            width: "30%",
-                            marginRight: 10,
-                            backgroundColor: COLORS.WHITE,
-                            borderColor: COLORS.AZURE_BLUE,
-                            borderWidth: 1
-                        }} />
-                    <ButtonComponent
-                        text="Đánh giá"
-                        type="#00ADEF"
-                        styles={{ width: "30%" }}
-                        textStyles={{ fontFamily: FONTFAMILY.montserrat_medium }} />
+                    </View>
+                    <TextComponent text={`SL: ${quantity}`} size={16} color={COLORS.BLUE_GRAY} />
                 </RowComponent>
-                
-            </SectionComponent>
-        ));
-    };
 
-    return <View>{renderOrders()}</View>;
+            </SectionComponent>
+    );
 };
 
-
-export default CardOrderComponent;
+export default Test;
