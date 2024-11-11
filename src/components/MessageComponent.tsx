@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 import COLORS from './../assets/colors/Colors';
 import TextComponent from './TextComponent';
@@ -22,4 +22,4 @@ const MessageComponent = (props: Props) => {
     );
 };
 
-export default MessageComponent;
+export default memo(MessageComponent);

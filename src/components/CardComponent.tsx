@@ -14,24 +14,20 @@ import TextComponent from './TextComponent';
 interface Props {
     user: any;
     chats: any;
-    isRead?: boolean;
     onPress?: ((event: GestureResponderEvent) => void) | undefined;
 }
 
 const CardComponent = (props: Props) => {
-    const { chats, user, isRead, onPress } = props;
+    const { chats, user, onPress } = props;
+    
     const { recipientUser } = useAxiosRecipient({ chats, user });
-    const { onlineUsers, notifications, allUsers } = useChatContext();
+    const { onlineUsers, notifications,markThisUserNotificationsAsRead} = useChatContext();
     const { lastestMessage } = useAxiosLastesMessage(chats);
     const unreadNotifications = unreadNotificationsFunc(notifications); //hàm này để tính số lượng tin nhắn false có nghĩa chưa đọc
-    const modifiedNotifications = notifications.map((n: any) => {
-        const sender = allUsers.find((user: any) => user._id === n.senderId);
-        return {
-            ...n,
-            senderName: sender?.fullname,
-        };
-    }); //hàm này gọi ra biết được tên người tin nhắn để có thể thông báo
+    const thisUserNotifications = unreadNotifications?.filter((n:any)=> n?.senderId == recipientUser?._id)
     const isActive = onlineUsers.some((user: any) => user.userId === recipientUser?._id);
+    console.log(notifications);
+    
     const truncateText = (text: any) => {
         let shortText = text.substring(0, 20);
         if (text.length > 20) {
@@ -39,9 +35,20 @@ const CardComponent = (props: Props) => {
         }
         return shortText;
     };
-
+    const HandleChatsBox=()=>{
+        if(thisUserNotifications?.length!==0){
+            markThisUserNotificationsAsRead({thisUserNotifications,notifications})
+        }
+        
+    }
+    const handlePress = (event: GestureResponderEvent) => {
+        HandleChatsBox();
+        if (onPress) {
+            onPress(event); 
+        }
+    };
     return (
-        <TouchableOpacity onPress={onPress} style={{ marginBottom: 15 }}>
+        <TouchableOpacity onPress={handlePress} style={{ marginBottom: 15 }}>
             <RowComponent>
                 <View style={{ position: 'relative', marginEnd: 15 }}>
                     {recipientUser?.photo != null ? (
@@ -56,17 +63,17 @@ const CardComponent = (props: Props) => {
                         <TextComponent text={recipientUser?.fullname} font={FONTFAMILY.montserrat_medium} color={COLORS.DARK_BLUE} />
                         <TextComponent
                             text={moment(lastestMessage?.createdAt).format('HH:mm')}
-                            color={isRead ? COLORS.GRAY_WHITE : COLORS.HEX_BLACK}
-                            font={isRead ? FONTFAMILY.montserrat_regular : FONTFAMILY.montserrat_semibold}
+                            color={thisUserNotifications && thisUserNotifications?.length>0 ? COLORS.HEX_BLACK : COLORS.GRAY_WHITE  }
+                            font={thisUserNotifications && thisUserNotifications?.length>0 ? FONTFAMILY.montserrat_semibold :FONTFAMILY.montserrat_regular}
                         />
                     </RowComponent>
                     <RowComponent justify="space-between">
                         <TextComponent
                             text={lastestMessage && truncateText(lastestMessage?.text)}
-                            color={isRead ? COLORS.GRAY_WHITE : COLORS.HEX_BLACK}
-                            font={isRead ? FONTFAMILY.montserrat_regular : FONTFAMILY.montserrat_semibold}
+                            color={thisUserNotifications && thisUserNotifications?.length>0 ?COLORS.HEX_BLACK : COLORS.GRAY_WHITE }
+                            font={thisUserNotifications && thisUserNotifications?.length>0 ? FONTFAMILY.montserrat_semibold : FONTFAMILY.montserrat_regular }
                         />
-                        {isRead ? undefined : <View style={globalStyle.dotBlue} />}
+                        {thisUserNotifications && thisUserNotifications?.length>0 ?  <TextComponent text={`${thisUserNotifications?.length}`}  color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold}/>:undefined}
                     </RowComponent>
                 </View>
             </RowComponent>
