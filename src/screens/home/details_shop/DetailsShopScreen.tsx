@@ -100,6 +100,10 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
     useEffect(() => {
         getDataProducts();
     }, [data._id]);
+    const handleDetailProduct = (item: any) => {
+        console.log('lỗi --------------------106', item.id_user);
+        navigation.navigate('DetailProductService', {data: item});
+      };
     return (
         <>
             {loading ? (
@@ -139,7 +143,7 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
                         </RowComponent>
                     </SectionComponent>
                     <SectionComponent styles={{ position: 'relative', top: 120, paddingBottom: 520 }}>
-                        <CardProductComponent groupProductsByServiceType={groupProductsByServiceType(products)} />
+                        <CardProductComponent onPress={handleDetailProduct} groupProductsByServiceType={groupProductsByServiceType(products)} />
                     </SectionComponent>
                     <View style={{ backgroundColor: COLORS.WHITE, position: 'absolute', bottom: 0, left: 0, right: 0, paddingTop: 15 }}>
                         <SectionComponent styles={{ justifyContent: 'flex-start' }}>

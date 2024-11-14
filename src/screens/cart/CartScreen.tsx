@@ -92,11 +92,16 @@ const CartScreen = ({navigation}: any) => {
             totalCartSubtotal         
         }
     },[carts])
+ 
+    const handleDetailProduct = (item: CartModel) => {
+        
+        navigation.navigate('DetailProductService', { data: item.id_product })
+    }
     return (
         <View style={{backgroundColor:COLORS.WHISPER_GRAY,position:'relative', flex:1}}>
             <HeaderComponent title={`Giỏ hàng`} isBack onBack={() => navigation.goBack()}/>
             <SectionComponent styles={{marginTop:15}}>
-                <CardProductOfProductType onPressDelete={handleDelete} onPressPlus={handlePlus} onPressMinus={handleMinus} isCart={true} carts={carts} isLoading={loading}/>
+                <CardProductOfProductType onPress={handleDetailProduct} onPressDelete={handleDelete} onPressPlus={handlePlus} onPressMinus={handleMinus} isCart={true} carts={carts} isLoading={loading}/>
             </SectionComponent>
             <View style={{backgroundColor:COLORS.WHITE, position:'absolute', bottom:0, left:0, right:0, paddingTop:15}}>
                 <SectionComponent>
