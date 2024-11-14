@@ -18,7 +18,7 @@ import AllStoresScreen from './home/all_stores/AllStoresScreen';
 import DetailShopOfService from './home/product_type/detail_shop_of_service/DetailShopOfService';
 import ProductOfProductTypeScreen from './home/product_type/detail_shop_of_service/product_of_product_type/ProductOfProductTypeScreen';
 import ChatBoxScreen from './notification/chatbox/ChatBoxScreen';
-
+import DetailNotificationScreen from './notification/detail_notification/DetailNotificationScreen';
 import OrderDetatailsScreen from './profile/OrderDetailsScreen';
 import OrderHistoryScreen from './profile/OrderHistoryScreen';
 import SeeReviewsScreen from './home/SeeReviewsScreen';
@@ -46,7 +46,7 @@ export {
     DetailShopOfService,
     ProductOfProductTypeScreen,
     ChatBoxScreen,
-
+    DetailNotificationScreen,
     OrderDetatailsScreen,
     OrderHistoryScreen,
     BookingScreen,

@@ -10,6 +10,7 @@ export interface UserModel {
     password: string; 
     phone_number: string; 
     address: string; 
+    deviceToken: string;
     data_user: {
         shop_name: string; 
         thumbnail: string; 

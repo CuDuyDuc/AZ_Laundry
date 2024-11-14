@@ -51,6 +51,7 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [notifications, setNotifications] = useState<any>([]);
     const [allUsers, setAllUsers] = useState<any>([]);
+    
     useEffect(() => {
         const newSocket = io(appInfo.URL_SOCKET);
         setSocket(newSocket);

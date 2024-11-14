@@ -7,8 +7,10 @@ import { SectionComponent } from '../../components';
 import NotificationItem from '../../components/NotificationItem';
 import { NotificationModel } from '../../model/notification_model';
 import { authSelector } from '../../redux/reducers/authReducer';
-const NotificationScreen = () => {
+const NotificationScreen = ({navigation} : any) => {
   const [listNoti, setListNoti] = useState<NotificationModel[]>();
+  console.log(listNoti);
+  
   const user = useSelector(authSelector);
 
   const getListNotification = async () => {
@@ -40,10 +42,15 @@ const NotificationScreen = () => {
         <SectionComponent>
           <NotificationItem
             title={item?.title}
-            message={item?.message}
+            message={item?.body}
             onUpdateList={getListNotification}
             idItem={item?._id.toString()}
             userId={user?.id}
+            notiStatus={item?.status}
+            createdAt={item?.createdAt}
+            onPress={() =>  navigation.navigate('DetailNotificationScreen', {
+              item : item
+            }) }
           />
         </SectionComponent>
       )}

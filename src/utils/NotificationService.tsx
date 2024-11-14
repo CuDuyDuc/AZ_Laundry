@@ -5,7 +5,8 @@ interface NotificationData {
     title?: string;
     body?: string;
     userId?: string;
-    deviceToken?: string;
+    object_type_id?: string;
+    notification_type?: string;
 }
 
 class NotificationService {
@@ -38,7 +39,7 @@ class NotificationService {
                     id: 'default',
                 },              
                 importance: AndroidImportance.HIGH,
-                timestamp: Date.now() - 480000,
+                timestamp: Date.now(),
                 showTimestamp:true,
             },
         });
