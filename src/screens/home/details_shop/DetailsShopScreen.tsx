@@ -12,6 +12,7 @@ import { useChatContext } from '../../../context/ChatContext';
 import { useSelector } from 'react-redux';
 import { authSelector } from '../../../redux/reducers/authReducer';
 import chatAPI from '../../../apis/chatAPI';
+import IMAGES from '../../../assets/images/Images';
 
 const DetailsShopScreen = ({ navigation, route }: any) => {
     const { data } = route.params;
@@ -72,10 +73,6 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
         getDataDetailShop();
         getChats();
     }, []);
-
-    useEffect(() => {
-        getDataProducts();
-    }, []);
     const HandleChatBox=()=>{
         if(!chat){
             createChat(user.id, data._id)
@@ -99,17 +96,17 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
         
         updateCurrentChat(chat[0]);
         navigation.navigate('ChatScreen');
-        
-       
-        
     }
+    useEffect(() => {
+        getDataProducts();
+    }, [data._id]);
     return (
         <>
             {loading ? (
                 <ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} style={{ marginTop: 83 }} />
             ) : (
                 <View style={{ backgroundColor: COLORS.WHISPER_GRAY, position: 'relative', flex: 1 }}>
-                    <ImageBackground source={{ uri: details[0]?.data_user.shop_banner }} style={{ width: '100%', height: 200 }}>
+                    <ImageBackground source={details[0]?{ uri: details[0]?.data_user.shop_banner }:IMAGES.BackGroundShop} style={{ width: '100%', height: 200 }}>
                         <SectionComponent styles={{ height: 83, flexDirection: 'column', justifyContent: 'center', }}>
                             <RowComponent styles={{ marginTop: 35 }} justify="flex-start">
                                 <TouchableOpacity onPress={() => navigation.goBack()}>
