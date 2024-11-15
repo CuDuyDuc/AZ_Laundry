@@ -26,7 +26,8 @@ const IMAGES = {
     line: require('./line.png'),
     star: require("./star.png"),
     check: require("./check.png"),
-    BackGroundShop:require('./shopdetail.png')
+    BackGroundShop:require('./shopdetail.png'),
+    loading_image: require("./loading_image.jpg")
+    
 }
-
 export default IMAGES
