@@ -24,6 +24,8 @@ import OrderHistoryScreen from './profile/OrderHistoryScreen';
 import SeeReviewsScreen from './home/SeeReviewsScreen';
 import BookingScreen from './cart/ServiceBooking/BookingScreen';
 import DateWeek from './cart/ServiceBooking/DateWeek';
+import ReviewProductsScreen from './profile/ReviewProductsScreen';
+import OrderConfirmationScreen from './history/OrderConfirmationScreen';
 
 export {
     SplashScreen,
@@ -51,6 +53,7 @@ export {
     OrderHistoryScreen,
     BookingScreen,
     DateWeek,
-    SeeReviewsScreen
-
+    SeeReviewsScreen,
+    ReviewProductsScreen,
+    OrderConfirmationScreen
 }

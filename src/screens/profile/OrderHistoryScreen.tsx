@@ -141,6 +141,7 @@ const OrderHistoryScreen = ({ navigation }: any) => {
                         type="#00ADEF"
                         styles={{ width: "30%" }}
                         textStyles={{ fontFamily: FONTFAMILY.montserrat_medium }}
+                        onPress={() => navigation.navigate('ReviewProductsScreen', { paymentId: item._id })}
                       />
                     </RowComponent>
                   )}
