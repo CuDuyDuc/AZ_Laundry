@@ -1,5 +1,5 @@
 import {Cd, ArrowRight2} from 'iconsax-react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -26,6 +26,8 @@ import {
   TextComponent,
 } from '../../../components';
 import moment from 'moment';
+import { CartModel } from '../../../model/cart_model';
+import { useDateTime } from '../../../context/DateTimeContext';
 
 const Data = [
   {
@@ -39,26 +41,81 @@ const Data = [
 ];
 
 const BookingScreen = ({navigation, route}: any) => {
-  const {sendDate, receiveDate, sendTime, receiveTime} = route.params || {};
+  const { sendValue, receiveValue, sendTime, receiveTime}= useDateTime()
+  const {data,total} = route.params || {};
   const [selectedProductType, setSelectedProductType] = useState('wet');
   const [selectedShipOption, setSelectedShipOption] = useState('oneway');
-
   const [notes, setNotes] = useState('');
+  const [totalCarts,setTotalCarts]= useState('')
+  const [dataCarts,setDataCarts]= useState<CartModel[]>([])
+  const groupDataByUserAndService = (data: CartModel[]): CartModel[] => {
+    const groupedData: { [key: string]: CartModel } = {};
+  
+    data?.forEach((item) => {
+      const userId = item.id_user._id.toString();
+      const serviceTypeName = item.id_product.id_product_type.id_service_type.service_type_name;
+  
+      // Use `userId` as a unique key to group by user
+      if (groupedData[userId]) {
+        // Concatenate service types with a comma if it doesn't already contain this service type
+        if (!groupedData[userId].id_product.id_product_type.id_service_type.service_type_name.includes(serviceTypeName)) {
+          groupedData[userId].id_product.id_product_type.id_service_type.service_type_name += `, ${serviceTypeName}`;
+        }
+  
+        // Add to the existing `cart_subtotal`
+        groupedData[userId].cart_subtotal += item.cart_subtotal;
+      } else {
+        // Create a new entry for the user with the current item details
+        groupedData[userId] = {
+          ...item,
+          cart_subtotal: item.cart_subtotal,
+          id_product: {
+            ...item.id_product,
+            id_product_type: {
+              ...item.id_product.id_product_type,
+              id_service_type: {
+                ...item.id_product.id_product_type.id_service_type,
+                service_type_name: serviceTypeName,
+              },
+            },
+          },
+        };
+      }
+    });
+  
+    // Convert the grouped object back into an array
+    return Object.values(groupedData);
+  };
+  useEffect(()=>{
+    setTotalCarts(total)
+    setDataCarts(groupDataByUserAndService(data))
+  },[])
+  const HandlePayment =()=>{
+    navigation.replace('PaymentScreen',
+    {
+      dataCarts:dataCarts,
+      totalCarts:totalCarts,
+      notes:notes,
+      selectedProductType:selectedProductType,
+      selectedShipOption:selectedShipOption
+    })
+  }
 
   const renderItem = ({item}: any) => (
     <ContainerComponent>
       <RowComponent>
-        <Image source={item.image} style={styles.image} />
+        <Image source={{uri:item?.id_product?.id_user?.data_user?.thumbnail}} style={styles.image} />
         <SectionComponent styles={{flex: 1, marginTop: 20}}>
-          <TextComponent text={item.title} color={COLORS.HEX_BLACK} size={14} />
+          <TextComponent text={item?.id_product?.id_user?.data_user?.shop_name} color={COLORS.HEX_BLACK} size={13} font={FONTFAMILY.montserrat_bold}/>
+          <TextComponent text={item?.id_product?.id_product_type?.id_service_type?.service_type_name} color={COLORS.HEX_BLACK} size={14} />
           <TextComponent
-            text={item.price}
+            text={`${item.cart_subtotal} VNĐ`}
             color={COLORS.AZURE_BLUE}
             size={12}
             styles={{marginTop: 4}}
           />
           <TextComponent
-            text={item.Address}
+            text={item?.id_product?.id_user?.address}
             color={COLORS.HEX_LIGHT_GREY}
             size={10}
           />
@@ -66,7 +123,7 @@ const BookingScreen = ({navigation, route}: any) => {
       </RowComponent>
     </ContainerComponent>
   );
-
+  
   return (
     <>
       <KeyboardAvoidingViewWrapper>
@@ -85,15 +142,15 @@ const BookingScreen = ({navigation, route}: any) => {
           />
           <FlatList
             style={{backgroundColor: COLORS.WHITE}}
-            data={Data}
+            data={dataCarts}
             renderItem={renderItem}
-            keyExtractor={item => item.id.toString()}
+            keyExtractor={item => item._id.toString()}
             showsVerticalScrollIndicator={false}
             scrollEnabled={false}
           />
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('DateWeek');
+              navigation.navigate('DateWeek',{total:totalCarts});
             }}>
             <RowComponent
               justify="space-between"
@@ -109,12 +166,12 @@ const BookingScreen = ({navigation, route}: any) => {
           <SectionComponent styles= {{paddingHorizontal: 0}}>
             <SpaceComponent height={10} />
             <RowComponent justify="space-between">
-              <TextComponent text={`Giờ gửi: ${sendTime}`} color={COLORS.AZURE_BLUE} size={14}/>
-              <TextComponent text={`Ngày gửi: ${moment(sendDate).format('DD-MM-YYYY')}`} color={COLORS.AZURE_BLUE} size={14}/>
+              <TextComponent text={`Giờ gửi: ${moment(sendTime).format('HH:mm')}`} color={COLORS.AZURE_BLUE} size={14}/>
+              <TextComponent text={`Ngày gửi: ${moment(sendValue).format('DD-MM-YYYY')}`} color={COLORS.AZURE_BLUE} size={14}/>
             </RowComponent>
-            <RowComponent justify="space-between">
-              <TextComponent text={`Giờ nhận: ${receiveTime}`} color={COLORS.AZURE_BLUE} size={14}/>
-              <TextComponent text={`Ngày gửi: ${moment(receiveDate).format('DD-MM-YYYY')}`} color={COLORS.AZURE_BLUE} size={14}/>
+            <RowComponent justify="space-between" styles={{marginTop:5}}>
+              <TextComponent text={`Giờ nhận: ${moment(receiveTime).format('HH:mm')}`} color={COLORS.AZURE_BLUE} size={14}/>
+              <TextComponent text={`Ngày gửi: ${moment(receiveValue).format('DD-MM-YYYY')}`} color={COLORS.AZURE_BLUE} size={14}/>
             </RowComponent>
           </SectionComponent>
           <TextComponent
@@ -201,6 +258,7 @@ const BookingScreen = ({navigation, route}: any) => {
         <SectionComponent>
           <TextInput 
             placeholder='Nhập ghi chú'
+            placeholderTextColor={COLORS.HEX_LIGHT_GREY}
             value={notes}
             onChangeText={setNotes}
             multiline = {true}
@@ -211,19 +269,20 @@ const BookingScreen = ({navigation, route}: any) => {
               paddingHorizontal: 20,
               paddingTop: 10, 
               paddingBottom: 0, 
-              borderRadius: 16,}}/>
+              borderRadius: 16,
+              color:COLORS.HEX_BLACK,}}/>
         </SectionComponent>
       </KeyboardAvoidingViewWrapper>
       <SectionComponent>
         <TextComponent
           text={
-            'Lưu ý: Thời gian dự kiến nhận hàng sau 24h kể từ lúc cửa hàng nhận hàng từ khách hàng'
+            'Lưu ý: Thời gian dự kiến nhận hàng sau 3h kể từ lúc cửa hàng nhận hàng từ khách hàng'
           }
           color={COLORS.RED}
           size={12}
         />
         <SpaceComponent height={20} />
-        <ButtonComponent type="#00ADEF" text="Tiếp theo" />
+        <ButtonComponent type="#00ADEF" text="Tiếp theo" onPress={HandlePayment} />
       </SectionComponent>
     </>
   );

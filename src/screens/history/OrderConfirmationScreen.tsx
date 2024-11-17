@@ -138,7 +138,7 @@ const OrderConfirmationScreen = ({ navigation }: any) => {
 
                   <RowComponent justify="space-between">
                     <TextComponent text="Tiền dịch vụ" color={COLORS.BLUE_GRAY} size={15} font={FONTFAMILY.montserrat_bold} />
-                    <TextComponent text={`${item.data_payment.discount.toLocaleString('vi-VN')} VND`} color={COLORS.HEX_BLACK} styles={{ marginRight: 30 }} size={15} />
+                    <TextComponent text={`${item.data_payment.total.toLocaleString('vi-VN')} VND`} color={COLORS.HEX_BLACK} styles={{ marginRight: 30 }} size={15} />
                   </RowComponent>
 
                   <RowComponent justify="space-between">
@@ -148,7 +148,7 @@ const OrderConfirmationScreen = ({ navigation }: any) => {
 
                   <RowComponent justify="space-between">
                     <TextComponent text="Tổng thanh toán" color={COLORS.BLUE_GRAY} size={15} font={FONTFAMILY.montserrat_bold} />
-                    <TextComponent text={`${item.data_payment.total.toLocaleString('vi-VN')} VND`} color={COLORS.HEX_BLACK} styles={{ marginRight: 30 }} size={15} />
+                    <TextComponent text={`${item.mount_money.toLocaleString('vi-VN')} VND`} color={COLORS.HEX_BLACK} styles={{ marginRight: 30 }} size={15} />
                   </RowComponent>
 
                 </SectionComponent>

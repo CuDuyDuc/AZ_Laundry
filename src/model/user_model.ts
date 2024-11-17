@@ -10,6 +10,27 @@ export interface UserModel {
     password: string; 
     phone_number: string; 
     address: string; 
+    list_addresses: [{
+        _id:ObjectId
+        full_name:{
+            type:string
+        },
+        address:{
+            type:string
+        },
+        phone_number:{
+            type:string
+        },
+        location: {
+            type: {
+                type: string, 
+                enum: ['Point'], 
+            },
+            coordinates: {
+                type: [Number], 
+            },
+        },
+    }],
     data_user: {
         shop_name: string; 
         thumbnail: string; 

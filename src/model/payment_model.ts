@@ -9,6 +9,9 @@ export interface PaymentModel{
     id_cart:CartModel,
     id_product:ProductModel,
     method_payment:string,
+    full_name:string,
+    number_phone:string,
+    address:string,
     data_payment: {
         shipping_fee: number,
         discount: number,    

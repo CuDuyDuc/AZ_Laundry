@@ -32,7 +32,8 @@ const IMAGES = {
     star1: require("./star1.png"),
     star2: require("./star2.png"),
     BackGroundShop:require('./shopdetail.png'),
-    loading_image: require("./loading_image.jpg")
+    loading_image: require("./loading_image.jpg"),
+    SuccessPayment:require('./success_payment.png')
     
 }
 export default IMAGES

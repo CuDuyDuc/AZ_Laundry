@@ -1,6 +1,6 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   Platform,
@@ -10,29 +10,29 @@ import {
   View,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
-import { FONTFAMILY } from '../../../../assets/fonts';
+import {FONTFAMILY} from '../../../../assets/fonts';
 import COLORS from '../../../assets/colors/Colors';
 import {
   HeaderComponent,
   RowComponent,
   SectionComponent,
   SpaceComponent,
-  TextComponent
+  TextComponent,
 } from '../../../components';
 import ContainerComponent from '../../../components/ContainerComponent';
+import * as Burnt from 'burnt';
+import {title} from 'process';
+import { useDateTime } from '../../../context/DateTimeContext';
 
-const {width, height} = Dimensions.get('window');
+const {height} = Dimensions.get('window');
 
-export default function DateWeek({ref, navigation}: any) {
-  const [sendValue, setSendValue] = useState(new Date());
+export default function DateWeek({navigation, route}: any) {
+  const {total} = route.params;
+  const { receiveTime, setReceiveTime,sendTime, setSendTime,sendValue, setSendValue,receiveValue, setReceiveValue}= useDateTime()
   const [sendWeek, setSendWeek] = useState(0);
-  const [receiveValue, setReceiveValue] = useState(new Date());
   const [receiveWeek, setReceiveWeek] = useState(0);
   const [sendIndex, setSendIndex] = useState(1);
   const [receiveIndex, setReceiveIndex] = useState(1);
-
-  const [receiveTime, setReceiveTime] = useState(new Date());
-  const [sendTime, setSendTime] = useState(new Date());
   const [showSendTimePicker, setShowSendTimePicker] = useState(false);
   const [showReceiveTimePicker, setShowReceiveTimePicker] = useState(false);
 
@@ -45,17 +45,24 @@ export default function DateWeek({ref, navigation}: any) {
 
   const weeks = React.useMemo(() => {
     const generateWeeks = (weekOffset: any) => {
-      const start = moment().add(weekOffset, 'weeks').startOf('week');
+      const start = moment().add(weekOffset, 'weeks').startOf('day');
       return [-1, 0, 1].map(adj => {
-        return Array.from({length: 7}).map((_, index) => {
-          const date = moment(start).add(adj, 'week').add(index, 'day');
-          return {
-            weekday: date.format('ddd'),
-            date: date.toDate(),
-          };
-        });
+        return Array.from({length: 7})
+          .map((_, index) => {
+            const date = moment(start).add(adj, 'week').add(index, 'day');
+            // Chỉ giữ lại các ngày sau ngày hiện tại
+            if (date.isSameOrAfter(moment(), 'day')) {
+              return {
+                weekday: date.format('ddd'),
+                date: date.toDate(),
+              };
+            }
+            return null; // Nếu là ngày trước hiện tại, trả về null
+          })
+          .filter(Boolean); // Lọc bỏ các giá trị null
       });
     };
+
     return {
       sendWeeks: generateWeeks(sendWeek),
       receiveWeeks: generateWeeks(receiveWeek),
@@ -63,20 +70,39 @@ export default function DateWeek({ref, navigation}: any) {
   }, [sendWeek, receiveWeek]);
 
   const handleSendWeekChange = (ind: any) => {
-    if (ind === 1) return;
+    if (ind === 1) return; // Không thay đổi nếu chỉ số là 1 (hoặc không cần thay đổi)
     const newIndex = ind - 1;
     const newWeek = sendWeek + newIndex;
     const newDate = moment(sendValue).add(newIndex, 'week').toDate();
+
+    // Kiểm tra nếu ngày gửi mới không được trước ngày hiện tại
+    if (moment(newDate).isBefore(moment(), 'minute')) {
+      Burnt.toast({
+        title: 'Ngày gửi không thể trước ngày và giờ hiện tại',
+      });
+      return;
+    }
+
     setSendWeek(newWeek);
     setSendValue(newDate);
     setSendMonth(moment(newDate).format('MMMM YYYY'));
   };
 
+  // Hàm kiểm tra ngày nhận phải sau ngày gửi
   const handleReceiveWeekChange = (ind: any) => {
-    if (ind === 1) return;
+    if (ind === 1) return; // Không thay đổi nếu chỉ số là 1 (hoặc không cần thay đổi)
     const newIndex = ind - 1;
     const newWeek = receiveWeek + newIndex;
     const newDate = moment(receiveValue).add(newIndex, 'week').toDate();
+
+    // Kiểm tra nếu ngày nhận không được trước ngày gửi
+    if (moment(newDate).isBefore(moment(sendValue), 'day')) {
+      Burnt.toast({
+        title: 'Ngày nhận không thể trước ngày gửi',
+      });
+      return;
+    }
+
     setReceiveWeek(newWeek);
     setReceiveValue(newDate);
     setReceiveMonth(moment(newDate).format('MMMM YYYY'));
@@ -139,40 +165,49 @@ export default function DateWeek({ref, navigation}: any) {
             loop={false}
             showsPagination={false}
             height={height * 0.2}
-            onIndexChanged={handleSendWeekChange}>
+            onIndexChanged={index => {
+              if (index < 0 || index >= weeks.sendWeeks.length) {
+                return; // Prevent swipe beyond the available weeks
+              }
+              handleSendWeekChange(index + 1); // Only allow valid index changes
+            }}>
             {weeks.sendWeeks.map((dates, index) => (
               <RowComponent styles={styles.itemRow} key={index}>
                 {dates.map((item, dateIndex) => {
-                  const isActive =
-                    sendValue.toDateString() === item.date.toDateString();
-                  return (
-                    <TouchableWithoutFeedback
-                      key={dateIndex}
-                      onPress={() => {
-                        setSendValue(item.date);
-                        setSendMonth(moment(item.date).format('MMMM YYYY'));
-                      }}>
-                      <View
-                        style={[
-                          styles.item,
-                          isActive && {
-                            backgroundColor: '#00ADEF',
-                            borderColor: '#00ADEF',
-                          },
-                        ]}>
-                        <TextComponent
-                          text={item.weekday}
-                          size={13}
-                          color={COLORS.HEX_BLACK}
-                          styles={[styles.itemWeekday]}
-                        />
-                        <TextComponent
-                          text={String(item.date.getDate())}
-                          color={COLORS.HEX_BLACK}
-                        />
-                      </View>
-                    </TouchableWithoutFeedback>
-                  );
+                  if (item) {
+                    // Kiểm tra item có phải là null hay không
+                    const isActive =
+                      sendValue.toDateString() === item.date.toDateString();
+                    return (
+                      <TouchableWithoutFeedback
+                        key={dateIndex}
+                        onPress={() => {
+                          setSendValue(item.date);
+                          setSendMonth(moment(item.date).format('MMMM YYYY'));
+                        }}>
+                        <View
+                          style={[
+                            styles.item,
+                            isActive && {
+                              backgroundColor: '#00ADEF',
+                              borderColor: '#00ADEF',
+                            },
+                          ]}>
+                          <TextComponent
+                            text={item.weekday}
+                            size={13}
+                            color={COLORS.HEX_BLACK}
+                            styles={[styles.itemWeekday]}
+                          />
+                          <TextComponent
+                            text={String(item.date.getDate())}
+                            color={COLORS.HEX_BLACK}
+                          />
+                        </View>
+                      </TouchableWithoutFeedback>
+                    );
+                  }
+                  return null; 
                 })}
               </RowComponent>
             ))}
@@ -227,41 +262,44 @@ export default function DateWeek({ref, navigation}: any) {
             loop={false}
             showsPagination={false}
             height={height * 0.2}
-            style={{ marginHorizontal: 16 }}
-            onIndexChanged={handleReceiveWeekChange}>
-            {weeks.receiveWeeks.map((dates, index) => (
+            scrollEnabled={!moment(receiveValue).isBefore(moment(), 'day')}  // Disable swiper if the sendValue is before today
+            onIndexChanged={index => handleReceiveWeekChange(index + 1)}>
+            {weeks.sendWeeks.map((dates, index) => (
               <RowComponent styles={styles.itemRow} key={index}>
                 {dates.map((item, dateIndex) => {
-                  const isActive =
-                    receiveValue.toDateString() === item.date.toDateString();
-                  return (
-                    <TouchableWithoutFeedback
-                      key={dateIndex}
-                      onPress={() => {
-                        setReceiveValue(item.date);
-                        setReceiveMonth(moment(item.date).format('MMMM YYYY'));
-                      }}>
-                      <View
-                        style={[
-                          styles.item,
-                          isActive && {
-                            backgroundColor: '#00ADEF',
-                            borderColor: '#00ADEF',
-                          },
-                        ]}>
-                        <TextComponent
-                          text={item.weekday}
-                          size={13}
-                          color={COLORS.HEX_BLACK}
-                          styles={[styles.itemWeekday]}
-                        />
-                        <TextComponent
-                          text={String(item.date.getDate())}
-                          color={COLORS.HEX_BLACK}
-                        />
-                      </View>
-                    </TouchableWithoutFeedback>
-                  );
+                  if (item) {
+                    const isActive =
+                      receiveValue.toDateString() === item.date.toDateString();
+                    return (
+                      <TouchableWithoutFeedback
+                        key={dateIndex}
+                        onPress={() => {
+                          setReceiveValue(item.date);
+                          setReceiveMonth(moment(item.date).format('MMMM YYYY'));
+                        }}>
+                        <View
+                          style={[
+                            styles.item,
+                            isActive && {
+                              backgroundColor: '#00ADEF',
+                              borderColor: '#00ADEF',
+                            },
+                          ]}>
+                          <TextComponent
+                            text={item.weekday}
+                            size={13}
+                            color={COLORS.HEX_BLACK}
+                            styles={[styles.itemWeekday]}
+                          />
+                          <TextComponent
+                            text={String(item.date.getDate())}
+                            color={COLORS.HEX_BLACK}
+                          />
+                        </View>
+                      </TouchableWithoutFeedback>
+                    );
+                  }
+                  return null;
                 })}
               </RowComponent>
             ))}
@@ -306,7 +344,7 @@ export default function DateWeek({ref, navigation}: any) {
         <SpaceComponent height={20} />
         <TextComponent
           size={16}
-          text="Tổng: 80,000 VND"
+          text={`Tổng: ${total ? total : 'lỗi'} VND`}
           color={COLORS.WHITE}
           font={FONTFAMILY.montserrat_bold}
         />
@@ -322,8 +360,8 @@ export default function DateWeek({ref, navigation}: any) {
           }}
           onPress={() => {
             navigation.navigate('BookingScreen', {
-              sendDate: moment(sendValue).format('YYYY-MM-DD'), // Chuyển thành chuỗi
-              receiveDate: moment(receiveValue).format('YYYY-MM-DD'), // Chuyển thành chuỗi
+              sendDate: moment(sendValue).format('DD-MM-YYYY'), // Chuyển thành chuỗi
+              receiveDate: moment(receiveValue).format('DD-MM-YYYY'), // Chuyển thành chuỗi
               sendTime: moment(sendTime).format('HH:mm'), // Đã là chuỗi
               receiveTime: moment(receiveTime).format('HH:mm'), // Đã là chuỗi
             });
@@ -359,7 +397,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 4,
     paddingVertical: 15,
-    paddingHorizontal: 4,
     borderWidth: 1,
     borderRadius: 8,
     borderColor: '#00ADEF',
@@ -367,7 +404,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemRow: {
-    width: width,
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
