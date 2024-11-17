@@ -27,6 +27,12 @@ import DateWeek from './cart/ServiceBooking/DateWeek';
 import ReviewProductsScreen from './profile/ReviewProductsScreen';
 import OrderConfirmationScreen from './history/OrderConfirmationScreen';
 import DetailProductService from './home/product_type/detail_shop_of_service/DetailProductService';
+import PaymentScreen from './cart/ServiceBooking/payment/PaymentScreen';
+import AddressSelectionScreen from './cart/ServiceBooking/payment/address_selection/AddressSelectionScreen';
+import Manage_Address from './cart/ServiceBooking/payment/address_selection/manage_address/Manage_Address';
+import SelectPaymentMethodScreen from './cart/ServiceBooking/payment/select_payment_method/SelectPaymentMethodScreen';
+import VNPayPaymentScreen from './cart/ServiceBooking/payment/vnpay_payment/VNPayPaymentScreen';
+import SuccessPaymentScreen from './cart/ServiceBooking/payment/success_payment/SuccessPaymentScreen';
 
 export {
     SplashScreen,
@@ -57,5 +63,11 @@ export {
     DetailProductService,
     SeeReviewsScreen,
     ReviewProductsScreen,
-    OrderConfirmationScreen
+    OrderConfirmationScreen,
+    PaymentScreen,
+    AddressSelectionScreen,
+    Manage_Address,
+    SelectPaymentMethodScreen,
+    VNPayPaymentScreen,
+    SuccessPaymentScreen
 }

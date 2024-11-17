@@ -1,11 +1,10 @@
 import { View, Text } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { ButtonComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../components'
+import { ButtonComponent, CardProductOfProductType, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../components'
 import { CartModel } from '../../model/cart_model'
 import cartAPI from '../../apis/cartAPI'
 import { authSelector } from '../../redux/reducers/authReducer'
 import { useSelector } from 'react-redux'
-import CardProductOfProductType from '../../components/CardProductOfProductTypeComponent'
 import * as Burnt from 'burnt'
 import COLORS from '../../assets/colors/Colors'
 import { FONTFAMILY } from '../../../assets/fonts'
@@ -89,19 +88,16 @@ const CartScreen = ({navigation}: any) => {
     useEffect(()=>{
         getDataCarts()
         if(carts.length>0){
-            totalCartSubtotal         
+            totalCartSubtotal
         }
     },[carts])
- 
-    const handleDetailProduct = (item: CartModel) => {
-        
-        navigation.navigate('DetailProductService', { data: item.id_product })
-    }
+
+    
     return (
         <View style={{backgroundColor:COLORS.WHISPER_GRAY,position:'relative', flex:1}}>
             <HeaderComponent title={`Giỏ hàng`} isBack onBack={() => navigation.goBack()}/>
             <SectionComponent styles={{marginTop:15}}>
-                <CardProductOfProductType onPress={handleDetailProduct} onPressDelete={handleDelete} onPressPlus={handlePlus} onPressMinus={handleMinus} isCart={true} carts={carts} isLoading={loading}/>
+                <CardProductOfProductType onPressDelete={handleDelete} onPressPlus={handlePlus} onPressMinus={handleMinus} isCart={true} carts={carts} isLoading={loading}/>
             </SectionComponent>
             <View style={{backgroundColor:COLORS.WHITE, position:'absolute', bottom:0, left:0, right:0, paddingTop:15}}>
                 <SectionComponent>
@@ -115,7 +111,7 @@ const CartScreen = ({navigation}: any) => {
                     type="#00ADEF"
                     text="Thanh toán ngay"
                     onPress={() => {
-                    navigation.navigate("BookingScreen");
+                        carts.length>0?navigation.navigate("BookingScreen",{data:carts,total:totalCartSubtotal}):undefined
                     }}/>
                 </SectionComponent>
             </View>
