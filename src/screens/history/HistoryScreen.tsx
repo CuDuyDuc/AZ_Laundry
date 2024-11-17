@@ -104,7 +104,7 @@ const HistoryScreen = ({ navigation }: any) => {
               price={item.data_payment.total}
               imgUrl={item.imgUrl}
               dateOrder={new Date(item.createdAt).toLocaleDateString('vi-VN')}
-              onPress={() => handleOrderPress(item._id.toString())}
+              onPress={() => navigation.navigate('OrderConfirmationScreen')}
             />
           )}
         />
