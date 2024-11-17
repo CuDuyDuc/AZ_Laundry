@@ -26,12 +26,18 @@ const ProductOfProductTypeScreen = ({navigation,route}:any) => {
     useEffect(()=>{
       getDataProducts()
     },[])
+
+    const handleDetailProduct = (item: ProductModel) => {
+      navigation.navigate('DetailProductService', { data: item, shopInfo: infoShop })
+      console.log("item =>>>>>>>>>",item)
+      console.log("infoShop =>>>>>>>>>",infoShop)
+    }
   return (
     <ContainerComponent>
       <HeaderComponent title={`${data.id_service_type.service_type_name} > ${data.product_type_name}`} onPress={()=>navigation.navigate('Cart')} isBack onBack={() => navigation.goBack()} />
       <SectionComponent styles={{marginTop:15}}>
         <TextComponent text={`${isUser?'Danh sách dịch vụ':'Dịch vụ của tôi'}`} color={COLORS.DARK_GRAY} font={FONTFAMILY.montserrat_semibold}/>
-        <CardProductOfProductType isLoading={loading} products={products} />
+        <CardProductOfProductType onPress={handleDetailProduct} isLoading={loading} products={products} />
       </SectionComponent>
     </ContainerComponent>
   )

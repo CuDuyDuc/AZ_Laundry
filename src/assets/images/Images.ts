@@ -31,6 +31,8 @@ const IMAGES = {
     photo_camera: require("./photo_camera.png"),
     star1: require("./star1.png"),
     star2: require("./star2.png"),
+    BackGroundShop:require('./shopdetail.png'),
+    loading_image: require("./loading_image.jpg")
+    
 }
-
 export default IMAGES

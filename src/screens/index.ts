@@ -26,6 +26,7 @@ import BookingScreen from './cart/ServiceBooking/BookingScreen';
 import DateWeek from './cart/ServiceBooking/DateWeek';
 import ReviewProductsScreen from './profile/ReviewProductsScreen';
 import OrderConfirmationScreen from './history/OrderConfirmationScreen';
+import DetailProductService from './home/product_type/detail_shop_of_service/DetailProductService';
 
 export {
     SplashScreen,
@@ -53,6 +54,7 @@ export {
     OrderHistoryScreen,
     BookingScreen,
     DateWeek,
+    DetailProductService,
     SeeReviewsScreen,
     ReviewProductsScreen,
     OrderConfirmationScreen

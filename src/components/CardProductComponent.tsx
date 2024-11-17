@@ -15,10 +15,12 @@ import TextComponent from './TextComponent';
 interface Props{
     isLoading?:boolean,
     groupProductsByServiceType?:any
+    onPress:(item:any)=>void,
+
 }
 
 const CardProductComponent = (props:Props) => {
-    const {isLoading,groupProductsByServiceType}=props
+    const {isLoading,groupProductsByServiceType,onPress}=props
     const [expandedGroups, setExpandedGroups] = useState<{ [key: string]: boolean }>({});
     const user = useSelector(authSelector)
     const {isUser}= useRole()
@@ -29,7 +31,7 @@ const CardProductComponent = (props:Props) => {
     }));
   };
     const renderItem = ({ item }: { item: ProductModel }) => (
-        <TouchableOpacity style={{marginBottom:15,backgroundColor:COLORS.WHITE, padding: 8, borderRadius: 16 }}>
+        <TouchableOpacity style={{marginBottom:15,backgroundColor:COLORS.WHITE, padding: 8, borderRadius: 16 }} onPress={() => onPress(item)}>
             <RowComponent>
                 <Image source={{uri:item.product_photo[0]}} style={{ width: 80, height: 80, borderRadius:8 }} />
                 <View style={{ width: '78%', paddingHorizontal: 10 }}>
