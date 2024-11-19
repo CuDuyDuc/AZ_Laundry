@@ -19,6 +19,7 @@ interface Props {
     carts?: CartModel[];
     isLoading?: boolean;
     isCart?: boolean;
+    onPress?: (data: ProductModel) => void ;
     onPressMinus?: (data: CartModel) => void ;
     onPressPlus?: (data: CartModel) => void ;
     onPressDelete?: (data: CartModel) => void ;
@@ -27,7 +28,7 @@ interface Props {
 const CardProductOfProductType = (props: Props) => {
     const user = useSelector(authSelector);
     const { isUser } = useRole();
-    const { products, carts, isLoading, isCart,onPressMinus, onPressPlus ,onPressDelete} = props;
+    const { products, carts, isLoading, isCart,onPressMinus, onPressPlus ,onPressDelete,onPress} = props;
     const renderRightActions = (item:CartModel) => (
         (progressAnimatedValue: Animated.AnimatedInterpolation<string | number>, dragAnimatedValue: Animated.AnimatedInterpolation<string | number>) => (
             <TouchableOpacity onPress={() => onPressDelete && onPressDelete(item)}>
@@ -75,7 +76,7 @@ const CardProductOfProductType = (props: Props) => {
         </Swipeable>
     );
     const renderProductItem = ({ item }: { item: ProductModel }) => (
-        <TouchableOpacity style={{ marginBottom: 15, backgroundColor: COLORS.WHITE, padding: 8, borderRadius: 16 }}>
+        <TouchableOpacity onPress={()=>onPress && onPress(item)} style={{ marginBottom: 15, backgroundColor: COLORS.WHITE, padding: 8, borderRadius: 16 }}>
             <RowComponent>
                 <Image source={{ uri: item.product_photo[0] }} style={{ width: 80, height: 80, borderRadius: 8 }} />
                 <View style={{ width: '78%', paddingHorizontal: 10 }}>
