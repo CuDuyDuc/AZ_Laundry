@@ -37,7 +37,6 @@ const NotificationItem = (props: Props) => {
   // Tính thời gian đã trôi qua từ createdAt cho đến giờ hiện tại
   const formattedTime = vietnamTime.fromNow();  // Kết quả trả về là "vài phút trước" hoặc "vài giờ trước"
 
-  console.log(formattedTime);
   const handleDeleteNotification = async () => {
     const res = await notificationAPI.HandleNotification(
       '/delete',

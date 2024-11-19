@@ -26,7 +26,7 @@ import {
   TextComponent,
 } from '../../../components';
 import moment from 'moment';
-
+import NotificationService from '../../notification/service/NotificationService';
 const Data = [
   {
     id: 1,
@@ -45,6 +45,17 @@ const BookingScreen = ({navigation, route}: any) => {
 
   const [notes, setNotes] = useState('');
 
+
+  const handleSendNotificationOrder = async () => {
+      const req = await NotificationService.sendNotificationToServer({
+        title: 'string',
+        body: 'string',
+        userId: '670eb43123dc57e4d392af1a',
+        notification_type: 'order'
+      })
+      console.log(req);
+      
+  }
   const renderItem = ({item}: any) => (
     <ContainerComponent>
       <RowComponent>
@@ -223,7 +234,7 @@ const BookingScreen = ({navigation, route}: any) => {
           size={12}
         />
         <SpaceComponent height={20} />
-        <ButtonComponent type="#00ADEF" text="Tiếp theo" />
+        <ButtonComponent onPress={handleSendNotificationOrder}  type="#00ADEF" text="Tiếp theo" />
       </SectionComponent>
     </>
   );

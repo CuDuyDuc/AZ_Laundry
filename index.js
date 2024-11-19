@@ -6,7 +6,8 @@ import messaging from '@react-native-firebase/messaging';
 import notifee, {
   EventType,
 } from '@notifee/react-native';
-import NotificationService from './src/utils/NotificationService';
+import NotificationService from './src/screens/notification/service/NotificationService';
+import { navigate } from './src/navigators/service/RootNavigation';
 var EventEmitter = require('eventemitter3');
 
 export const eventEmitter = new EventEmitter();
@@ -27,7 +28,11 @@ messaging().onMessage(onMessageReceived);
 
 notifee.onBackgroundEvent(async ({ type, detail }) => {
   const { notification, pressAction } = detail;
-
+  console.log('Background Event:', type, detail);
+  if (type === EventType.PRESS && pressAction?.id === 'default') {
+    console.log('User pressed notification');
+    navigate('Notification', { from: 'background' });
+  }
   // Check if the user pressed the "Mark as read" action
   switch (type) {
     case EventType.DISMISSED:
@@ -36,8 +41,10 @@ notifee.onBackgroundEvent(async ({ type, detail }) => {
     case EventType.PRESS:
       // Update external API
       eventEmitter.emit('notificationReceived', notification);
-      // Remove the notification
       console.log('Press Notification');
+      // Điều hướng đến màn hình Notification
+      navigate('Notification', { from: 'background' });
+      // Remove the notification
 
       await notifee.cancelNotification(notification.id);
       break;

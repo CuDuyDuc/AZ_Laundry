@@ -9,18 +9,23 @@ import { NotificationModel } from '../../model/notification_model';
 import { authSelector } from '../../redux/reducers/authReducer';
 const NotificationScreen = ({navigation} : any) => {
   const [listNoti, setListNoti] = useState<NotificationModel[]>();
-  console.log(listNoti);
   
   const user = useSelector(authSelector);
 
   const getListNotification = async () => {
     const apiNoti = `/get-alls?userId=${user?.id}`;
 
-    const res = await notificationAPI.HandleNotification
+    try {
+      const res = await notificationAPI.HandleNotification
       (
         apiNoti,
       );
     setListNoti(() => res.data)
+
+    } catch (error) {
+      console.log(error);
+      
+    }
   }
 
   useEffect(() => {

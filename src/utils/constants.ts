@@ -4,4 +4,4 @@ export const notification_type = {
     PROMOTION: 'promotion',
     REMINDER: 'reminder',
     NEW_PRODUCT: 'product'
-  };
+};

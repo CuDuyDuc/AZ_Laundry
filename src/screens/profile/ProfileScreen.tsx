@@ -1,6 +1,6 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { ArrowRight2, Book, LanguageCircle, Logout, Trash, Unlock } from 'iconsax-react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 import { LoginManager } from 'react-native-fbsdk-next';
 import ReactNativeModal from 'react-native-modal';
@@ -9,6 +9,8 @@ import COLORS from '../../assets/colors/Colors';
 import { AccountComponent, HeaderComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from '../../components';
 import { authSelector, removeAuth } from '../../redux/reducers/authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import authenticationAPI from '../../apis/authAPI';
+import { UserModel } from '../../model/user_model';
 
 
 const ProfileScreen = ({ navigation }: any) => {
@@ -16,7 +18,18 @@ const ProfileScreen = ({ navigation }: any) => {
     const user = useSelector(authSelector);
     const dispatch = useDispatch();
     const [isModalVisible, setModalVisible] = useState(false);
-
+    const [phone, setPhone] = useState('');
+    const getUserById = async (id_user: string) => {
+        try {
+        const req : any = await authenticationAPI.HandleAuthentication(`/get-user-by-id?id_user=${id_user}`);
+        console.log(req);
+       if(req) {
+        setPhone(req[0].phone_number);
+       }
+        } catch (error) {
+          console.log(error);
+        }
+      }
     const handleLogout = async () => {
         setModalVisible(true);
     };
@@ -36,6 +49,11 @@ const ProfileScreen = ({ navigation }: any) => {
         setModalVisible(false);
     };
 
+    useEffect(() => {
+
+    getUserById(user?.id);
+    }, [])
+    
     return (
         <>
             <SectionComponent
@@ -79,7 +97,7 @@ const ProfileScreen = ({ navigation }: any) => {
                                 size={14}
                                 color={COLORS.BLUE_GRAY}
                             /> : <TextComponent
-                                text={'Add new phone number'}
+                                text={phone || 'Add new phone number'}
                                 size={14}
                                 color={COLORS.BLUE_GRAY}
                             />}
@@ -99,7 +117,9 @@ const ProfileScreen = ({ navigation }: any) => {
                         icon={<LanguageCircle size="28" color={COLORS.AZURE_BLUE} />}
                         title="Ngôn ngữ"/>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity  onPress={() => {
+                        navigation.navigate('ChangePasswordScreen');
+                    }}>
                     <AccountComponent
                         icon={<Unlock size="28" color={COLORS.AZURE_BLUE} />}
                         title="Đổi mật khẩu"/>

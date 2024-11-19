@@ -1,69 +1,74 @@
 import React, { useRef } from "react";
 import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View, Animated, Image } from "react-native";
 import COLORS from "../../../assets/colors/Colors";
-import { SectionComponent, TextComponent } from "../../../components";
-import { DiscountShape, TicketDiscount } from "iconsax-react-native";
+import { CardOrderComponent, HeaderComponent, KeyboardAvoidingViewWrapper, SectionComponent, TextComponent } from "../../../components";
+import { Box, DiscountShape, NotificationBing, ShoppingBag, TicketDiscount } from "iconsax-react-native";
 import { notification_type } from "../../../utils/constants";
 
 export default function DetailNotificationScreen({navigation, route}: any) {
-    const animatedValue = useRef(new Animated.Value(0)).current;
     const { item } = route.params;
     
-    // Animation for text to move up and change color
-    const textAnimation = {
-        transform: [
-            {
-                translateY: animatedValue.interpolate({
-                    inputRange: [0, 50],
-                    outputRange: [0, -50],
-                    extrapolate: "clamp",
-                }),
-            },
-            {
-                translateX: animatedValue.interpolate({
-                    inputRange: [0, 50],
-                    outputRange: [0, -20],
-                    extrapolate: "clamp",
-                }),
-            },
-        ],
-        color: animatedValue.interpolate({
-            inputRange: [0, 50],
-            outputRange: ["black", "white"],
-            extrapolate: "clamp",
-        }),
-    };
-
     // Render nội dung dựa trên loại thông báo
     const renderNotificationContent = () => {
-        switch (item.notification_type) {
+        switch ("order_update") {
             case notification_type.ORDER_UPDATE:
                 return (
                     <SectionComponent styles={styles.contentBox}>
-                        <TextComponent color={COLORS.HEX_BLACK} size={20} title text="Đơn Hàng Mới" />
-                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`Mã Đơn: ${item.orderId}`} />
-                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`Khách Hàng: ${item.customerName}`} />
-                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`Tổng Tiền: ${item.totalAmount} đ`} />
-                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`Số lượng dịch vụ: ${item.serviceCount}`} />
-                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`Chi tiết dịch vụ: ${item.serviceItems.join(", ")}`} />
+                        <TextComponent color={COLORS.AZURE_BLUE} size={22} styles={ {
+                            fontWeight: 'bold',
+                            textAlign: 'center',
+                            width: '100%'
+                        }}  title text="Đơn Hàng Mới" />
+                        <TextComponent  styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Mã Đơn: #1981239188`} />
+                        <TextComponent  styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Khách Hàng: #1981239188`} />
+                        <SectionComponent styles={{ display: 'flex', flexDirection: 'row', paddingHorizontal:0, paddingBottom: 0}}>
+                        <TextComponent  styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Phương thức thanh toán: `} />
+                        <TextComponent color={COLORS.AZURE_BLUE} size={16} text={`VNPAY`} />
+                        </SectionComponent>
+                    
+
+                        <TextComponent  styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Tổng Tiền: 120.000 đ`} />
+
+                        <TextComponent  styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Dịch vụ khách đặt:`} />
+                        <CardOrderComponent 
+                          imgUrl={"https://firebasestorage.googleapis.com/v0/b/az-laundry.appspot.com/o/product_type_icon%2Fao.png?alt=media&token=1aff5676-861a-42c1-b0c9-15ad3343e330"}
+                          name={"Áo"}
+                          short_description={"ok"}
+                          status={"Chờ duyệt"}
+                          total={140.000}
+                          quantity={2}
+                          id={""}
+                        />
+                        <CardOrderComponent 
+                          imgUrl={"https://firebasestorage.googleapis.com/v0/b/az-laundry.appspot.com/o/product_type_icon%2Fao.png?alt=media&token=1aff5676-861a-42c1-b0c9-15ad3343e330"}
+                          name={"Áo"}
+                          short_description={"ok"}
+                          status={"Chờ duyệt"}
+                          total={140.000}
+                          quantity={2}
+                          id={""}
+                        />
                     </SectionComponent>
                 );
             case notification_type.REMINDER:
                 return (
                     <SectionComponent styles ={styles.contentBox}>
-                        <TextComponent color={COLORS.HEX_BLACK} size={20} title text={item.title} />
+                        <TextComponent color={COLORS.AZURE_BLUE} size={20} title text={item.title} styles= {{
+                             fontWeight: 'bold',
+                             textAlign: 'center',
+                             width: '100%'
+                        }}/>
                         <TextComponent color={COLORS.HEX_BLACK} size={16} text={item.body || 'Content'} />
-
                         <TextComponent color={COLORS.HEX_BLACK} size={16} text={item.shortDescription || 'shortDescription'} />
                     </SectionComponent>
                 );
             case notification_type.NEW_PRODUCT:
                 return (
                     <SectionComponent styles={styles.contentBox}>
-                        <TextComponent color={COLORS.HEX_BLACK} size={20} title text="Sản Phẩm Mới" />
-                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`Tên Sản Phẩm: ${item.productName}`} />
-                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`Tên Shop: ${item.shopName}`} />
+                        <TextComponent color={COLORS.HEX_BLACK} size={20} title text="Dịch vụ Mới" />
                         <Image source={{ uri: item.shopImage }} style={styles.shopImage} />
+                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`Tên dịch vụ: ${item.productName}`} />
+                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`Tên Shop: ${item.shopName}`} />
                     </SectionComponent>
                 );
             default:
@@ -74,25 +79,10 @@ export default function DetailNotificationScreen({navigation, route}: any) {
     };
 
     return (
-        <View style={styles.container}>
-            <StatusBar barStyle="light-content" />
-
-            <SafeAreaView>
-                <View style={styles.upperHeaderPlaceholder} />
-            </SafeAreaView>
-
-            <View style={styles.header}>
-                <Animated.Text style={[styles.notificationText, textAnimation]}>
-                    Thông báo Chi tiết
-                </Animated.Text>
-            </View>
-            <ScrollView
-                onScroll={(e) => {
-                    const offsetY = e.nativeEvent.contentOffset.y;
-                    animatedValue.setValue(offsetY);
-                }}
-                scrollEventThrottle={16}
-            >
+        <SectionComponent styles={styles.container}>
+            <HeaderComponent isBack onBack={() => navigation.goBack()} title="Thông báo chi tiết" />
+        
+            <KeyboardAvoidingViewWrapper>
                 <SectionComponent styles={styles.scrollViewContent} >
                     <SectionComponent styles= {{
                         marginTop: 40,
@@ -106,12 +96,14 @@ export default function DetailNotificationScreen({navigation, route}: any) {
                         justifyContent: 'center',
                         alignItems: 'center'
                     }}>
-                        <DiscountShape size="40" color="#FF8A65"/>
+                        {item?.notification_type === notification_type.ORDER_UPDATE ? <ShoppingBag size="40" color={COLORS.AZURE_BLUE}/> : 
+                        item?.notification_type === notification_type.PROMOTION ?  <DiscountShape size="40" color={COLORS.AZURE_BLUE}/> : 
+                        item?.notification_type === notification_type.NEW_PRODUCT ? <Box size="40" color={COLORS.AZURE_BLUE}/> : <NotificationBing size="40" color={COLORS.AZURE_BLUE}/>}
                     </SectionComponent>
                     {renderNotificationContent()}
                 </SectionComponent>
-            </ScrollView>
-        </View>
+            </KeyboardAvoidingViewWrapper>
+        </SectionComponent>
     );
 }
 
@@ -120,6 +112,8 @@ const UPPER_HEADER_HEIGHT = 60;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingHorizontal:0,
+        paddingVertical: 0
     },
     upperHeaderPlaceholder: {
         height: UPPER_HEADER_HEIGHT,
@@ -136,7 +130,6 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     scrollViewContent: {
-        height: 1000,
         display: 'flex',
         justifyContent: 'flex-start',
         alignItems: 'center'
@@ -147,7 +140,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.WHITE,
         borderRadius: 10,
         width: '90%',
-        alignItems: 'flex-start'
+        gap: 10
     },
     shopImage: {
         width: 100,

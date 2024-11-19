@@ -1,10 +1,9 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import { ChatContextProvider } from '../context/ChatContext'
-import { AllStoresScreen, BookingScreen, ChatBoxScreen, DateWeek, DetailNotificationScreen, DetailShopOfService, DetailsShopScreen, HistoryScreen, InfoScreen, OrderDetatailsScreen, OrderHistoryScreen, ProductOfProductTypeScreen, ProductTypeScreen, SeeReviewsScreen } from '../screens'
+import { AllStoresScreen, BookingScreen, ChangePasswordSceen, ChatBoxScreen, DateWeek, DetailNotificationScreen, DetailShopOfService, DetailsShopScreen, HistoryScreen, InfoScreen, OrderDetatailsScreen, OrderHistoryScreen, ProductOfProductTypeScreen, ProductTypeScreen, SeeReviewsScreen } from '../screens'
 import TabNavigator from './TabNavigator'
 import TopTabNavigator from './TopTabNavigator'
-
 
 const MainNavigator = () => {
     const Stack = createNativeStackNavigator()
@@ -26,7 +25,8 @@ const MainNavigator = () => {
                 <Stack.Screen name="BookingScreen" component={BookingScreen} />
                 <Stack.Screen name="DateWeek" component={DateWeek} />
                 <Stack.Screen name="SeeReviewsScreen" component={SeeReviewsScreen} />
-                <Stack.Screen name="DetailNotificationScreen" component={DetailNotificationScreen} />
+                <Stack.Screen name="DetailNotificationScreen"  component={DetailNotificationScreen} />
+                <Stack.Screen name="ChangePasswordScreen"  component={ChangePasswordSceen} />
 
             </Stack.Navigator>
         </ChatContextProvider>

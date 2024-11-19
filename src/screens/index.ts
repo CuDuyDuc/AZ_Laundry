@@ -24,7 +24,7 @@ import OrderHistoryScreen from './profile/OrderHistoryScreen';
 import SeeReviewsScreen from './home/SeeReviewsScreen';
 import BookingScreen from './cart/ServiceBooking/BookingScreen';
 import DateWeek from './cart/ServiceBooking/DateWeek';
-
+import ChangePasswordSceen from './profile/ChangePasswordScreen';
 export {
     SplashScreen,
     OnBoardingScreen,
@@ -51,6 +51,6 @@ export {
     OrderHistoryScreen,
     BookingScreen,
     DateWeek,
-    SeeReviewsScreen
-
+    SeeReviewsScreen,
+    ChangePasswordSceen
 }

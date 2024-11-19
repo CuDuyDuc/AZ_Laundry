@@ -367,7 +367,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemRow: {
-    width: width,
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
