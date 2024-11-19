@@ -1,25 +1,25 @@
-import { View, TouchableOpacity, Image, ActivityIndicator, FlatList, Animated } from 'react-native';
-import React from 'react';
-import { ProductModel } from '../model/product';
-import { CartModel } from '../model/cart_model';
-import COLORS from '../assets/colors/Colors';
-import RowComponent from './RowComponent';
-import TextComponent from './TextComponent';
-import { FONTFAMILY } from '../../assets/fonts';
 import { AddSquare, Minus } from 'iconsax-react-native';
-import { useAxiosAddCart } from '../hooks/useAxiosAddCart';
-import { useSelector } from 'react-redux';
-import { authSelector } from '../redux/reducers/authReducer';
-import { useRole } from '../permission/permission';
-import SectionComponent from './SectionComponent';
+import React from 'react';
+import { ActivityIndicator, Animated, FlatList, Image, TouchableOpacity, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
+import { useSelector } from 'react-redux';
+import { FONTFAMILY } from '../../assets/fonts';
+import COLORS from '../assets/colors/Colors';
+import { useAxiosAddCart } from '../hooks/useAxiosAddCart';
+import { CartModel } from '../model/cart_model';
+import { ProductModel } from '../model/product';
+import { useRole } from '../permission/permission';
+import { authSelector } from '../redux/reducers/authReducer';
+import RowComponent from './RowComponent';
+import SectionComponent from './SectionComponent';
+import TextComponent from './TextComponent';
 
 interface Props {
     products?: ProductModel[];
     carts?: CartModel[];
     isLoading?: boolean;
     isCart?: boolean;
-    onPress?: (data: ProductModel) => void ;
+    onPress?: (data: any) => void ;
     onPressMinus?: (data: CartModel) => void ;
     onPressPlus?: (data: CartModel) => void ;
     onPressDelete?: (data: CartModel) => void ;
@@ -48,7 +48,7 @@ const CardProductOfProductType = (props: Props) => {
     );
     const renderCartItem = ({ item }: { item: CartModel }) => (
         <Swipeable renderRightActions={renderRightActions(item)}>
-            <TouchableOpacity style={{ marginBottom: 15, backgroundColor: COLORS.WHITE, padding: 8, borderRadius: 16 }}>
+            <TouchableOpacity onPress={()=>onPress&& onPress(item)} style={{ marginBottom: 15, backgroundColor: COLORS.WHITE, padding: 8, borderRadius: 16 }}>
                 <RowComponent>
                     <Image source={{ uri: item.id_product.product_photo[0] }} style={{ width: 80, height: 80, borderRadius: 8 }} />
                     <View style={{ width: '78%', paddingHorizontal: 10 }}>
