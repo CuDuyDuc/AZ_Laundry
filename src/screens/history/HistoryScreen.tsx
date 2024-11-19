@@ -101,10 +101,10 @@ const HistoryScreen = ({ navigation }: any) => {
             <CardOrderShopComponent
               id={item._id.toString()}
               status={item.confirmationStatus.toString()}
-              price={item.data_payment.total}
+              price={item.mount_money}
               imgUrl={item.imgUrl}
               dateOrder={new Date(item.createdAt).toLocaleDateString('vi-VN')}
-              onPress={() => handleOrderPress(item._id.toString())}
+              onPress={() => navigation.navigate('OrderConfirmationScreen')}
             />
           )}
         />

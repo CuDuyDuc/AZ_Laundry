@@ -13,7 +13,6 @@ import CardShopComponent from './CardShopComponent';
 import HeaderComponent from './HeaderComponent';
 import AccountComponent from './AccountComponent';
 import CardProductComponent from './CardProductComponent';
-import CardProductOfProductTypeComponent from './CardProductOfProductTypeComponent';
 import CardOrderComponent from './CardOrderComponent';
 import LineComponent from './LineComponent';
 import MessageComponent from './MessageComponent';
@@ -27,6 +26,8 @@ import BottomSheetComponent from './BottomSheetComponent';
 import CheckBoxComponent from './CheckBoxComponent';
 import SpinnerComponent from './SpinnerComponent';
 import CircleComponent from './CircleComponent';
+import CardProductOfProductType from './CardProductOfProductTypeComponent';
+import PickerComponent from './PickerComponent';
 export {
     ButtonComponent,
     ContainerComponent,
@@ -43,7 +44,7 @@ export {
     HeaderComponent, 
     AccountComponent,
     CardProductComponent,
-    CardProductOfProductTypeComponent,
+    CardProductOfProductType,
     CardOrderComponent,
     LineComponent,
     MessageComponent,
@@ -56,6 +57,6 @@ export {
     BottomSheetComponent,
     CheckBoxComponent,
     SpinnerComponent,
-    CircleComponent
-
+    CircleComponent,
+    PickerComponent
 }

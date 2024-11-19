@@ -13,9 +13,11 @@ import { useSelector } from 'react-redux';
 import { authSelector } from '../../../redux/reducers/authReducer';
 import chatAPI from '../../../apis/chatAPI';
 import IMAGES from '../../../assets/images/Images';
+import { useRole } from '../../../permission/permission';
 
 const DetailsShopScreen = ({ navigation, route }: any) => {
     const { data } = route.params;
+    const { isUser } = useRole()
     const [details, setDetailShop] = useState<UserModel[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [products, setProducts] = useState<ProductModel[]>([])
@@ -100,6 +102,10 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
     useEffect(() => {
         getDataProducts();
     }, [data._id]);
+    const handleDetailProduct = (item: any) => {
+        console.log('lỗi --------------------106', item.id_user);
+        navigation.navigate('DetailProductService', {data: item});
+      };
     return (
         <>
             {loading ? (
@@ -138,27 +144,29 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
                             <ButtonComponent type='link' text='Xem đánh giá' color={COLORS.AZURE_BLUE} onPress={() => { navigation.navigate("SeeReviewsScreen") }} />
                         </RowComponent>
                     </SectionComponent>
-                    <SectionComponent styles={{ position: 'relative', top: 120, paddingBottom: 520 }}>
-                        <CardProductComponent groupProductsByServiceType={groupProductsByServiceType(products)} />
+                    <SectionComponent styles={{ position: 'relative', top: 120, paddingBottom: isUser?520:400 }}>
+                        <CardProductComponent onPress={handleDetailProduct} groupProductsByServiceType={groupProductsByServiceType(products)} />
                     </SectionComponent>
-                    <View style={{ backgroundColor: COLORS.WHITE, position: 'absolute', bottom: 0, left: 0, right: 0, paddingTop: 15 }}>
-                        <SectionComponent styles={{ justifyContent: 'flex-start' }}>
-                            <TouchableOpacity onPress={HandleChatBox}>
-                                <RowComponent>
-                                    <Message size={18} variant='Bold' color={COLORS.AZURE_BLUE} />
-                                    <TextComponent styles={{ marginLeft: 5 }} text={'Hỗ trợ khách hàng'} color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
-                                </RowComponent>
-                            </TouchableOpacity>
-                        </SectionComponent>
-                        <SectionComponent>
-                            <RowComponent justify='space-between'>
-                                <TouchableOpacity onPress={() => navigation.navigate('Cart')} >
-                                    <ShoppingCart size={40} color={COLORS.AZURE_BLUE} />
+                    {isUser?(
+                        <View style={{ backgroundColor: COLORS.WHITE, position: 'absolute', bottom: 0, left: 0, right: 0, paddingTop: 15 }}>
+                            <SectionComponent styles={{ justifyContent: 'flex-start' }}>
+                                <TouchableOpacity onPress={HandleChatBox}>
+                                    <RowComponent>
+                                        <Message size={18} variant='Bold' color={COLORS.AZURE_BLUE} />
+                                        <TextComponent styles={{ marginLeft: 5 }} text={'Hỗ trợ khách hàng'} color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
+                                    </RowComponent>
                                 </TouchableOpacity>
-                                <ButtonComponent styles={{ width: '80%' }} type='#00ADEF' text='Đến trang thanh toán' />
-                            </RowComponent>
-                        </SectionComponent>
-                    </View>
+                            </SectionComponent>
+                            <SectionComponent>
+                                <RowComponent justify='space-between'>
+                                    <TouchableOpacity onPress={() => navigation.navigate('Cart')} >
+                                        <ShoppingCart size={40} color={COLORS.AZURE_BLUE} />
+                                    </TouchableOpacity>
+                                    <ButtonComponent styles={{ width: '80%' }} type='#00ADEF' text='Đến trang thanh toán' />
+                                </RowComponent>
+                            </SectionComponent>
+                        </View>
+                    ):undefined}
                 </View>
             )}
         </>

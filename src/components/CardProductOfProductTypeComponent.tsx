@@ -51,7 +51,10 @@ const CardProductOfProductType = (props: Props) => {
                 <RowComponent>
                     <Image source={{ uri: item.id_product.product_photo[0] }} style={{ width: 80, height: 80, borderRadius: 8 }} />
                     <View style={{ width: '78%', paddingHorizontal: 10 }}>
-                        <TextComponent text={item.id_product.product_name} color={COLORS.DARK_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
+                        <RowComponent justify='space-between'>
+                            <TextComponent text={item.id_product.product_name} color={COLORS.DARK_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
+                            <TextComponent text={item.id_product?.id_product_type?.id_service_type?.service_type_name} color={COLORS.HEX_LIGHT_GRAY} font={FONTFAMILY.montserrat_medium} size={13} />
+                        </RowComponent>
                         <TextComponent styles={{ paddingVertical: 3 }} text={item.id_product.short_description} color={COLORS.HEX_LIGHT_GRAY} size={13} />
                         <RowComponent justify='space-between'>
                             <TextComponent text={`${item.cart_subtotal} vnđ`} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} />
@@ -65,6 +68,7 @@ const CardProductOfProductType = (props: Props) => {
                                 </TouchableOpacity>
                             </RowComponent>
                         </RowComponent>
+                        <TextComponent text={`${item.id_product.id_user.data_user.shop_name}`} color={COLORS.HEX_LIGHT_GRAY} font={FONTFAMILY.montserrat_regular} size={13} />
                     </View>
                 </RowComponent>
             </TouchableOpacity>

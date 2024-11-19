@@ -10,12 +10,13 @@ import { AccountComponent, HeaderComponent, RowComponent, SectionComponent, Spac
 import { authSelector, removeAuth } from '../../redux/reducers/authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import authenticationAPI from '../../apis/authAPI';
-import { UserModel } from '../../model/user_model';
+import { useRole } from '../../permission/permission';
 
 
 const ProfileScreen = ({ navigation }: any) => {
 
     const user = useSelector(authSelector);
+    const { isUser } = useRole()
     const dispatch = useDispatch();
     const [isModalVisible, setModalVisible] = useState(false);
     const [phone, setPhone] = useState('');
@@ -106,12 +107,19 @@ const ProfileScreen = ({ navigation }: any) => {
                     <ArrowRight2 size={32} color={COLORS.HEX_BLACK} />
                 </RowComponent>
                 <SpaceComponent height={10} />
-                <TouchableOpacity onPress={() => {navigation.navigate('OrderHistoryScreen')}}>
-                    <AccountComponent
-                        icon={<Book size="28" color={COLORS.AZURE_BLUE} />}
-                        title="Lịch sử đặt hàng"
-                    />
-                </TouchableOpacity>
+                {isUser?(
+                    <TouchableOpacity onPress={() => {navigation.navigate('OrderHistoryScreen')}}>
+                        <AccountComponent
+                            icon={<Book size="28" color={COLORS.AZURE_BLUE} />}
+                            title="Lịch sử đặt hàng"/>
+                    </TouchableOpacity>
+                ):(
+                    <TouchableOpacity >
+                        <AccountComponent
+                            icon={<Book size="28" color={COLORS.AZURE_BLUE} />}
+                            title="Thống kê"/>
+                    </TouchableOpacity>
+                )}
                 <TouchableOpacity>
                     <AccountComponent
                         icon={<LanguageCircle size="28" color={COLORS.AZURE_BLUE} />}
@@ -128,11 +136,6 @@ const ProfileScreen = ({ navigation }: any) => {
                     <AccountComponent
                         icon={<Logout size="28" color={COLORS.AZURE_BLUE} />}
                         title="Đăng xuất" />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                    <AccountComponent
-                        icon={<Trash size="28" color={COLORS.AZURE_BLUE} />}
-                        title="Xoá tài khoản" />
                 </TouchableOpacity>
             </SectionComponent>
             <ReactNativeModal

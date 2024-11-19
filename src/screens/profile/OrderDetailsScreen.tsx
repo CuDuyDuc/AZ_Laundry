@@ -7,9 +7,10 @@ import StepProgress from './StepProgress';
 import { useEffect, useState } from 'react';
 import { PaymentModel } from '../../model/payment_model';
 import paymentAPI from '../../apis/paymentAPI';
+import { usePaymentMethod } from '../../context/PaymentMethodContext';
 
 const OrderDetatailsScreen = ({ navigation, route }: any) => {
-
+  const {selectedPaymentMethod}=usePaymentMethod()
   const [payment, setPayment] = useState<PaymentModel[]>([]);
   const { paymentId } = route.params;
 
@@ -129,11 +130,11 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
             <RowComponent justify="flex-start" styles={{ marginTop: 5, alignItems: 'flex-start' }}>
               <TextComponent text="Địa chỉ" size={14} color={COLORS.HEX_BLACK} styles={{ width: 60 }} />
               <TextComponent
-                text={payment.length > 0 ? payment[0].id_user.address : ''}
+                text={payment.length > 0 ? payment[0].address : ''}
                 size={15}
                 color={COLORS.HEX_BLACK}
                 font={FONTFAMILY.montserrat_medium}
-                styles={{ flex: 1, flexWrap: 'wrap', marginLeft: 10 }}
+                styles={{ flex: 1, flexWrap: 'wrap', marginLeft: 10 , textAlign:'right'}}
               />
             </RowComponent>
           </View>
@@ -148,7 +149,7 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
           <View style={{ flex: 1 }}>
             <TextComponent text="Phương thức thanh toán" size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
             <RowComponent justify="flex-start" styles={{ marginTop: 5, alignItems: 'flex-start' }}>
-              <TextComponent text={payment.length > 0 ? payment[0].method_payment : ""} size={14} color={COLORS.HEX_BLACK} styles={{ width: 200 }} />
+              <TextComponent text={payment[0]?.method_payment ==='COD' ?"Thanh toán khi nhận hàng"  : " Thanh toán VNPay"} size={14} color={COLORS.HEX_BLACK} styles={{ width: 200 }} />
             </RowComponent>
           </View>
         </RowComponent>
@@ -170,7 +171,7 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
             </RowComponent>
             <RowComponent justify="space-between" styles={{ alignItems: 'center', marginBottom: 15 }}>
               <TextComponent text="Tổng tiền" size={16} color={COLORS.HEX_BLACK} />
-              <TextComponent text={payment.length > 0 ? `${payment[0].data_payment.total.toLocaleString('vi-VN')} VND` : ""} size={18} color={COLORS.RED} />
+              <TextComponent text={payment.length > 0 ? `${payment[0].mount_money.toLocaleString('vi-VN')} VND` : ""} size={18} color={COLORS.RED} />
             </RowComponent>
           </SectionComponent>
         </SectionComponent>

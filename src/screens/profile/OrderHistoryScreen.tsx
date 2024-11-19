@@ -1,11 +1,10 @@
-import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native';
-import { BoxStatusShopOrderComponent, ButtonComponent, CardOrderComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../components';
-import { FONTFAMILY } from '../../../assets/fonts';
-import COLORS from '../../assets/colors/Colors';
-import { useEffect, useState } from 'react';
-import paymentAPI from '../../apis/paymentAPI';
 import { useFocusEffect } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, TouchableOpacity, View } from 'react-native';
+import { FONTFAMILY } from '../../../assets/fonts';
+import paymentAPI from '../../apis/paymentAPI';
+import COLORS from '../../assets/colors/Colors';
+import { BoxStatusShopOrderComponent, ButtonComponent, CardOrderComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../components';
 import { PaymentModel } from '../../model/payment_model';
 
 const OrderHistoryScreen = ({ navigation }: any) => {
@@ -141,6 +140,7 @@ const OrderHistoryScreen = ({ navigation }: any) => {
                         type="#00ADEF"
                         styles={{ width: "30%" }}
                         textStyles={{ fontFamily: FONTFAMILY.montserrat_medium }}
+                        onPress={() => navigation.navigate('ReviewProductsScreen', { paymentId: item._id })}
                       />
                     </RowComponent>
                   )}

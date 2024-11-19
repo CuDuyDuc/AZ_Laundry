@@ -108,4 +108,10 @@ export const globalStyle = StyleSheet.create({
         bottom: 0,
         right: 0,
     },
+    styleSection:{
+        backgroundColor:COLORS.WHITE, 
+        marginTop:5, 
+        borderRadius:15, 
+        paddingTop:15
+    },
 })
