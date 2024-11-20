@@ -79,7 +79,6 @@ const HomeScreen = ({ route, navigation }: any) => {
         const subscription = eventEmitter.on('newNotification', getUnreadNotificationCount);
         const subscriptionUpdateNoti = eventEmitterUpdateRead.on('updateCountNotiRead', getUnreadNotificationCount);
         
-        // Hủy lắng nghe sự kiện khi component unmount
         return () => {
           subscription.off('newNotification', getUnreadNotificationCount);
           subscriptionUpdateNoti.off('updateCountNotiRead', getUnreadNotificationCount);

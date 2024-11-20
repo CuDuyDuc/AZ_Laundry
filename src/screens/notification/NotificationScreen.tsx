@@ -24,16 +24,13 @@ const NotificationScreen = ({navigation} : any) => {
 
     } catch (error) {
       console.log(error);
-      
     }
   }
 
   useEffect(() => {
     getListNotification();
-    // Lắng nghe sự kiện 'newNotification'
     const subscription = eventEmitter.on('newNotification', getListNotification);
 
-    // Hủy lắng nghe sự kiện khi component unmount
     return () => {
       subscription.off('newNotification', getListNotification);
     };
