@@ -14,6 +14,7 @@ import { useAddresses } from '../../../../context/AddressesContext'
 import { usePaymentMethod } from '../../../../context/PaymentMethodContext'
 import paymentAPI from '../../../../apis/paymentAPI'
 import * as Burnt from "burnt";
+import NotificationService from '../../../notification/service/NotificationService'
 
 const PaymentScreen = ({navigation, route}: any) => {
     const user = useSelector(authSelector);
@@ -80,9 +81,16 @@ const PaymentScreen = ({navigation, route}: any) => {
                 },'post')
                 if(res){
                     if(res.paymentUrl){
-                        navigation.replace('VNPayPaymentScreen',{vnpayUrl:res.paymentUrl})
+                        navigation.replace('VNPayPaymentScreen',{vnpayUrl:res.paymentUrl, orderId: res?.orderId})
                     }else{
                         navigation.replace('SuccessPaymentScreen')
+                        NotificationService.sendNotificationToServer({
+                            title: "Bạn có một đơn hàng mới" ,
+                            body: "Có đơn hàng mới Shop ơi💎💎",
+                            sender: user?.id,
+                            object_type_id: res?.data?._id,
+                            notification_type: "order_update",
+                        })
                     }
                 }
             } catch (error) {

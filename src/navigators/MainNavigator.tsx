@@ -1,13 +1,12 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import { ChatContextProvider } from '../context/ChatContext'
-import { AllStoresScreen, BookingScreen, ChatBoxScreen, Manage_Address, DateWeek, DetailShopOfService,DetailProductService , DetailsShopScreen, HistoryScreen, InfoScreen, OrderDetatailsScreen, OrderHistoryScreen, ProductOfProductTypeScreen, ProductTypeScreen, SeeReviewsScreen, ReviewProductsScreen, OrderConfirmationScreen , SelectPaymentMethodScreen, SuccessPaymentScreen, VNPayPaymentScreen ,PaymentScreen,AddressSelectionScreen} from '../screens'
+import { AllStoresScreen, BookingScreen, ChatBoxScreen, Manage_Address, DateWeek, DetailShopOfService,DetailProductService , DetailsShopScreen, HistoryScreen, InfoScreen, OrderDetatailsScreen, OrderHistoryScreen, ProductOfProductTypeScreen, ProductTypeScreen, SeeReviewsScreen, ReviewProductsScreen, OrderConfirmationScreen , SelectPaymentMethodScreen, SuccessPaymentScreen, VNPayPaymentScreen ,PaymentScreen,AddressSelectionScreen, DetailNotificationScreen, ChangePasswordSceen} from '../screens'
 import TabNavigator from './TabNavigator'
 import TopTabNavigator from './TopTabNavigator'
 import { DateTimeProvider } from '../context/DateTimeContext'
 import { AddressesProvider } from '../context/AddressesContext'
 import { PaymentMethodProvider } from '../context/PaymentMethodContext'
-
 
 const MainNavigator = () => {
     const Stack = createNativeStackNavigator()
@@ -41,6 +40,8 @@ const MainNavigator = () => {
                             <Stack.Screen name="SelectPaymentMethodScreen" component={SelectPaymentMethodScreen} />
                             <Stack.Screen name="VNPayPaymentScreen" component={VNPayPaymentScreen} />
                             <Stack.Screen name="SuccessPaymentScreen" component={SuccessPaymentScreen} />
+                            <Stack.Screen name="DetailNotificationScreen"  component={DetailNotificationScreen} />
+                            <Stack.Screen name="ChangePasswordScreen"  component={ChangePasswordSceen} />
                         </Stack.Navigator>
                     </PaymentMethodProvider>
                 </AddressesProvider>

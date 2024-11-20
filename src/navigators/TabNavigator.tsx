@@ -87,7 +87,7 @@ const TabNavigator = () => {
             <Tab.Screen name='Home' component={HomeScreen} />
             {isUser ? (<Tab.Screen name='Cart' component={CartScreen} />):(<Tab.Screen name='History' component={HistoryScreen} />)}
             {(isShop || isAdmin) && (<Tab.Screen name='AddService' component={AddService} />)}
-            <Tab.Screen name='Notification' component={TopTabNavigator} />
+            <Tab.Screen name='Notification'  component={TopTabNavigator} />
             <Tab.Screen name='Profile' component={ProfileScreen} />
         </Tab.Navigator>
     )

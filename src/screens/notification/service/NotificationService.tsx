@@ -1,11 +1,13 @@
 import notifee, { AndroidImportance, TriggerType } from '@notifee/react-native';
-import firebaseAPI from '../apis/firebaseNotiAPI';
+import firebaseAPI from '../../../apis/firebaseNotiAPI';
 
 interface NotificationData {
     title?: string;
     body?: string;
     userId?: string;
-    deviceToken?: string;
+    sender?: string;
+    object_type_id?: string;
+    notification_type?: string;
 }
 
 class NotificationService {
@@ -35,10 +37,10 @@ class NotificationService {
                 smallIcon: 'ic_launcher',
                 largeIcon: 'https://cdn-icons-png.flaticon.com/256/5103/5103880.png',
                 pressAction: {
-                    id: 'default',
+                    id: 'default'
                 },              
                 importance: AndroidImportance.HIGH,
-                timestamp: Date.now() - 480000,
+                timestamp: Date.now(),
                 showTimestamp:true,
             },
         });
@@ -54,7 +56,7 @@ class NotificationService {
                 notificationData,
                 'post',
             );
-            return response.data;
+            return response;
         } catch (error) {
             console.error('Error sending notification:', error);
             throw error;

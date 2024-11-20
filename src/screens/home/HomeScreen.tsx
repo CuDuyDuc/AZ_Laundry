@@ -25,6 +25,9 @@ import { service_type } from '../../model/service_type';
 import { authSelector } from '../../redux/reducers/authReducer';
 import { TipModel } from '../../model/tip_model';
 import Firebase from '../../configs/firebaseConfig';
+import { eventEmitter } from '../../../index.js';
+import notificationAPI from '../../apis/notificationApi.ts';
+import { eventEmitterUpdateRead } from '../../components/NotificationItem.tsx';
 import authenticationAPI from '../../apis/authAPI';
 import * as Burnt from "burnt";
 type Coordinates = {
@@ -41,7 +44,9 @@ const HomeScreen = ({ route, navigation }: any) => {
     });
     const [typeService, setTypeService] = useState<service_type[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-
+    const [countUnread, setCountUnread] = useState<string>('0');
+    console.log({countUnread});
+    
     const [selectedTip, setSelectedTip] = useState<TipModel | null>(null);
     const bottomSheetRef = useRef<any>(null);
 
@@ -56,10 +61,30 @@ const HomeScreen = ({ route, navigation }: any) => {
             setLoading(false);
         }
     };
-
+    const getUnreadNotificationCount = async () => {
+        try {
+            console.log(user);
+            
+            const res = await notificationAPI.HandleNotification(`/get-count-unread?userId=${user?.id}`);
+            setCountUnread(res.data);
+        } catch (error) {
+            console.log('Error fetching service types: ', error);
+        }
+    };
+    
     useEffect(() => {
         getDataService_Type();
-        Firebase(user?.id)
+        Firebase(user?.id);
+        getUnreadNotificationCount();
+        const subscription = eventEmitter.on('newNotification', getUnreadNotificationCount);
+        const subscriptionUpdateNoti = eventEmitterUpdateRead.on('updateCountNotiRead', getUnreadNotificationCount);
+        
+        return () => {
+          subscription.off('newNotification', getUnreadNotificationCount);
+          subscriptionUpdateNoti.off('updateCountNotiRead', getUnreadNotificationCount);
+
+        };
+
     }, []);
     const requestLocationPermission = async () => {
         if (Platform.OS === 'android') {
@@ -166,7 +191,29 @@ const HomeScreen = ({ route, navigation }: any) => {
                             font={FONTFAMILY.montserrat_medium}
                         />
                         <TouchableOpacity>
+                            <SectionComponent styles= {{
+                                position : 'relative',
+                                paddingHorizontal: 0,
+                                paddingVertical:0
+                            }}>
                             <Notification size="30" color={COLORS.WHITE} />
+                            <RowComponent styles={{
+                                paddingHorizontal: 0,
+                                paddingVertical:0,
+                                position: 'absolute',
+                                top: -5,
+                                right: -5,
+                                backgroundColor: 'red',
+                                borderRadius: 10,
+                                width: 20, 
+                                height: 20,
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}>
+                         <TextComponent color={COLORS.WHITE} size={12}  text={Number(countUnread) > 10 ? '10+' : countUnread}/>
+                            </RowComponent>
+                            </SectionComponent>
                         </TouchableOpacity>
                     </RowComponent>
                 </SectionComponent>

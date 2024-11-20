@@ -17,7 +17,6 @@ const Test = (props: Props) => {
     const { imgUrl, name, short_description, status, total, quantity } = props
     return (
             <SectionComponent>
-
                 <RowComponent justify="space-between" styles={{ marginTop: 10 }}>
                     <Image
                         source={{ uri: imgUrl }}

@@ -26,9 +26,9 @@ import {
   TextComponent,
 } from '../../../components';
 import moment from 'moment';
+import NotificationService from '../../notification/service/NotificationService';
 import { CartModel } from '../../../model/cart_model';
 import { useDateTime } from '../../../context/DateTimeContext';
-
 const Data = [
   {
     id: 1,
@@ -101,6 +101,17 @@ const BookingScreen = ({navigation, route}: any) => {
     })
   }
 
+
+  const handleSendNotificationOrder = async () => {
+      const req = await NotificationService.sendNotificationToServer({
+        title: 'string',
+        body: 'string',
+        userId: '670eb43123dc57e4d392af1a',
+        notification_type: 'order'
+      })
+      console.log(req);
+      
+  }
   const renderItem = ({item}: any) => (
     <ContainerComponent>
       <RowComponent>

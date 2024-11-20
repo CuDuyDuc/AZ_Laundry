@@ -9,7 +9,7 @@ const TopTabNavigator = ({navigation}:any) => {
     return (
         <>
             <HeaderComponent title='Thông báo' isBack onBack={() => navigation.goBack()} />
-            < Tab.Navigator >
+            < Tab.Navigator initialRouteName="Thông báo" >
                 <Tab.Screen name="Tin nhắn" component={MessageScreen} />
                 <Tab.Screen name="Thông báo" component={NotificationScreen} />
             </Tab.Navigator>
