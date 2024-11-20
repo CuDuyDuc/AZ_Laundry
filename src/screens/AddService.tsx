@@ -21,16 +21,6 @@ import { useSelector } from 'react-redux';
 import { authSelector } from '../redux/reducers/authReducer';
 import { appInfo } from '../apis/appInfo';
 
-// const initValues = {
-//     image: null as string | null,
-//     serviceName: 'Áo khoác dài',
-//     serviceType: '',
-//     idServiceType: '',
-//     productType: '',
-//     price: '',
-//     ShortDescription: '',
-//     DetailedDescription: '',
-// };
 const initValues = {
     images: [] as { uri: string, type: string, name: string }[], // Sửa thành mảng chứa các đối tượng ảnh
     serviceName: 'Áo khoác dài',
@@ -87,63 +77,6 @@ const AddService = ({ navigation }: any) => {
         }
     };
 
-    // Function to upload data and image to the API
-    // const handleUpload = async () => {
-    //     if (!values.image) {
-    //         Alert.alert('Error', 'Please select an image before saving.');
-    //         return;
-    //     }
-    //     // product_photo : downloadURLs,
-    //     // product_name:data.product_name,
-    //     // product_price:data.product_price,
-    //     // id_user:data.id_user,
-    //     // data_product:data.data_product,
-    //     // product_description:data.product_description,
-    //     // short_description:data.short_description,
-    //     // id_product_type: data.id_product_type
-    //     const formData = new FormData();
-    //     // formData.append('product_name', values.serviceType);
-    //     formData.append('product_name', values.productType);
-    //     formData.append('product_price', values.price);
-    //     formData.append('short_description', values.ShortDescription);
-    //     formData.append('product_description', values.DetailedDescription);
-    //     formData.append('id_user', user?.id);
-    //     formData.append('id_product_type', values.productType);
-
-    //     formData.append('image', {
-    //         uri: values.image,
-    //         type: 'image/jpg', 
-    //         name: new Date() + 'product.jpg',
-    //     });
-
-    //     // images.forEach((image, index) => {
-    //     //     formData.append('image', {
-    //     //       uri: image.uri,
-    //     //       type: image.type,
-    //     //       name: image.fileName || `photo_${index}.jpg`
-    //     //     });
-    //     //   });
-    //     try {
-    //         const response = await fetch(`${appInfo.BASE_URL}/product/addProduct`, {
-    //             method: 'POST',
-    //             body: formData,
-    //             headers: {
-    //                 'Content-Type': 'multipart/form-data',
-    //             },
-    //         });
-
-    //         if (response.ok) {
-    //             Alert.alert('Success', 'Data and image uploaded successfully.');
-    //         } else {
-    //             console.error('Error uploading:', response.status);
-    //             Alert.alert('Error', 'An error occurred during the upload.');
-    //         }
-    //     } catch (error) {
-    //         console.error('Upload Error:', error);
-    //         Alert.alert('Error', 'Unable to upload image.');
-    //     }
-    // };
- // Function to upload data and images to the API
  const handleUpload = async () => {
     if (values?.images?.length === 0) {
         Alert.alert('Error', 'Please select images before saving.');

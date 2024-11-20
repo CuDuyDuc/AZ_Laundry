@@ -103,7 +103,6 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
         getDataProducts();
     }, [data._id]);
     const handleDetailProduct = (item: any) => {
-        console.log('lỗi --------------------106', item.id_user);
         navigation.navigate('DetailProductService', {data: item});
       };
     return (

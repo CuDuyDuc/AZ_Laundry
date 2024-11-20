@@ -29,8 +29,6 @@ const ProductOfProductTypeScreen = ({navigation,route}:any) => {
 
     const handleDetailProduct = (item: ProductModel) => {
       navigation.navigate('DetailProductService', { data: item, shopInfo: infoShop })
-      console.log("item =>>>>>>>>>",item)
-      console.log("infoShop =>>>>>>>>>",infoShop)
     }
   return (
     <ContainerComponent>
