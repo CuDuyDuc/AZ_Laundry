@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Alert, Image, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import COLORS from '../assets/colors/Colors';
 import IMAGES from '../assets/images/Images';
@@ -9,10 +9,13 @@ import {
     InputComponent,
     KeyboardAvoidingViewWrapper,
     SectionComponent,
+    PickerComponent,
+    RowComponent,
     SpaceComponent,
     SpinnerComponent,
     TextComponent
 } from '../components';
+import { useRole } from '../permission/permission';
 import serviceAPI from '../apis/serviceAPI';
 import { service_type } from '../model/service_type';
 import productTypeAPI from '../apis/product_typeAPI';
@@ -20,9 +23,14 @@ import { ProductTypeModel } from '../model/product_type';
 import { useSelector } from 'react-redux';
 import { authSelector } from '../redux/reducers/authReducer';
 import { appInfo } from '../apis/appInfo';
+import { useGetThirdPartyAPI } from '../hooks/useGetThirdPartyAPI';
+import * as Burnt from "burnt";
+import authenticationAPI from '../apis/authAPI';
+import { FONTFAMILY } from '../../assets/fonts';
+
 
 const initValues = {
-    images: [] as { uri: string, type: string, name: string }[], // Sửa thành mảng chứa các đối tượng ảnh
+    images: [] as { uri: string, type: string, name: string }[], 
     serviceName: 'Áo khoác dài',
     serviceType: '',
     idServiceType: '',
@@ -40,14 +48,63 @@ interface type_spinner {
 const AddService = ({ navigation }: any) => {
     const user = useSelector(authSelector);
     const [values, setValues] = useState(initValues);
-    const [selectedValue, setSelectedValue] = useState<string | null>(null);
     const [serviceTypeList, setServiceTypeList] = useState<service_type[]>();
-    const [serviceTypeSpinner, setserviceTypeName] = useState<string | null>();
     const [productTypeList, setProductTypeList] = useState<ProductTypeModel[]>();
     const [loading, setLoading] = useState<boolean>(true);
-    console.log(values);
-    // console.log({productTypeList});
-    // Function to open the image library and select images
+  const { isShop, isAdmin } = useRole();
+    const [note, setNote] = useState('')
+  const [specificAddress, setSpecificAddress] = useState('')
+  const [value, setValue] = useState('')
+  const { valueLocation: provinceData } = useGetThirdPartyAPI(1, 0);
+  const [selectedValueProvince, setSelectedValueProvince] = useState<any>({});
+  const [files, setFiles] = useState<{ uri: string | undefined; type: string | undefined; name: string | undefined; }[]>([]);
+  const { valueLocation: districtData } = useGetThirdPartyAPI(
+    2,
+    selectedValueProvince?.id,
+  );
+  const [selectedValueDistrict, setSelectedValueDistrict] = useState<any>({});
+  const { valueLocation: wardData } = useGetThirdPartyAPI(
+    3,
+    selectedValueDistrict?.id,
+  );
+  const [selectedValueWard, setSelectedValueWard] = useState<any>({});
+  const HandleGetProvince = (data: any) => {
+    setSelectedValueProvince(data);
+  };
+  const HandleGetDistrict = (data: any) => {
+    setSelectedValueDistrict(data);
+  };
+  const HandleGetWard = (data: any) => {
+    setSelectedValueWard(data);
+  };
+
+  const handleAddFile = async (type: string) => {
+    try {
+      const options = {
+        mediaType: type as 'photo',
+        selectionLimit: 1,
+      };
+
+      const result = await launchImageLibrary(options);
+
+      if (result.assets && result.assets.length > 0) {
+        const newFile = {
+          uri: result.assets[0].uri,
+          type: result.assets[0].type,
+          name: result.assets[0].fileName,
+        };
+
+        setFiles((prevFiles) => [...prevFiles, newFile]);
+      }
+    } catch (error) {
+      console.log('Error adding file:', error);
+    }
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  };
+
     const handleImagePick = async () => {
         try {
             const result = await launchImageLibrary({
@@ -154,15 +211,36 @@ const AddService = ({ navigation }: any) => {
             value: item?._id
         }));
     };
-
+    const HandleAddShop = async () => {
+        const address = `${specificAddress}, ${selectedValueWard?.full_name}, ${selectedValueDistrict?.full_name}, ${selectedValueProvince?.full_name}`
+        try {
+          const respones = await authenticationAPI.HandleAuthentication('/create-user', {
+            
+            address: address
+          }, 'post')
+          if (respones) {
+            Burnt.toast({
+              title: "Thêm thành công",
+    
+            });
+          } else {
+            console.log('Sai dòng 118')
+          }
+          navigation.navigate('AddressSelectionScreen')
+        } catch (error) {
+          console.log(error);
+    
+        }
+      }
     useEffect(() => {
         getDataService_Type();
-        
     }, []);
 
     return (
         <KeyboardAvoidingViewWrapper>
-            <HeaderComponent
+       { isShop ? (
+        <>
+             <HeaderComponent
                 title="Thêm dịch vụ"
                 isBack
                 onBack={() => navigation.goBack()}
@@ -262,6 +340,192 @@ const AddService = ({ navigation }: any) => {
                     onPress={handleUpload}
                 />
             </SectionComponent>
+            </>
+       ) : isAdmin ? (
+        <>
+          <KeyboardAvoidingViewWrapper>
+            <HeaderComponent
+              title="Tạo Shop"
+              isBack
+              onBack={() => navigation.goBack()}
+            />
+            <SectionComponent styles={{ marginTop: 20 }}>
+              <RowComponent>
+                <ButtonComponent
+                  text="Thêm hình ảnh"
+                  icon={<Image source={IMAGES.camera_alt} style={{ width: 20, height: 20 }} />}
+                  iconFlex="left"
+                  type="#00ADEF"
+                  textColor={COLORS.AZURE_BLUE}
+                  textStyles={{ fontFamily: FONTFAMILY.montserrat_medium }}
+                  styles={{
+                    width: "49%",
+                    backgroundColor: COLORS.HEX_GRAY,
+                    borderColor: COLORS.AZURE_BLUE,
+                    borderWidth: 1,
+                    borderRadius: 1,
+                  }}
+                  onPress={() => handleAddFile('photo')}
+                />
+                <ButtonComponent
+                  text="Thêm baner"
+                  icon={<Image source={IMAGES.camera_alt} style={{ width: 20, height: 20 }} />}
+                  iconFlex="left"
+                  type="#00ADEF"
+                  textColor={COLORS.AZURE_BLUE}
+                  textStyles={{ fontFamily: FONTFAMILY.montserrat_medium }}
+                  styles={{
+                    width: "49%",
+                    marginLeft: 5,
+                    backgroundColor: COLORS.HEX_GRAY,
+                    borderColor: COLORS.AZURE_BLUE,
+                    borderWidth: 1,
+                    borderRadius: 1
+                  }}
+                  onPress={() => handleAddFile('photo')}
+                />
+              </RowComponent>
+
+              <RowComponent styles={{ marginTop: 10, flexWrap: 'wrap' }}>
+                {files.map((file, index) => (
+                  <View key={index} style={{ margin: 5 }}>
+                    <TouchableOpacity onPress={() => handleRemoveFile(index)} style={{ position: 'relative' }}>
+                      <Image
+                        source={{ uri: file.uri }}
+                        style={{
+                          width: 100,
+                          height: 100,
+                          borderRadius: 5,
+                          borderWidth: 1,
+                          borderColor: COLORS.GRAY,
+                        }}
+                      />
+                      <View style={{
+                        position: 'absolute',
+                        top: -5,
+                        right: -5,
+                        backgroundColor: COLORS.RED,
+                        borderRadius: 15,
+                        width: 20,
+                        height: 20,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}>
+                        <TextComponent
+                          text="X"
+                          color={COLORS.WHITE}
+                          size={12}
+                          font={FONTFAMILY.montserrat_bold}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </RowComponent>
+            </SectionComponent>
+            <SectionComponent>
+              <TextComponent
+                text={'Tên Shop'}
+                color={COLORS.HEX_BLACK}
+                size={14}
+                font={FONTFAMILY.montserrat_bold} />
+              <InputComponent
+                value={value}
+                onChange={setValue}
+                backgroundColor={COLORS.WHITE}
+                allowClear />
+              <TextComponent
+                text={'Email'}
+                color={COLORS.HEX_BLACK}
+                size={14}
+                font={FONTFAMILY.montserrat_bold} />
+              <InputComponent
+                value={value}
+                onChange={setValue}
+                backgroundColor={COLORS.WHITE}
+                allowClear />
+              <TextComponent
+                text={'Password'}
+                color={COLORS.HEX_BLACK}
+                size={14}
+                font={FONTFAMILY.montserrat_bold} />
+              <InputComponent
+                value={value}
+                onChange={setValue}
+                backgroundColor={COLORS.WHITE}
+                isPassword />
+              <TextComponent
+                text={'Mô tả Shop'}
+                color={COLORS.HEX_BLACK}
+                size={14}
+                font={FONTFAMILY.montserrat_bold} />
+              <TextInput
+                placeholder='Nhập mô tả'
+                placeholderTextColor={COLORS.HEX_LIGHT_GREY}
+                value={note}
+                onChangeText={setNote}
+                multiline={true}
+                numberOfLines={8}
+                style={{
+                  backgroundColor: COLORS.WHITE,
+                  textAlignVertical: 'top',
+                  paddingHorizontal: 20,
+                  paddingTop: 10,
+                  paddingBottom: 0,
+                  borderRadius: 16,
+                  color: COLORS.HEX_BLACK,
+                }} />
+              <TextComponent
+                text={'Tỉnh / TP'}
+                color={COLORS.HEX_BLACK}
+                size={14}
+                font={FONTFAMILY.montserrat_bold} />
+              <PickerComponent
+                dataLocation={provinceData}
+                onDataLocation={HandleGetProvince} />
+            </SectionComponent>
+            <SectionComponent>
+              <TextComponent
+                text={'Quận / Huyện'}
+                color={COLORS.HEX_BLACK}
+                size={14}
+                font={FONTFAMILY.montserrat_bold} />
+              <PickerComponent
+                dataLocation={districtData}
+                onDataLocation={HandleGetDistrict} />
+            </SectionComponent>
+            <SectionComponent>
+              <TextComponent
+                text={'Phường / Xã'}
+                color={COLORS.HEX_BLACK}
+                size={14}
+                font={FONTFAMILY.montserrat_bold} />
+              <PickerComponent
+                dataLocation={wardData}
+                onDataLocation={HandleGetWard} />
+            </SectionComponent>
+            <SectionComponent>
+              <TextComponent
+                text={'Địa chỉ cụ thể'}
+                color={COLORS.HEX_BLACK}
+                size={14}
+                font={FONTFAMILY.montserrat_bold} />
+              <InputComponent
+                placeholder='102 Hoài Thanh'
+                allowClear
+                value={specificAddress}
+                backgroundColor={COLORS.WHITE}
+                onChange={val => setSpecificAddress(val)} />
+            </SectionComponent>
+            <SectionComponent>
+              <ButtonComponent 
+                type='#00ADEF'
+                text='Tạo Shop'
+              />
+            </SectionComponent>
+          </KeyboardAvoidingViewWrapper>
+        </>
+       ) : null }
         </KeyboardAvoidingViewWrapper>
     );
 };
