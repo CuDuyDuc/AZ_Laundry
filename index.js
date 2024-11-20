@@ -32,18 +32,14 @@ notifee.onBackgroundEvent(async ({ type, detail }) => {
     console.log('User pressed notification');
     navigate('Notification', { from: 'background' });
   }
-  // Check if the user pressed the "Mark as read" action
   switch (type) {
     case EventType.DISMISSED:
       console.log('User dismissed notification', detail.notification);
       break;
     case EventType.PRESS:
-      // Update external API
       eventEmitter.emit('notificationReceived', notification);
       console.log('Press Notification');
-      // Điều hướng đến màn hình Notification
       navigate('Notification', { from: 'background' });
-      // Remove the notification
 
       await notifee.cancelNotification(notification.id);
       break;

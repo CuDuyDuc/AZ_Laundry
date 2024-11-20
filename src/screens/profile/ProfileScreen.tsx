@@ -42,7 +42,6 @@ const ProfileScreen = ({ navigation }: any) => {
         await LoginManager.logOut();
         dispatch(removeAuth({}));
 
-        // Ẩn modal sau khi đăng xuất thành công
         setModalVisible(false);
     };
 

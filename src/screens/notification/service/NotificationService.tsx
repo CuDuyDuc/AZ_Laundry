@@ -5,6 +5,7 @@ interface NotificationData {
     title?: string;
     body?: string;
     userId?: string;
+    sender?: string;
     object_type_id?: string;
     notification_type?: string;
 }
