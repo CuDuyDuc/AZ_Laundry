@@ -54,7 +54,7 @@ const InputComponent = (props: Props) => {
                         <Eye size={22} color={COLORS.BLUE_GRAY} />
                     )
                 ) : (
-                    value.length > 0 && allowClear && (
+                    value?.length > 0 && allowClear && (
                         <CloseSquare size={22} color={COLORS.BLUE_GRAY} />
                     )
                 )}
