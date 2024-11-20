@@ -16,7 +16,6 @@ const onMessageReceived = async message => {
 
   await NotificationService.requestPermissions();
   await NotificationService.displayLocalNotification(message.notification.title, message.notification.body);
-  // Phát sự kiện thông báo mới nhận
   eventEmitter.emit('newNotification');
   Burnt.toast({
     title: 'Có thông báo mới'

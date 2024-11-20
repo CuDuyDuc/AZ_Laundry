@@ -282,7 +282,6 @@ const AddService = ({ navigation }: any) => {
                     items={transformedDataSpinner(serviceTypeList, 'service') ?? []}
                     placeholder="Loại Giặt: "
                     onValueChange={(values)  => {
-                        // handleChangeValue('serviceType', values);
                         getDataProductType(values);
                     }}
                 />

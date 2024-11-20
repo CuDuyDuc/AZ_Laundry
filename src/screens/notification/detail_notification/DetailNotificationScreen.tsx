@@ -8,7 +8,6 @@ import { notification_type } from "../../../utils/constants";
 export default function DetailNotificationScreen({navigation, route}: any) {
     const { item } = route.params;
     
-    // Render nội dung dựa trên loại thông báo
     const renderNotificationContent = () => {
         switch ("order_update") {
             case notification_type.ORDER_UPDATE:
