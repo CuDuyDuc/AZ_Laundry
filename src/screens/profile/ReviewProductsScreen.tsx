@@ -86,7 +86,7 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
     }, []);
 
     return (
-        <ContainerComponent>
+        <ContainerComponent isScroll>
             <HeaderComponent title="Đánh giá đơn hàng" isBack onBack={() => navigation.goBack()} />
 
             <SectionComponent>
@@ -141,7 +141,7 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                         textColor={COLORS.AZURE_BLUE}
                         textStyles={{ fontFamily: FONTFAMILY.montserrat_medium }}
                         styles={{
-                            width: "50%",
+                            width: "49%",
                             marginRight: 10,
                             backgroundColor: COLORS.HEX_GRAY,
                             borderColor: COLORS.AZURE_BLUE,
@@ -158,7 +158,7 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                         textColor={COLORS.AZURE_BLUE}
                         textStyles={{ fontFamily: FONTFAMILY.montserrat_medium }}
                         styles={{
-                            width: "50%",
+                            width: "49%",
                             marginRight: 10,
                             backgroundColor: COLORS.HEX_GRAY,
                             borderColor: COLORS.AZURE_BLUE,
@@ -183,7 +183,6 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                                         borderColor: COLORS.GRAY,
                                     }}
                                 />
-                                {/* Nút xóa tệp */}
                                 <View style={{
                                     position: 'absolute',
                                     top: -5,
@@ -221,22 +220,22 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
             </RowComponent>
 
             <SectionComponent>
-                <InputComponent
-                    value={comment}
-                    onChange={(val) => setComment(val)}
-                    allowClear
-                    placeholder="Hãy chia sẻ những điều bạn thích ở sản phẩm này nhé"
-                    style={{
-                        borderColor: COLORS.WHITE,
-                        backgroundColor: COLORS.WHITE,
-                        borderRadius: 5,
-                        height: 200,
-                        justifyContent: 'flex-start',
-                        alignItems: 'flex-start',
-                    }}
-                    multiline={true}
-                    numberOfLines={5}
-                />
+                <TextInput
+                placeholder='Hãy chia sẻ những điều bạn thích ở sản phẩm này nhé'
+                placeholderTextColor={COLORS.HEX_LIGHT_GREY}
+                value={comment}
+                onChangeText={(val) => setComment(val)}
+                multiline={true}
+                numberOfLines={6}
+                style={{
+                    backgroundColor: COLORS.WHITE,
+                    textAlignVertical: 'top',
+                    paddingHorizontal: 20,
+                    paddingTop: 10,
+                    paddingBottom: 0,
+                    borderRadius: 16,
+                    color: COLORS.HEX_BLACK,
+                }} />
             </SectionComponent>
 
             <SectionComponent>

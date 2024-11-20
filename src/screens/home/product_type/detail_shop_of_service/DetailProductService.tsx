@@ -6,9 +6,10 @@ import {
   Shop,
   ShoppingCart,
 } from 'iconsax-react-native'
-import React, {useEffect, useState} from 'react'
-import {ImageBackground, TouchableOpacity, View} from 'react-native'
-import {FONTFAMILY} from '../../../../../assets/fonts'
+import React, { useState } from 'react'
+import { ImageBackground, TouchableOpacity, View } from 'react-native'
+import { useSelector } from 'react-redux'
+import { FONTFAMILY } from '../../../../../assets/fonts'
 import COLORS from '../../../../assets/colors/Colors'
 import {
   ButtonComponent,
@@ -19,14 +20,9 @@ import {
   SpaceComponent,
   TextComponent,
 } from '../../../../components'
-import {useAxiosAddCart} from '../../../../hooks/useAxiosAddCart'
-import {useRole} from '../../../../permission/permission'
-import { useSelector } from 'react-redux'
+import { useAxiosAddCart } from '../../../../hooks/useAxiosAddCart'
+import { useRole } from '../../../../permission/permission'
 import { authSelector } from '../../../../redux/reducers/authReducer'
-import productAPI from '../../../../apis/productAPI'
-import { ProductModel } from '../../../../model/product'
-import authenticationAPI from '../../../../apis/authAPI'
-import { UserModel } from '../../../../model/user_model'
 
 const DetailProductService = ({navigation, route}: any) => {
   const { data = {}, shopInfo = {} } = route.params || {}
