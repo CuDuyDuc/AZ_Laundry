@@ -30,6 +30,7 @@ import notificationAPI from '../../apis/notificationApi.ts';
 import { eventEmitterUpdateRead } from '../../components/NotificationItem.tsx';
 import authenticationAPI from '../../apis/authAPI';
 import * as Burnt from "burnt";
+import { navigate } from '../../navigators/service/RootNavigation.ts';
 type Coordinates = {
     latitude: number | null;
     longitude: number | null;
@@ -190,16 +191,14 @@ const HomeScreen = ({ route, navigation }: any) => {
                             text={`Hi, ${user.fullname}!`}
                             font={FONTFAMILY.montserrat_medium}
                         />
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() => navigate('Notification', { from: 'background' })}>
                             <SectionComponent styles= {{
                                 position : 'relative',
                                 paddingHorizontal: 0,
-                                paddingVertical:0
+                                paddingBottom:0
                             }}>
-                            <Notification size="30" color={COLORS.WHITE} />
+                            <Notification size="30" color={COLORS.WHITE} />                       
                             <RowComponent styles={{
-                                paddingHorizontal: 0,
-                                paddingVertical:0,
                                 position: 'absolute',
                                 top: -5,
                                 right: -5,

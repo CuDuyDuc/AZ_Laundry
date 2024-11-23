@@ -6,9 +6,13 @@ import { FONTFAMILY } from '../../../assets/fonts';
 import { PaymentModel } from '../../model/payment_model';
 import paymentAPI from '../../apis/paymentAPI';
 import { useFocusEffect } from '@react-navigation/native';
+import NotificationService from '../notification/service/NotificationService';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
 
 const OrderConfirmationScreen = ({ navigation }: any) => {
   const [payment, setPayment] = useState<PaymentModel[]>([]);
+  const user = useSelector(authSelector);
 
   const handleCancelOrder = () => {
     if (payment[0]?.confirmationStatus == 'Chờ duyệt') {
@@ -35,6 +39,7 @@ const OrderConfirmationScreen = ({ navigation }: any) => {
           { text: 'Đồng ý', onPress: () => comfirmOrder() }
         ]
       );
+
     } else {
       Alert.alert('Không thể hủy', 'Đơn hàng không ở trạng thái có thể hủy.');
     }
@@ -46,7 +51,13 @@ const OrderConfirmationScreen = ({ navigation }: any) => {
         _id: payment[0]._id,
         confirmationStatus: 'Đang giặt',
       }, 'post');
-
+      NotificationService.sendNotificationToServer({
+        title: "Cập nhật đơn hàng" ,
+        body: "Đơn hàng của bạn đã được xác nhận!💎💎",
+        sender: user?.id,
+        object_type_id: payment[0]._id,
+        notification_type: "order_update",
+    })
       Alert.alert('Thành công', 'Đơn hàng đã được xác nhận.', [
         {
           text: 'OK',
@@ -66,7 +77,13 @@ const OrderConfirmationScreen = ({ navigation }: any) => {
         _id: payment[0]._id,
         confirmationStatus: 'Đã hủy',
       }, 'post');
-
+      NotificationService.sendNotificationToServer({
+        title: "Cập nhật đơn hàng" ,
+        body: "Đơn hàng của bạn đã bị huỷ!💎💎",
+        sender: user?.id,
+        object_type_id: payment[0]._id,
+        notification_type: "order_update",
+    })
       Alert.alert('Thành công', 'Đơn hàng đã được hủy.', [
         {
           text: 'OK',

@@ -1,12 +1,13 @@
 import notifee, { AndroidImportance, TriggerType } from '@notifee/react-native';
 import firebaseAPI from '../../../apis/firebaseNotiAPI';
+import { ObjectId } from 'mongoose';
 
 interface NotificationData {
     title?: string;
     body?: string;
     userId?: string;
     sender?: string;
-    object_type_id?: string;
+    object_type_id?: ObjectId;
     notification_type?: string;
 }
 
@@ -59,7 +60,6 @@ class NotificationService {
             return response;
         } catch (error) {
             console.error('Error sending notification:', error);
-            throw error;
         }
     }
 }

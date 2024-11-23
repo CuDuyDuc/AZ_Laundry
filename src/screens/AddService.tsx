@@ -27,6 +27,7 @@ import { useGetThirdPartyAPI } from '../hooks/useGetThirdPartyAPI';
 import * as Burnt from "burnt";
 import authenticationAPI from '../apis/authAPI';
 import { FONTFAMILY } from '../../assets/fonts';
+import NotificationService from './notification/service/NotificationService';
 
 
 const initValues = {
@@ -167,6 +168,13 @@ const AddService = ({ navigation }: any) => {
 
         if (response.ok) {
             Alert.alert('Success', 'Data and images uploaded successfully.');
+            NotificationService.sendNotificationToServer({
+              title: "Dịch vụ mới" ,
+              body: `Shop ${user?.fullname} vừa thêm dịch vụ!💎💎`,
+              sender: user?.id,
+              userId: '670cdc31290fa9791067df19',
+              notification_type: "product",
+          })
         } else {
             console.error('Error uploading:', response.status);
             Alert.alert('Error', 'An error occurred during the upload.');
