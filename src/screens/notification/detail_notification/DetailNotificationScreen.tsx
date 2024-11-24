@@ -76,28 +76,28 @@ export default function DetailNotificationScreen({navigation, route}: any) {
                             textAlign: 'center',
                             width: '100%'
                         }}  title text={ isUser ?  "Cập nhật đơn hàng" : "Đơn hàng mới"} />
-                        <SectionComponent styles={{ display: 'flex', flexDirection: 'row', paddingHorizontal:0, paddingBottom: 0}}>
+                        <RowComponent>
                         <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Mã Đơn: `} />
                         <TextComponent color={COLORS.HEX_BLACK} size={16} text={`#${formatId(dataPayment?._id, 7)}`} />
-                        </SectionComponent>
-                       {!isUser ?  <SectionComponent styles={{ display: 'flex', flexDirection: 'row', paddingHorizontal:0, paddingBottom: 0}}>
+                        </RowComponent>
+                       {!isUser ?  <RowComponent>
                         <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Khách Hàng: `} />
                         <TextComponent color={COLORS.AZURE_BLUE} size={16} text={dataPayment?.id_user?.fullname || 'fullname'} />
-                        </SectionComponent> : 
-                        <SectionComponent styles={{ display: 'flex', flexDirection: 'row', paddingHorizontal:0, paddingBottom: 0}}>
+                        </RowComponent> : 
+                        <RowComponent>
                         <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Trạng thái đơn: `} />
                         <TextComponent color={COLORS.AZURE_BLUE} size={16} text={dataPayment?.confirmationStatus || ''} />
-                        </SectionComponent>
+                        </RowComponent>
                         }
                        
-                        <SectionComponent styles={{ display: 'flex', flexDirection: 'row', paddingHorizontal:0, paddingBottom: 0}}>
+                        <RowComponent>
                         <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Phương thức thanh toán: `} />
                         <TextComponent color={COLORS.AZURE_BLUE} size={16} text={dataPayment?.method_payment || ''} />
-                        </SectionComponent>
-                        <SectionComponent styles={{ display: 'flex', flexDirection: 'row', paddingHorizontal:0, paddingBottom: 0}}>
+                        </RowComponent>
+                        <RowComponent>
                         <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Tổng Tiền: `} />
                         <TextComponent color={COLORS.AZURE_BLUE} size={16} text={`${dataPayment?.mount_money} VND`} />
-                        </SectionComponent>
+                        </RowComponent>
 
                         <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`${isUser ? 'Dịch vụ bạn đã đặt' : 'Dịch vụ khách đặt'}:`} />
                         <FlatList
@@ -150,22 +150,33 @@ export default function DetailNotificationScreen({navigation, route}: any) {
                       }}>
                       <Image source={{ uri: product?.product_photo[0] || '' }} style={styles.shopImage} />
                       </RowComponent>
-                      <SectionComponent styles={{ display: 'flex', flexDirection: 'row', paddingHorizontal:0, paddingBottom: 0}}>
+                     <SectionComponent styles={{
+                        paddingVertical: 16,
+                        display: 'flex',
+                        paddingHorizontal: 0,
+                        gap: 10
+                     }}>
+                     <RowComponent styles={{alignItems: 'flex-start'}}>
                       <TextComponent color={COLORS.HEX_BLACK} styles={{fontWeight: 'bold'}} size={16} text={`Tên Shop: `} />
                         <TextComponent color={COLORS.AZURE_BLUE} size={16} text={`${shopName || ''}`} />
-                        </SectionComponent>
-                        <SectionComponent styles={{ display: 'flex', flexDirection: 'row', paddingHorizontal:0, paddingBottom: 0}}>
+                        </RowComponent>
+                        <RowComponent>
                         <TextComponent color={COLORS.HEX_BLACK} size={16} styles={{fontWeight: 'bold'}} text={`Tên dịch vụ: `} />
                         <TextComponent color={COLORS.AZURE_BLUE} size={16} text={`${product?.id_product_type?.product_type_name || ''}`} />
-                        </SectionComponent>
-                        <SectionComponent styles={{ display: 'flex', flexDirection: 'row', paddingHorizontal:0, paddingBottom: 0}}>
-                        <TextComponent color={COLORS.HEX_BLACK} size={16} styles={{fontWeight: 'bold'}} text={`Mô tả ngắn: `} />
-                        <TextComponent color={COLORS.AZURE_BLUE} size={16} text={`${product?.short_description || ''}`} />
-                        </SectionComponent>
-                        <SectionComponent styles={{ display: 'flex', flexDirection: 'row', paddingHorizontal:0, paddingBottom: 0}}>
+                        </RowComponent>
+                        <RowComponent>
                         <TextComponent color={COLORS.HEX_BLACK} size={16} styles={{fontWeight: 'bold'}} text={`Giá dịch vụ: `} />
                         <TextComponent color={COLORS.AZURE_BLUE} size={16} text={`${product?.product_price || ''} VNĐ`} />
-                        </SectionComponent>
+                        </RowComponent>
+                        <RowComponent>
+                        <TextComponent color={COLORS.HEX_BLACK} size={16} styles={{fontWeight: 'bold'}} text={`Mô tả ngắn: `} />
+                        <TextComponent color={COLORS.AZURE_BLUE} size={16} text={`${product?.short_description || ''}`} />
+                        </RowComponent>
+                        <RowComponent styles={{alignItems: 'flex-start'}}>
+                        <TextComponent color={COLORS.HEX_BLACK} size={16} styles={{fontWeight: 'bold'}} text={`Mô tả chi tiết: `} />
+                        <TextComponent flex={1} color={COLORS.AZURE_BLUE} size={16} text={`${product?.product_description || ''}`} />
+                        </RowComponent>
+                     </SectionComponent>
                       </SectionComponent>
                     </SectionComponent>
                 );
