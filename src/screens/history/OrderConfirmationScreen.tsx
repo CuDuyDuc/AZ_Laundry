@@ -55,9 +55,10 @@ const OrderConfirmationScreen = ({ navigation }: any) => {
         title: "Cập nhật đơn hàng" ,
         body: "Đơn hàng của bạn đã được xác nhận!💎💎",
         sender: user?.id,
+        userId: payment[0].id_user?._id,
         object_type_id: payment[0]._id,
         notification_type: "order_update",
-    })
+      })
       Alert.alert('Thành công', 'Đơn hàng đã được xác nhận.', [
         {
           text: 'OK',
@@ -81,6 +82,7 @@ const OrderConfirmationScreen = ({ navigation }: any) => {
         title: "Cập nhật đơn hàng" ,
         body: "Đơn hàng của bạn đã bị huỷ!💎💎",
         sender: user?.id,
+        userId: payment[0].id_user?._id,
         object_type_id: payment[0]._id,
         notification_type: "order_update",
     })

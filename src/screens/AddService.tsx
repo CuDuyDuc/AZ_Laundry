@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, Image, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import COLORS from '../assets/colors/Colors';
 import IMAGES from '../assets/images/Images';
@@ -52,6 +52,8 @@ const AddService = ({ navigation }: any) => {
     const [serviceTypeList, setServiceTypeList] = useState<service_type[]>();
     const [productTypeList, setProductTypeList] = useState<ProductTypeModel[]>();
     const [loading, setLoading] = useState<boolean>(true);
+    const [loadingButton, setLoadingButton] = useState<boolean>(false);
+
   const { isShop, isAdmin } = useRole();
     const [note, setNote] = useState('')
   const [specificAddress, setSpecificAddress] = useState('')
@@ -136,6 +138,7 @@ const AddService = ({ navigation }: any) => {
     };
 
  const handleUpload = async () => {
+  setLoadingButton(true);
     if (values?.images?.length === 0) {
         Alert.alert('Error', 'Please select images before saving.');
         return;
@@ -165,22 +168,28 @@ const AddService = ({ navigation }: any) => {
                 'Content-Type': 'multipart/form-data',
             },
         });
-
+        const data = await response.json();
         if (response.ok) {
             Alert.alert('Success', 'Data and images uploaded successfully.');
+            setLoadingButton(false);
+            console.log({dataPRODUCTADDED: data});
+            
             NotificationService.sendNotificationToServer({
               title: "Dịch vụ mới" ,
               body: `Shop ${user?.fullname} vừa thêm dịch vụ!💎💎`,
               sender: user?.id,
               userId: '670cdc31290fa9791067df19',
+              object_type_id: data?.data?._id,
               notification_type: "product",
           })
         } else {
             console.error('Error uploading:', response.status);
+            setLoadingButton(false);
             Alert.alert('Error', 'An error occurred during the upload.');
         }
     } catch (error) {
         console.error('Upload Error:', error);
+        setLoadingButton(false);
         Alert.alert('Error', 'Unable to upload images.');
     }
 };
@@ -341,11 +350,11 @@ const AddService = ({ navigation }: any) => {
                 />
             </SectionComponent>
             <SectionComponent>
-                <ButtonComponent
+              { loadingButton ? <ActivityIndicator size={30} /> :  <ButtonComponent
                     text="Thêm dịch vụ"
                     type="#00ADEF"
                     onPress={handleUpload}
-                />
+                />}
             </SectionComponent>
             </>
        ) : isAdmin ? (

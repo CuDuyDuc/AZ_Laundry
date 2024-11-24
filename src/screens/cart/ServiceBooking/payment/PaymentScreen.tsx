@@ -84,7 +84,6 @@ const PaymentScreen = ({navigation, route}: any) => {
                         navigation.replace('VNPayPaymentScreen',{vnpayUrl:res.paymentUrl, orderId: res?.orderId})
                     }else{
                         navigation.replace('SuccessPaymentScreen')
-                       try {
                         NotificationService.sendNotificationToServer({
                             title: "Bạn có một đơn hàng mới" ,
                             body: "Có đơn hàng mới Shop ơi💎💎",
@@ -92,10 +91,13 @@ const PaymentScreen = ({navigation, route}: any) => {
                             object_type_id: res?.data?._id,
                             notification_type: "order_update",
                         })
-                       } catch (error) {
-                        console.log(error);
-                        
-                       }
+                        NotificationService.sendNotificationToServer({
+                            title: "Đặt hàng thành công" ,
+                            body: `Đơn hàng #${res?.data?._id} của bạn đang chờ xác nhận! 💎💎`,
+                            userId: user?.id,
+                            object_type_id: res?.data?._id,
+                            notification_type: "order_update",
+                        })
                     }
                 }
             } catch (error) {

@@ -5,7 +5,7 @@ import { ObjectId } from 'mongoose';
 interface NotificationData {
     title?: string;
     body?: string;
-    userId?: string;
+    userId?: ObjectId;
     sender?: string;
     object_type_id?: ObjectId;
     notification_type?: string;
