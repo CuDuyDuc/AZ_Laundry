@@ -121,7 +121,7 @@ const ProfileScreen = ({ navigation }: any) => {
                             title="Lịch sử đặt hàng"/>
                     </TouchableOpacity>
                 ):(
-                    <TouchableOpacity >
+                    <TouchableOpacity onPress={() => {navigation.navigate('OrderStatisticsScreen')}}>
                         <AccountComponent
                             icon={<Book size="28" color={COLORS.AZURE_BLUE} />}
                             title="Thống kê"/>

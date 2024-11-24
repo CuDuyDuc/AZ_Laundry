@@ -104,7 +104,7 @@ const HistoryScreen = ({ navigation }: any) => {
               price={item.mount_money}
               imgUrl={item.imgUrl}
               dateOrder={new Date(item.createdAt).toLocaleDateString('vi-VN')}
-              onPress={() => navigation.navigate('OrderConfirmationScreen')}
+              onPress={() => navigation.navigate('OrderConfirmationScreen', { confirmationStatus: item.confirmationStatus })}
             />
           )}
         />
@@ -114,3 +114,4 @@ const HistoryScreen = ({ navigation }: any) => {
 };
 
 export default HistoryScreen;
+
