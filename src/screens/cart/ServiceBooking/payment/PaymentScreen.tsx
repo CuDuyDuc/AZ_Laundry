@@ -91,6 +91,13 @@ const PaymentScreen = ({navigation, route}: any) => {
                             object_type_id: res?.data?._id,
                             notification_type: "order_update",
                         })
+                        NotificationService.sendNotificationToServer({
+                            title: "Đặt hàng thành công" ,
+                            body: `Đơn hàng #${res?.data?._id} của bạn đang chờ xác nhận! 💎💎`,
+                            userId: user?.id,
+                            object_type_id: res?.data?._id,
+                            notification_type: "order_update",
+                        })
                     }
                 }
             } catch (error) {

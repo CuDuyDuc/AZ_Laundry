@@ -25,7 +25,7 @@ const onMessageReceived = async message => {
 messaging().setBackgroundMessageHandler(onMessageReceived);
 messaging().onMessage(onMessageReceived);
 
-notifee.onBackgroundEvent(async ({ type, detail }) => {
+notifee.onForegroundEvent(async ({ type, detail }) => {
   const { notification, pressAction } = detail;
   console.log('Background Event:', type, detail);
   if (type === EventType.PRESS && pressAction?.id === 'default') {

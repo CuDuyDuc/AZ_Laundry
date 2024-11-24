@@ -13,11 +13,14 @@ import { FONTFAMILY } from '../../../assets/fonts';
 import { PaymentModel } from '../../model/payment_model';
 import paymentAPI from '../../apis/paymentAPI';
 import { useFocusEffect } from '@react-navigation/native';
+import NotificationService from '../notification/service/NotificationService';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
 
 const OrderConfirmationScreen = ({ navigation, route }: any) => {
   const [payment, setPayment] = useState<PaymentModel[]>([]);
   const [confirmationStatus, setConfirmationStatus] = useState(route.params?.confirmationStatus || '');
-
+  const user = useSelector(authSelector);
   const handleAction = async (newStatus: string, itemId: string) => {
     try {
       const response = await paymentAPI.HandlePayment('/update-confirmation-status', {
@@ -27,7 +30,14 @@ const OrderConfirmationScreen = ({ navigation, route }: any) => {
 
       // Cập nhật danh sách cục bộ
       setPayment((prevPayment) => prevPayment.filter(item => item._id.toString() !== itemId));
-
+      NotificationService.sendNotificationToServer({
+        title: "Cập nhật đơn hàng" ,
+        body: "Đơn hàng của bạn đã được xác nhận!💎💎",
+        sender: user?.id,
+        userId: payment[0].id_user?._id,
+        object_type_id: payment[0]._id,
+        notification_type: "order_update",
+      })
       Alert.alert('Thành công', `Đơn hàng đã chuyển sang trạng thái "${newStatus}".`, [
         {
           text: 'OK',
@@ -62,7 +72,14 @@ const OrderConfirmationScreen = ({ navigation, route }: any) => {
 
       // Cập nhật danh sách cục bộ
       setPayment((prevPayment) => prevPayment.filter(item => item._id.toString() !== itemId));
-
+      NotificationService.sendNotificationToServer({
+        title: "Cập nhật đơn hàng" ,
+        body: "Đơn hàng của bạn đã bị huỷ!💎💎",
+        sender: user?.id,
+        userId: payment[0].id_user?._id,
+        object_type_id: payment[0]._id,
+        notification_type: "order_update",
+    })
       Alert.alert('Thành công', 'Đơn hàng đã được hủy.', [
         {
           text: 'OK',

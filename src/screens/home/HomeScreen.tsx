@@ -30,6 +30,7 @@ import notificationAPI from '../../apis/notificationApi.ts';
 import { eventEmitterUpdateRead } from '../../components/NotificationItem.tsx';
 import authenticationAPI from '../../apis/authAPI';
 import * as Burnt from "burnt";
+import { navigate } from '../../navigators/service/RootNavigation.ts';
 type Coordinates = {
     latitude: number | null;
     longitude: number | null;
@@ -190,25 +191,28 @@ const HomeScreen = ({ route, navigation }: any) => {
                             text={`Hi, ${user.fullname}!`}
                             font={FONTFAMILY.montserrat_medium}
                         />
-                        <TouchableOpacity>
-                            <View style={{
-                                position: 'relative',
+                        <TouchableOpacity onPress={() => navigate('Notification', { from: 'background' })}>
+                            <SectionComponent styles= {{
+                                position : 'relative',
+                                paddingHorizontal: 0,
+                                paddingBottom:0
                             }}>
-                                <Notification size="30" color={COLORS.WHITE} />
-                                <RowComponent styles={{
-                                    position: 'absolute',
-                                    top: -5,
-                                    right: -5,
-                                    backgroundColor: 'red',
-                                    borderRadius: 10,
-                                    width: 20,
-                                    height: 20,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}>
-                                    <TextComponent color={COLORS.WHITE} size={12} text={Number(countUnread) > 10 ? '10+' : countUnread} />
-                                </RowComponent>
-                            </View>
+                            <Notification size="30" color={COLORS.WHITE} />                       
+                            <RowComponent styles={{
+                                position: 'absolute',
+                                top: -5,
+                                right: -5,
+                                backgroundColor: 'red',
+                                borderRadius: 10,
+                                width: 20, 
+                                height: 20,
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}>
+                         <TextComponent color={COLORS.WHITE} size={12}  text={Number(countUnread) > 10 ? '10+' : countUnread}/>
+                            </RowComponent>
+                            </SectionComponent>
                         </TouchableOpacity>
                     </RowComponent>
                 </SectionComponent>
