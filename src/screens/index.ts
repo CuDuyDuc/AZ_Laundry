@@ -34,6 +34,7 @@ import SelectPaymentMethodScreen from './cart/ServiceBooking/payment/select_paym
 import VNPayPaymentScreen from './cart/ServiceBooking/payment/vnpay_payment/VNPayPaymentScreen';
 import SuccessPaymentScreen from './cart/ServiceBooking/payment/success_payment/SuccessPaymentScreen';
 import ChangePasswordSceen from './profile/ChangePasswordScreen';
+import OrderStatisticsScreen from './profile/OrderStatisticsScreen';
 
 export {
     SplashScreen,
@@ -71,5 +72,7 @@ export {
     Manage_Address,
     SelectPaymentMethodScreen,
     VNPayPaymentScreen,
-    SuccessPaymentScreen
+    SuccessPaymentScreen,
+    OrderStatisticsScreen
+
 }
