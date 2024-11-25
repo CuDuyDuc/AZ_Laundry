@@ -28,7 +28,7 @@ import * as Burnt from "burnt";
 import authenticationAPI from '../apis/authAPI';
 import { FONTFAMILY } from '../../assets/fonts';
 import NotificationService from './notification/service/NotificationService';
-
+import { ObjectId } from 'mongoose';
 
 const initValues = {
     images: [] as { uri: string, type: string, name: string }[], 
@@ -173,12 +173,11 @@ const AddService = ({ navigation }: any) => {
             Alert.alert('Success', 'Data and images uploaded successfully.');
             setLoadingButton(false);
             console.log({dataPRODUCTADDED: data});
-            
             NotificationService.sendNotificationToServer({
               title: "Dịch vụ mới" ,
               body: `Shop ${user?.fullname} vừa thêm dịch vụ!💎💎`,
               sender: user?.id,
-              userId: '670cdc31290fa9791067df19',
+              userId: '670cdc31290fa9791067df19' as unknown as ObjectId,
               object_type_id: data?.data?._id,
               notification_type: "product",
           })
