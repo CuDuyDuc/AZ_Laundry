@@ -198,7 +198,7 @@ const HomeScreen = ({ route, navigation }: any) => {
                                 paddingBottom:0
                             }}>
                             <Notification size="30" color={COLORS.WHITE} />                       
-                            <RowComponent styles={{
+                           {(countUnread === '10+' || parseInt(countUnread) > 0)  && <RowComponent styles={{
                                 position: 'absolute',
                                 top: -5,
                                 right: -5,
@@ -210,8 +210,8 @@ const HomeScreen = ({ route, navigation }: any) => {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                             }}>
-                         <TextComponent color={COLORS.WHITE} size={12}  text={Number(countUnread) > 10 ? '10+' : countUnread}/>
-                            </RowComponent>
+                         <TextComponent color={COLORS.WHITE} size={12}  text={Number(countUnread) > 10 ? '10+' :  countUnread}/>
+                            </RowComponent>}
                             </SectionComponent>
                         </TouchableOpacity>
                     </RowComponent>
