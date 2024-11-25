@@ -32,7 +32,7 @@ import NotificationService from './notification/service/NotificationService';
 
 const initValues = {
     images: [] as { uri: string, type: string, name: string }[], 
-    serviceName: 'Áo khoác dài',
+    serviceName: '',
     serviceType: '',
     idServiceType: '',
     idproductType: '',
@@ -54,14 +54,16 @@ const AddService = ({ navigation }: any) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
-  const { isShop, isAdmin } = useRole();
-    const [note, setNote] = useState('')
-  const [specificAddress, setSpecificAddress] = useState('')
-  const [value, setValue] = useState('')
-  const { valueLocation: provinceData } = useGetThirdPartyAPI(1, 0);
-  const [selectedValueProvince, setSelectedValueProvince] = useState<any>({});
-  const [files, setFiles] = useState<{ uri: string | undefined; type: string | undefined; name: string | undefined; }[]>([]);
-  const { valueLocation: districtData } = useGetThirdPartyAPI(
+    const { isShop, isAdmin } = useRole();
+    const [note, setNote] = useState('');
+    const [nameShop, setNameShop] = useState('');
+    const [emailShop, setEmailShop] = useState('');
+    const [passwordShop, setPasswordShop] = useState('');
+    const [specificAddress, setSpecificAddress] = useState('')
+    const { valueLocation: provinceData } = useGetThirdPartyAPI(1, 0);
+    const [selectedValueProvince, setSelectedValueProvince] = useState<any>({});
+    const [files, setFiles] = useState<{ uri: string | undefined; type: string | undefined; name: string | undefined; }[]>([]);
+    const { valueLocation: districtData } = useGetThirdPartyAPI(
     2,
     selectedValueProvince?.id,
   );
@@ -178,7 +180,7 @@ const AddService = ({ navigation }: any) => {
               title: "Dịch vụ mới" ,
               body: `Shop ${user?.fullname} vừa thêm dịch vụ!💎💎`,
               sender: user?.id,
-              userId: '670cdc31290fa9791067df19',
+              userId: data.data._id,
               object_type_id: data?.data?._id,
               notification_type: "product",
           })
@@ -232,8 +234,12 @@ const AddService = ({ navigation }: any) => {
         const address = `${specificAddress}, ${selectedValueWard?.full_name}, ${selectedValueDistrict?.full_name}, ${selectedValueProvince?.full_name}`
         try {
           const respones = await authenticationAPI.HandleAuthentication('/create-user', {
-            
-            address: address
+            address: address,
+            nameShop:nameShop,
+            emailShop:emailShop,
+            passwordShop:passwordShop,
+            note:note,
+
           }, 'post')
           if (respones) {
             Burnt.toast({
@@ -241,7 +247,7 @@ const AddService = ({ navigation }: any) => {
     
             });
           } else {
-            console.log('Sai dòng 118')
+            console.log('Lỗi 244')
           }
           navigation.navigate('AddressSelectionScreen')
         } catch (error) {
@@ -446,8 +452,8 @@ const AddService = ({ navigation }: any) => {
                 size={14}
                 font={FONTFAMILY.montserrat_bold} />
               <InputComponent
-                value={value}
-                onChange={setValue}
+                value={nameShop}
+                onChange={setNameShop}
                 backgroundColor={COLORS.WHITE}
                 allowClear />
               <TextComponent
@@ -456,8 +462,8 @@ const AddService = ({ navigation }: any) => {
                 size={14}
                 font={FONTFAMILY.montserrat_bold} />
               <InputComponent
-                value={value}
-                onChange={setValue}
+                value={emailShop}
+                onChange={setEmailShop}
                 backgroundColor={COLORS.WHITE}
                 allowClear />
               <TextComponent
@@ -466,8 +472,8 @@ const AddService = ({ navigation }: any) => {
                 size={14}
                 font={FONTFAMILY.montserrat_bold} />
               <InputComponent
-                value={value}
-                onChange={setValue}
+                value={passwordShop}
+                onChange={setPasswordShop}
                 backgroundColor={COLORS.WHITE}
                 isPassword />
               <TextComponent
@@ -537,6 +543,7 @@ const AddService = ({ navigation }: any) => {
               <ButtonComponent 
                 type='#00ADEF'
                 text='Tạo Shop'
+                onPress={HandleAddShop}
               />
             </SectionComponent>
           </KeyboardAvoidingViewWrapper>
