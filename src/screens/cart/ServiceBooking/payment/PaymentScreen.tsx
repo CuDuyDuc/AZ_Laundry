@@ -21,14 +21,13 @@ const PaymentScreen = ({navigation, route}: any) => {
     const {dataInfoUser}= useAddresses()
     const {dataCarts,totalCarts,notes,selectedProductType,selectedShipOption}= route.params
     
-    const productOwnerIds = dataCarts.map((cart:any) => cart.id_product.id_user._id);
     const { sendValue, receiveValue, sendTime, receiveTime}= useDateTime()
     console.log(sendValue);
     console.log(sendTime);
     const calculateShippingFee = (coords1:any, coords2:any) => {
-        console.log(coords1);
         
-        if(coords1){
+        if(coords1 && coords2){
+            console.log('lỗi 30',coords2);
             const [latitude,longitude] =coords1
             // Tọa độ user
             const lat2 = coords2[1]; // Shop latitude
@@ -48,13 +47,14 @@ const PaymentScreen = ({navigation, route}: any) => {
             if(selectedShipOption!=='oneway'){
                 shippingFee=shippingFee*2
             }
+            
             return Math.round(shippingFee);
         }else{
-            return 'Chưa chọn địa chỉ'
+            return 0
         }
       };
     const totalShippingFee = dataCarts.reduce((total:any, item:any) => {
-        const fee = calculateShippingFee(dataInfoUser?.location?.coordinates, item?.id_product?.id_user?.location?.coordinates);
+        const fee = calculateShippingFee(dataInfoUser?.location?.coordinates, item?.coordinates);
         return total + fee;
     }, 0);
     const handlePayment=async()=>{
@@ -126,20 +126,26 @@ const PaymentScreen = ({navigation, route}: any) => {
                 <TextComponent text={'Thông tin dịch vụ'} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} size={13}/>
                 <FlatList 
                     data={dataCarts}
-                    keyExtractor={(item) => item._id.toString()} 
-                    renderItem={({item})=>(
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item,index})=>{
+                        let ship = calculateShippingFee(dataInfoUser?.location?.coordinates,item?.coordinates)
+                        return(
                         <>
                             <RowComponent justify='space-between' styles={{marginTop:5}}>
-                                <TextComponent text={'Cửa hàng'} color={COLORS.HEX_LIGHT_GREY} size={13}/>
-                                <TextComponent text={`${item?.id_product?.id_user?.data_user?.shop_name}`} color={COLORS.HEX_LIGHT_GREY} size={13}/>
+                                <TextComponent text={`Cửa hàng ${index + 1}`} color={COLORS.HEX_LIGHT_GREY} size={13}/>
+                                <TextComponent text={`${item?.shop_name}`} color={COLORS.HEX_LIGHT_GREY} size={13}/>
                             </RowComponent>
                             <RowComponent justify='space-between' styles={{marginTop:5,flex:9,alignItems:'flex-start'}}>
                                 <TextComponent text={'Dịch vụ'} color={COLORS.HEX_LIGHT_GREY} size={13}/>
-                                <TextComponent text={`${item?.id_product?.id_product_type?.id_service_type?.service_type_name}`} styles={{flexWrap:'wrap',maxWidth: '70%', textAlign:'right'}} color={COLORS.HEX_LIGHT_GREY} size={13}/>
+                                <TextComponent text={`${item?.service_type_name}`} styles={{flexWrap:'wrap',maxWidth: '70%', textAlign:'right'}} color={COLORS.HEX_LIGHT_GREY} size={13}/>
+                            </RowComponent>
+                            <RowComponent justify='space-between' styles={{marginTop:5}}>
+                                <TextComponent text={`Tiền vận chuyển`} color={COLORS.HEX_LIGHT_GREY} size={13}/>
+                                <TextComponent text={`${ship?`${ship} vnđ`:'Chưa chọn địa chỉ'}`} color={COLORS.HEX_LIGHT_GREY} size={13}/>
                             </RowComponent>
                         </>
                         
-                    )}
+                    )}}
                 />
                 <RowComponent justify='space-between' styles={{marginTop:5}}>
                     <TextComponent text={'Đầu ship'} color={COLORS.HEX_LIGHT_GREY} size={13}/>
@@ -192,19 +198,10 @@ const PaymentScreen = ({navigation, route}: any) => {
                     <TextComponent text={'Tiền dịch vụ'} color={COLORS.HEX_LIGHT_GREY} size={13}/>
                     <TextComponent text={`${totalCarts} vnđ`} color={COLORS.HEX_LIGHT_GREY} size={13}/>
                 </RowComponent>
-                <FlatList 
-                    data={dataCarts}
-                    keyExtractor={(item) => item._id.toString()} 
-                    renderItem={({item,index})=>(
-                        <>
-                            <RowComponent justify='space-between' styles={{marginTop:5}}>
-                                <TextComponent text={`Phí ship`} color={COLORS.HEX_LIGHT_GREY} size={13}/>
-                                <TextComponent text={`${calculateShippingFee(dataInfoUser?.location?.coordinates,item?.id_product?.id_user?.location?.coordinates)} vnđ`} color={COLORS.HEX_LIGHT_GREY} size={13}/>
-                            </RowComponent>
-                        </>
-                        
-                    )}
-                />
+                <RowComponent justify='space-between' styles={{marginTop:5}}>
+                    <TextComponent text={`Tổng tiền vận chuyển`} color={COLORS.HEX_LIGHT_GREY} size={13}/>
+                    <TextComponent text={`${totalShippingFee?`${totalShippingFee} vnđ`:'Chưa chọn địa chỉ'}`} color={COLORS.HEX_LIGHT_GREY} size={13}/>
+                </RowComponent>
                 <RowComponent justify='space-between' styles={{marginTop:5}}>
                     <TextComponent text={'Tổng thanh toán'} color={COLORS.HEX_LIGHT_GREY} size={13}/>
                     <TextComponent text={`${totalCarts+totalShippingFee} vnđ`} color={COLORS.HEX_LIGHT_GREY} size={13}/>

@@ -29,16 +29,6 @@ import moment from 'moment';
 import { CartModel } from '../../../model/cart_model';
 import { useDateTime } from '../../../context/DateTimeContext';
 
-const Data = [
-  {
-    id: 1,
-    image: IMAGES.ImgShop,
-    title: 'Giặt ủi thông thường',
-    price: '12.000/kg',
-    Address:
-      'Địa chỉ: Lô 13A, Phường Hòa Hải, Quận Ngũ Hành Sơn, Đà Nẵng (1.2km)',
-  },
-];
 
 const BookingScreen = ({navigation, route}: any) => {
   const { sendValue, receiveValue, sendTime, receiveTime}= useDateTime()
@@ -47,49 +37,50 @@ const BookingScreen = ({navigation, route}: any) => {
   const [selectedShipOption, setSelectedShipOption] = useState('oneway');
   const [notes, setNotes] = useState('');
   const [totalCarts,setTotalCarts]= useState('')
-  const [dataCarts,setDataCarts]= useState<CartModel[]>([])
-  const groupDataByUserAndService = (data: CartModel[]): CartModel[] => {
-    const groupedData: { [key: string]: CartModel } = {};
+  const [dataCarts,setDataCarts]= useState<any[]>([])
+  const groupDataByShop = (data: CartModel[]): any[] => {
+    const groupedData: { [key: string]: any } = {};
   
-    data?.forEach((item) => {
-      const userId = item.id_user._id.toString();
+    data.forEach((item) => {
+      const shopId = item.id_product.id_user._id.toString(); // Chuyển ObjectId sang chuỗi
+      const shopName = item.id_product.id_user.data_user.shop_name;
+      const shopAddress = item.id_product.id_user.address;
+      const shopThumbnail = item.id_product.id_user.data_user.thumbnail;
       const serviceTypeName = item.id_product.id_product_type.id_service_type.service_type_name;
+      const shopCoordinates = item.id_product.id_user.location.coordinates;
   
-      // Use `userId` as a unique key to group by user
-      if (groupedData[userId]) {
-        // Concatenate service types with a comma if it doesn't already contain this service type
-        if (!groupedData[userId].id_product.id_product_type.id_service_type.service_type_name.includes(serviceTypeName)) {
-          groupedData[userId].id_product.id_product_type.id_service_type.service_type_name += `, ${serviceTypeName}`;
+      if (groupedData[shopId]) {
+        // Gộp các dịch vụ thành chuỗi, tránh trùng lặp
+        if (!groupedData[shopId].service_type_name.includes(serviceTypeName)) {
+          groupedData[shopId].service_type_name += `, ${serviceTypeName}`;
         }
-  
-        // Add to the existing `cart_subtotal`
-        groupedData[userId].cart_subtotal += item.cart_subtotal;
+        // Cộng dồn tổng số tiền
+        groupedData[shopId].cart_subtotal += item.cart_subtotal;
       } else {
-        // Create a new entry for the user with the current item details
-        groupedData[userId] = {
-          ...item,
+        // Tạo đối tượng mới cho shop nếu chưa tồn tại
+        groupedData[shopId] = {
+          _id: shopId, // Bao gồm _id của shop (ở dạng chuỗi)
+          shop_name: shopName,
+          address: shopAddress,
+          thumbnail: shopThumbnail,
+          service_type_name: serviceTypeName,
           cart_subtotal: item.cart_subtotal,
-          id_product: {
-            ...item.id_product,
-            id_product_type: {
-              ...item.id_product.id_product_type,
-              id_service_type: {
-                ...item.id_product.id_product_type.id_service_type,
-                service_type_name: serviceTypeName,
-              },
-            },
-          },
+          coordinates:shopCoordinates
         };
       }
     });
   
-    // Convert the grouped object back into an array
+    // Trả về mảng dữ liệu đã nhóm
     return Object.values(groupedData);
   };
+  
+  
+  
   useEffect(()=>{
     setTotalCarts(total)
-    setDataCarts(groupDataByUserAndService(data))
+    setDataCarts(groupDataByShop(data))
   },[])
+  
   const HandlePayment =()=>{
     navigation.replace('PaymentScreen',
     {
@@ -104,10 +95,10 @@ const BookingScreen = ({navigation, route}: any) => {
   const renderItem = ({item}: any) => (
     <ContainerComponent>
       <RowComponent>
-        <Image source={{uri:item?.id_product?.id_user?.data_user?.thumbnail}} style={styles.image} />
+        <Image source={{uri:item?.thumbnail}} style={styles.image} />
         <SectionComponent styles={{flex: 1, marginTop: 20}}>
-          <TextComponent text={item?.id_product?.id_user?.data_user?.shop_name} color={COLORS.HEX_BLACK} size={13} font={FONTFAMILY.montserrat_bold}/>
-          <TextComponent text={item?.id_product?.id_product_type?.id_service_type?.service_type_name} color={COLORS.HEX_BLACK} size={14} />
+          <TextComponent text={item?.shop_name} color={COLORS.HEX_BLACK} size={13} font={FONTFAMILY.montserrat_bold}/>
+          <TextComponent text={item?.service_type_name} color={COLORS.HEX_BLACK} size={14} />
           <TextComponent
             text={`${item.cart_subtotal} VNĐ`}
             color={COLORS.AZURE_BLUE}
@@ -115,7 +106,7 @@ const BookingScreen = ({navigation, route}: any) => {
             styles={{marginTop: 4}}
           />
           <TextComponent
-            text={item?.id_product?.id_user?.address}
+            text={item?.address}
             color={COLORS.HEX_LIGHT_GREY}
             size={10}
           />
@@ -144,7 +135,7 @@ const BookingScreen = ({navigation, route}: any) => {
             style={{backgroundColor: COLORS.WHITE}}
             data={dataCarts}
             renderItem={renderItem}
-            keyExtractor={item => item._id.toString()}
+            keyExtractor={(item, index) => index.toString()}
             showsVerticalScrollIndicator={false}
             scrollEnabled={false}
           />
