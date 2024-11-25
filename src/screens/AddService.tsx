@@ -1,19 +1,19 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Image, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import COLORS from '../assets/colors/Colors';
 import IMAGES from '../assets/images/Images';
 import {
-    ButtonComponent,
-    HeaderComponent,
-    InputComponent,
-    KeyboardAvoidingViewWrapper,
-    SectionComponent,
-    PickerComponent,
-    RowComponent,
-    SpaceComponent,
-    SpinnerComponent,
-    TextComponent
+  ButtonComponent,
+  HeaderComponent,
+  InputComponent,
+  KeyboardAvoidingViewWrapper,
+  SectionComponent,
+  PickerComponent,
+  RowComponent,
+  SpaceComponent,
+  SpinnerComponent,
+  TextComponent
 } from '../components';
 import { useRole } from '../permission/permission';
 import serviceAPI from '../apis/serviceAPI';
@@ -29,62 +29,55 @@ import authenticationAPI from '../apis/authAPI';
 import { FONTFAMILY } from '../../assets/fonts';
 import NotificationService from './notification/service/NotificationService';
 import { ObjectId } from 'mongoose';
+import { log } from 'console';
 
 const initValues = {
-    images: [] as { uri: string, type: string, name: string }[], 
-    serviceName: '',
-    serviceType: '',
-    idServiceType: '',
-    idproductType: '',
-    productType: '',
-    price: '',
-    ShortDescription: '',
-    DetailedDescription: '',
+  images: [] as { uri: string, type: string, name: string }[],
+  serviceName: '',
+  serviceType: '',
+  idServiceType: '',
+  idproductType: '',
+  productType: '',
+  price: '',
+  ShortDescription: '',
+  DetailedDescription: '',
 };
 
 interface FormState {
+  fullName: string;
   nameShop: string;
   emailShop: string;
   passwordShop: string;
   specificAddress: string;
-  selectedValueProvince: object; 
-  selectedValueDistrict: object;  
-  selectedValueWard: object;      
-  files: any[];  
-  note: string;
 }
 
 
 interface type_spinner {
-    label: string;
-    value: string;
+  label: string;
+  value: string;
 }
 const AddService = ({ navigation }: any) => {
-    const user = useSelector(authSelector);
-    const [values, setValues] = useState(initValues);
-    const [serviceTypeList, setServiceTypeList] = useState<service_type[]>();
-    const [productTypeList, setProductTypeList] = useState<ProductTypeModel[]>();
-    const [loading, setLoading] = useState<boolean>(true);
-    const [loadingButton, setLoadingButton] = useState<boolean>(false);
+  const user = useSelector(authSelector);
+  const [values, setValues] = useState(initValues);
+  const [serviceTypeList, setServiceTypeList] = useState<service_type[]>();
+  const [productTypeList, setProductTypeList] = useState<ProductTypeModel[]>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
-    const [formState, setFormState] = useState<FormState>({
-      nameShop: '',
-      emailShop: '',
-      passwordShop: '',
-      specificAddress: '',
-      selectedValueProvince: {},
-      selectedValueDistrict: {},
-      selectedValueWard: {},
-      files: [],
-      note: '',
-    });
+  const [formState, setFormState] = useState<FormState>({
+    fullName: '',
+    nameShop: '',
+    emailShop: '',
+    passwordShop: '',
+    specificAddress: '',
+  });
 
-    const { isShop, isAdmin } = useRole();
-    const [specificAddress, setSpecificAddress] = useState('')
-    const { valueLocation: provinceData } = useGetThirdPartyAPI(1, 0);
-    const [selectedValueProvince, setSelectedValueProvince] = useState<any>({});
-    const [files, setFiles] = useState<{ uri: string | undefined; type: string | undefined; name: string | undefined; }[]>([]);
-    const { valueLocation: districtData } = useGetThirdPartyAPI(
+  const { isShop, isAdmin } = useRole();
+  const { valueLocation: provinceData } = useGetThirdPartyAPI(1, 0);
+  const [selectedValueProvince, setSelectedValueProvince] = useState<any>({});
+  const [thumbnails, setThumbnails] = useState<{ uri: string | undefined; type: string | undefined; name: string | undefined; }[]>([]);
+  const [shopBanner, setShopBanner] = useState<{ uri: string | undefined; type: string | undefined; name: string | undefined; }[]>([]);
+  const { valueLocation: districtData } = useGetThirdPartyAPI(
     2,
     selectedValueProvince?.id,
   );
@@ -104,7 +97,7 @@ const AddService = ({ navigation }: any) => {
     setSelectedValueWard(data);
   };
 
-  const handleAddFile = async (type: string) => {
+  const handleAddFile = async (type: string, check: number) => {
     try {
       const options = {
         mediaType: type as 'photo',
@@ -114,57 +107,71 @@ const AddService = ({ navigation }: any) => {
       const result = await launchImageLibrary(options);
 
       if (result.assets && result.assets.length > 0) {
-        const newFile = {
+        let newFile = {
           uri: result.assets[0].uri,
           type: result.assets[0].type,
           name: result.assets[0].fileName,
         };
 
-        setFiles((prevFiles) => [...prevFiles, newFile]);
+        if (check === 1) {
+          setThumbnails((prevFiles) => [...prevFiles, newFile]);
+          newFile={uri:'',type:'',name:'',}
+        } else {
+          setShopBanner((prevFiles) => [...prevFiles, newFile]);
+          newFile={uri:'',type:'',name:'',}
+
+
+        }
+
       }
     } catch (error) {
       console.log('Error adding file:', error);
     }
   };
 
-  const handleRemoveFile = (index: number) => {
-    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+  const handleRemoveFile = (index: number, check: number) => {
+    if (check === 1) {
+      setThumbnails((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    } else {
+      setShopBanner((prevFiles) => prevFiles.filter((_, i) => i !== index));
+
+    }
   };
 
-    const handleImagePick = async () => {
-        try {
-            const result = await launchImageLibrary({
-                mediaType: 'photo',
-                quality: 1,
-                selectionLimit: 5,
-            });
+  const handleImagePick = async () => {
+    try {
+      const result = await launchImageLibrary({
+        mediaType: 'photo',
+        quality: 1,
+        selectionLimit: 5,
+      });
 
-            if (result.didCancel) {
-                console.log('User cancelled image picker');
-            } else if (result.errorCode) {
-                console.log('Image Picker Error: ', result.errorCode);
-            } else if (result.assets && result.assets.length > 0) {
-                const images = result.assets.map(asset => ({
-                    uri: asset.uri ?? '',
-                    type: asset.type ?? 'image/jpg',
-                    name: asset.fileName ?? `${new Date().toISOString()}.jpg`,
-                }));
-                setValues({ ...values, images });
-            } else {
-                console.log('No assets found');
-                Alert.alert('Error', 'No image selected, please try again.');
-            }
-        } catch (error) {
-            console.error('Error picking images: ', error);
-            Alert.alert('Error', 'An error occurred while picking the images.');
-        }
-    };
+      if (result.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (result.errorCode) {
+        console.log('Image Picker Error: ', result.errorCode);
+      } else if (result.assets && result.assets.length > 0) {
+        const images = result.assets.map(asset => ({
+          uri: asset.uri ?? '',
+          type: asset.type ?? 'image/jpg',
+          name: asset.fileName ?? `${new Date().toISOString()}.jpg`,
+        }));
+        setValues({ ...values, images });
+      } else {
+        console.log('No assets found');
+        Alert.alert('Error', 'No image selected, please try again.');
+      }
+    } catch (error) {
+      console.error('Error picking images: ', error);
+      Alert.alert('Error', 'An error occurred while picking the images.');
+    }
+  };
 
- const handleUpload = async () => {
-  setLoadingButton(true);
+  const handleUpload = async () => {
+    setLoadingButton(true);
     if (values?.images?.length === 0) {
-        Alert.alert('Error', 'Please select images before saving.');
-        return;
+      Alert.alert('Error', 'Please select images before saving.');
+      return;
     }
 
     const formData = new FormData();
@@ -176,265 +183,263 @@ const AddService = ({ navigation }: any) => {
     formData.append('id_product_type', values.productType);
 
     values.images.forEach((image, index) => {
-        formData.append('image', {
-            uri: image.uri,
-            type: image.type,
-            name: image.name,
-        });
+      formData.append('image', {
+        uri: image.uri,
+        type: image.type,
+        name: image.name,
+      });
     });
 
     try {
-        const response = await fetch(`${appInfo.BASE_URL}/product/addProduct`, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
-        const data = await response.json();
-        if (response.ok) {
-            Alert.alert('Success', 'Data and images uploaded successfully.');
-            setLoadingButton(false);
-            console.log({dataPRODUCTADDED: data});
-            NotificationService.sendNotificationToServer({
-              title: "Dịch vụ mới" ,
-              body: `Shop ${user?.fullname} vừa thêm dịch vụ!💎💎`,
-              sender: user?.id,
-              userId: '670cdc31290fa9791067df19' as unknown as ObjectId,
-              object_type_id: data?.data?._id,
-              notification_type: "product",
-          })
-        } else {
-            console.error('Error uploading:', response.status);
-            setLoadingButton(false);
-            Alert.alert('Error', 'An error occurred during the upload.');
-        }
+      const response = await fetch(`${appInfo.BASE_URL}/product/addProduct`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        Alert.alert('Success', 'Data and images uploaded successfully.');
+        setLoadingButton(false);
+        console.log({ dataPRODUCTADDED: data });
+        NotificationService.sendNotificationToServer({
+          title: "Dịch vụ mới",
+          body: `Shop ${user?.fullname} vừa thêm dịch vụ!💎💎`,
+          sender: user?.id,
+          userId: '670cdc31290fa9791067df19' as unknown as ObjectId,
+          object_type_id: data?.data?._id,
+          notification_type: "product",
+        })
+      } else {
+        console.error('Error uploading:', response.status);
+        setLoadingButton(false);
+        Alert.alert('Error', 'An error occurred during the upload.');
+      }
     } catch (error) {
-        console.error('Upload Error:', error);
-        setLoadingButton(false);
-        Alert.alert('Error', 'Unable to upload images.');
+      console.error('Upload Error:', error);
+      setLoadingButton(false);
+      Alert.alert('Error', 'Unable to upload images.');
     }
-};
+  };
 
-    const handleChangeValue = (key: string, value: string) => {
-        const data: any = { ...values };
-        data[`${key}`] = value;
-        setValues(data);
-    };
+  const handleChangeValue = (key: string, value: string) => {
+    const data: any = { ...values };
+    data[`${key}`] = value;
+    setValues(data);
+  };
 
-    const updateField = (key: keyof FormState, value: string | number | object | any[]) => {
-      setFormState((prev) => ({
-        ...prev,
-        [key]: value,
-      }));
-    };
-  
+  const updateField = (key: keyof FormState, value: string | number | object | any[]) => {
+    setFormState((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
 
-    const getDataService_Type = async () => {
-        try {
-            const res = await serviceAPI.HandleService('/get-service-type');
-            setServiceTypeList(() => res.data);
-            setLoading(false);
-        } catch (error) {
-            console.error('Error fetching service types:', error);
-            setLoading(false);
-        }
-    };
-    const getDataProductType = async (serviceType : string ) => {
-        try {
-                const res = await productTypeAPI.HandleProductType(`/get-product-type?id_service_type=${serviceType}`);
-                const dataProduct: ProductTypeModel[] = res.data;
-                setProductTypeList(dataProduct);
-                setLoading(false);
-                
-        } catch (error) {
-            console.log('Error fetching service types: ', error);
-            setLoading(false);
-        }
-    };
-    const transformedDataSpinner = (data: any, type: string): type_spinner[] | undefined => {
-        return data?.map((item: any) => ({
-            label: type === 'service' ? item?.service_type_name : item?.product_type_name,
-            value: item?._id
-        }));
-    };
-  
-    const HandleAddShop = async () => {
-      // Kiểm tra các trường bắt buộc
-      if (!formState.nameShop || !formState.emailShop || !formState.passwordShop) {
-        Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ các trường bắt buộc.');
-        return;
-      }
-    
-      // Kiểm tra địa chỉ để đảm bảo tất cả các phần được chọn
-      const address = `${formState.specificAddress}, ${selectedValueWard?.full_name ?? ''}, ${selectedValueDistrict?.full_name ?? ''}, ${selectedValueProvince?.full_name ?? ''}`;
-    
-      try {
-        setLoadingButton(true);
-    
-        const response = await authenticationAPI.HandleAuthentication(
-          '/create-user',
-          {
-            nameShop: formState.nameShop,
-            emailShop: formState.emailShop,
-            password: formState.passwordShop,
-            address,
-            files: formState.files,
-            note: formState.note,
-          },
-          'post'
-        );
-    
-        // Chắc chắn tắt loading khi kết thúc
-        setLoadingButton(false);
-    
-        if (response?.status === 201 || response?.data?.success) {
-          Burnt.toast({
-            title: 'Thành công!',
-            message: 'Shop đã được thêm.',
-          });
-    
-          // Reset form sau khi thành công
-          setFormState({
-            nameShop: '',
-            emailShop: '',
-            passwordShop: '',
-            specificAddress: '',
-            selectedValueProvince: {},
-            selectedValueDistrict: {},
-            selectedValueWard: {},
-            files: [],
-            note: '',
-          });
-        } else {
-          Burnt.toast({
-            title: 'Thất bại!',
-            message: response?.data?.message ?? 'Đã có lỗi xảy ra.',
-          });
-        }
-      } catch (error: any) {
-        // Đảm bảo loading được tắt khi có lỗi
-        setLoadingButton(false);
-        const errorMessage = error?.message || error?.response?.data?.message || 'Không thể thêm shop.';
+
+  const getDataService_Type = async () => {
+    try {
+      const res = await serviceAPI.HandleService('/get-service-type');
+      setServiceTypeList(() => res.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching service types:', error);
+      setLoading(false);
+    }
+  };
+  const getDataProductType = async (serviceType: string) => {
+    try {
+      const res = await productTypeAPI.HandleProductType(`/get-product-type?id_service_type=${serviceType}`);
+      const dataProduct: ProductTypeModel[] = res.data;
+      setProductTypeList(dataProduct);
+      setLoading(false);
+
+    } catch (error) {
+      console.log('Error fetching service types: ', error);
+      setLoading(false);
+    }
+  };
+  const transformedDataSpinner = (data: any, type: string): type_spinner[] | undefined => {
+    return data?.map((item: any) => ({
+      label: type === 'service' ? item?.service_type_name : item?.product_type_name,
+      value: item?._id
+    }));
+  };
+
+  const HandleAddShop = async () => {
+    // Kiểm tra các trường bắt buộc
+    if (!formState.nameShop || !formState.emailShop || !formState.passwordShop) {
+      Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ các trường bắt buộc.');
+      return;
+    }
+    // Kiểm tra địa chỉ để đảm bảo tất cả các phần được chọn
+    const address = `${formState.specificAddress}, ${selectedValueWard?.full_name ?? ''}, ${selectedValueDistrict?.full_name ?? ''}, ${selectedValueProvince?.full_name ?? ''}`;
+    const formData = new FormData();
+    formData.append('fullname', formState.fullName);
+    formData.append('email', formState.emailShop);
+    formData.append('password', formState.passwordShop);
+    formData.append('address', address);
+    formData.append('shop_name', formState.nameShop);
+    thumbnails.forEach((file) => {
+      formData.append(`thumbnail`, {
+        uri: file.uri,
+        type: file.type,
+        name: file.name,
+      });
+    });
+    shopBanner.forEach((file) => {
+      formData.append(`shop_banner`, {
+        uri: file.uri,
+        type: file.type,
+        name: file.name,
+      });
+    });
+    console.log(shopBanner)
+    console.log(thumbnails)
+
+    try {
+      setLoadingButton(true);
+      const response = await authenticationAPI.HandleAuthentication('/create-user', formData, 'post');
+      setLoadingButton(false);
+      if (response) {
         Burnt.toast({
-          title: 'Lỗi!',
-          message: errorMessage,
+          title: 'Thành công!',
+          message: 'Shop đã được thêm.',
+        });
+        navigation.goBack();
+        setFormState({
+          fullName: '',
+          nameShop: '',
+          emailShop: '',
+          passwordShop: '',
+          specificAddress: '',
+        });
+      } else {
+        Burnt.toast({
+          title: 'Thất bại!',
+          message: response,
         });
       }
-    };
-    
-  
-  
-  
-    useEffect(() => {
-        getDataService_Type();
-    }, []);
+    } catch (error: any) {
+      // Đảm bảo loading được tắt khi có lỗi
+      setLoadingButton(false);
+      const errorMessage = error?.message || error?.response?.data?.message || 'Không thể thêm shop.';
+      Burnt.toast({
+        title: 'Lỗi!',
+        message: errorMessage,
+      });
+    }
+  };
 
-    return (
-      <KeyboardAvoidingViewWrapper>
-       { isShop ? (
+  useEffect(() => {
+    getDataService_Type();
+  }, []);
+
+  return (
+    <KeyboardAvoidingViewWrapper>
+      {isShop ? (
         <>
-             <HeaderComponent
-                title="Thêm dịch vụ"
-                isBack
-                onBack={() => navigation.goBack()}
+          <HeaderComponent
+            title="Thêm dịch vụ"
+            isBack
+            onBack={() => navigation.goBack()}
+          />
+          <SectionComponent
+            styles={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              marginTop: 20,
+            }}>
+            <TextComponent
+              text="Upload Hình Ảnh"
+              color={COLORS.HEX_BLACK}
+              size={15}
             />
-            <SectionComponent
-                styles={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: 20,
-                }}>
-                <TextComponent
-                    text="Upload Hình Ảnh"
-                    color={COLORS.HEX_BLACK}
-                    size={15}
-                />
-                <SpaceComponent height={5} />
-                <TouchableOpacity onPress={handleImagePick}>
-                    {values?.images[0]?.uri ? (
-                        <Image source={{ uri: values?.images[0]?.uri }} style={styles.image} />
-                    ) : (
-                        <Image source={IMAGES.ImgShop1} style={styles.image} />
-                    )}
-                </TouchableOpacity>
-            </SectionComponent>
-            <SectionComponent>
-                <TextComponent text="Tên Dịch vụ" color={COLORS.HEX_BLACK} size={13} />
-                <SpaceComponent height={10} />
-                <InputComponent
-                    value={values.serviceName}
-                    onChange={ val =>  handleChangeValue('serviceName', val)}
-                    allowClear
-                    backgroundColor={COLORS.WHITE}
-                />
+            <SpaceComponent height={5} />
+            <TouchableOpacity onPress={handleImagePick}>
+              {values?.images[0]?.uri ? (
+                <Image source={{ uri: values?.images[0]?.uri }} style={styles.image} />
+              ) : (
+                <Image source={IMAGES.ImgShop1} style={styles.image} />
+              )}
+            </TouchableOpacity>
+          </SectionComponent>
+          <SectionComponent>
+            <TextComponent text="Tên Dịch vụ" color={COLORS.HEX_BLACK} size={13} />
+            <SpaceComponent height={10} />
+            <InputComponent
+              value={values.serviceName}
+              onChange={val => handleChangeValue('serviceName', val)}
+              allowClear
+              backgroundColor={COLORS.WHITE}
+            />
 
-                <TextComponent text="Loại Giặt" color={COLORS.HEX_BLACK} size={13} />
-                <SpaceComponent height={10} />
-                <SpinnerComponent
-                isLoading= {loading}
-                    items={transformedDataSpinner(serviceTypeList, 'service') ?? []}
-                    placeholder="Loại Giặt: "
-                    onValueChange={(values)  => {
-                        getDataProductType(values);
-                    }}
-                />
-            </SectionComponent>
+            <TextComponent text="Loại Giặt" color={COLORS.HEX_BLACK} size={13} />
+            <SpaceComponent height={10} />
+            <SpinnerComponent
+              isLoading={loading}
+              items={transformedDataSpinner(serviceTypeList, 'service') ?? []}
+              placeholder="Loại Giặt: "
+              onValueChange={(values) => {
+                getDataProductType(values);
+              }}
+            />
+          </SectionComponent>
 
-            <SectionComponent>
-                <TextComponent
-                    text="Loại sản phẩm"
-                    color={COLORS.HEX_BLACK}
-                    size={13}
-                />
-                <SpaceComponent height={10} />
-                <SpinnerComponent
-                    isLoading = {loading}
-                    items={transformedDataSpinner(productTypeList, 'product') ?? []}
-                    placeholder="Loại Sản Phẩm: "
-                    onValueChange={values => handleChangeValue('productType', values)}
-                />
-            </SectionComponent>
+          <SectionComponent>
+            <TextComponent
+              text="Loại sản phẩm"
+              color={COLORS.HEX_BLACK}
+              size={13}
+            />
+            <SpaceComponent height={10} />
+            <SpinnerComponent
+              isLoading={loading}
+              items={transformedDataSpinner(productTypeList, 'product') ?? []}
+              placeholder="Loại Sản Phẩm: "
+              onValueChange={values => handleChangeValue('productType', values)}
+            />
+          </SectionComponent>
 
-            <SectionComponent>
-                <TextComponent text="Giá" color={COLORS.HEX_BLACK} size={13} />
-                <InputComponent
-                    placeholder="10000VNd"
-                    value={values.price}
-                    onChange={val => handleChangeValue("price", val)}
-                    backgroundColor={COLORS.WHITE}
-                />
-                <TextComponent text="Mô Tả ngắn" color={COLORS.HEX_BLACK} size={13} />
-                <InputComponent
-                    value={values.ShortDescription}
-                    onChange={val => handleChangeValue("ShortDescription", val)}
-                    backgroundColor={COLORS.WHITE}
-                    multiline={true}
-                    numberOfLines={2}
-                />
-                <TextComponent
-                    text="Mô Tả chi tiết"
-                    color={COLORS.HEX_BLACK}
-                    size={13}
-                />
-                <InputComponent
-                    value={values.DetailedDescription}
-                    onChange={val => handleChangeValue('DetailedDescription', val)}
-                    allowClear
-                    backgroundColor={COLORS.WHITE}
-                    multiline={true}
-                    numberOfLines={6}
-                />
-            </SectionComponent>
-            <SectionComponent>
-              { loadingButton ? <ActivityIndicator size={30} /> :  <ButtonComponent
-                    text="Thêm dịch vụ"
-                    type="#00ADEF"
-                    onPress={handleUpload}
-                />}
-            </SectionComponent>
-            </>
-       ) : isAdmin ? (
+          <SectionComponent>
+            <TextComponent text="Giá" color={COLORS.HEX_BLACK} size={13} />
+            <InputComponent
+              placeholder="10000VNd"
+              value={values.price}
+              onChange={val => handleChangeValue("price", val)}
+              backgroundColor={COLORS.WHITE}
+            />
+            <TextComponent text="Mô Tả ngắn" color={COLORS.HEX_BLACK} size={13} />
+            <InputComponent
+              value={values.ShortDescription}
+              onChange={val => handleChangeValue("ShortDescription", val)}
+              backgroundColor={COLORS.WHITE}
+              multiline={true}
+              numberOfLines={2}
+            />
+            <TextComponent
+              text="Mô Tả chi tiết"
+              color={COLORS.HEX_BLACK}
+              size={13}
+            />
+            <InputComponent
+              value={values.DetailedDescription}
+              onChange={val => handleChangeValue('DetailedDescription', val)}
+              allowClear
+              backgroundColor={COLORS.WHITE}
+              multiline={true}
+              numberOfLines={6}
+            />
+          </SectionComponent>
+          <SectionComponent>
+            {loadingButton ? <ActivityIndicator size={30} /> : <ButtonComponent
+              text="Thêm dịch vụ"
+              type="#00ADEF"
+              onPress={handleUpload}
+            />}
+          </SectionComponent>
+        </>
+      ) : isAdmin ? (
         <>
           <KeyboardAvoidingViewWrapper>
             <HeaderComponent
@@ -442,83 +447,50 @@ const AddService = ({ navigation }: any) => {
               isBack
               onBack={() => navigation.goBack()}
             />
-            <SectionComponent styles={{ marginTop: 20 }}>
-              <RowComponent>
-                <ButtonComponent
-                  text="Thêm hình ảnh"
-                  icon={<Image source={IMAGES.camera_alt} style={{ width: 20, height: 20 }} />}
-                  iconFlex="left"
-                  type="#00ADEF"
-                  textColor={COLORS.AZURE_BLUE}
-                  textStyles={{ fontFamily: FONTFAMILY.montserrat_medium }}
-                  styles={{
-                    width: "49%",
-                    backgroundColor: COLORS.HEX_GRAY,
-                    borderColor: COLORS.AZURE_BLUE,
-                    borderWidth: 1,
-                    borderRadius: 1,
-                  }}
-                  onPress={() => handleAddFile('photo')}
-                />
-                <ButtonComponent
-                  text="Thêm baner"
-                  icon={<Image source={IMAGES.camera_alt} style={{ width: 20, height: 20 }} />}
-                  iconFlex="left"
-                  type="#00ADEF"
-                  textColor={COLORS.AZURE_BLUE}
-                  textStyles={{ fontFamily: FONTFAMILY.montserrat_medium }}
-                  styles={{
-                    width: "49%",
-                    marginLeft: 5,
-                    backgroundColor: COLORS.HEX_GRAY,
-                    borderColor: COLORS.AZURE_BLUE,
-                    borderWidth: 1,
-                    borderRadius: 1
-                  }}
-                  onPress={() => handleAddFile('photo')}
-                />
-              </RowComponent>
-
-              <RowComponent styles={{ marginTop: 10, flexWrap: 'wrap' }}>
-                {files.map((file, index) => (
-                  <View key={index} style={{ margin: 5 }}>
-                    <TouchableOpacity onPress={() => handleRemoveFile(index)} style={{ position: 'relative' }}>
-                      <Image
-                        source={{ uri: file.uri }}
-                        style={{
-                          width: 100,
-                          height: 100,
-                          borderRadius: 5,
-                          borderWidth: 1,
-                          borderColor: COLORS.GRAY,
-                        }}
-                      />
-                      <View style={{
-                        position: 'absolute',
-                        top: -5,
-                        right: -5,
-                        backgroundColor: COLORS.RED,
-                        borderRadius: 15,
-                        width: 20,
-                        height: 20,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                        <TextComponent
-                          text="X"
-                          color={COLORS.WHITE}
-                          size={12}
-                          font={FONTFAMILY.montserrat_bold}
-                        />
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                ))}
-              </RowComponent>
+            <SectionComponent styles={{ marginTop: 20, alignItems: 'center' }}>
+              <TextComponent
+                text={'Ảnh đại diện'}
+                color={COLORS.HEX_BLACK}
+                size={14}
+                font={FONTFAMILY.montserrat_bold} 
+                styles={{marginBottom: 3}}/>
+              <TouchableOpacity onPress={() => handleAddFile('photo', 0)}>
+                {shopBanner[0]?.uri ? (
+                  <Image source={{ uri: shopBanner[0]?.uri }} style={styles.image} />
+                ) : (
+                  <Image source={IMAGES.ImgShop1} style={[styles.image]} />
+                )}
+              </TouchableOpacity>
+            </SectionComponent>
+            <SectionComponent styles={{alignItems:'center'}}>
+              <TextComponent
+                text={'Ảnh bìa'}
+                color={COLORS.HEX_BLACK}
+                size={14}
+                font={FONTFAMILY.montserrat_bold} 
+                styles={{marginBottom: 3}}/>
+              <TouchableOpacity onPress={() => handleAddFile('photo', 1)}>
+                {thumbnails[0]?.uri ? (
+                  <Image source={{ uri: thumbnails[0]?.uri }} style={styles.image1} />
+                ) : (
+                  <Image source={IMAGES.AnhBia} style={styles.image1} />
+                )}
+              </TouchableOpacity>
             </SectionComponent>
             <SectionComponent>
               <TextComponent
-                text={'Tên Shop'}
+                text={'Tên người đại diện'}
+                color={COLORS.HEX_BLACK}
+                size={14}
+                font={FONTFAMILY.montserrat_bold} />
+              <InputComponent
+                value={formState.fullName}
+                onChange={(value) => updateField('fullName', value)}
+                backgroundColor={COLORS.WHITE}
+                allowClear />
+
+              <TextComponent
+                text={'Tên cửa hàng'}
                 color={COLORS.HEX_BLACK}
                 size={14}
                 font={FONTFAMILY.montserrat_bold} />
@@ -547,27 +519,6 @@ const AddService = ({ navigation }: any) => {
                 onChange={(value) => updateField('passwordShop', value)}
                 backgroundColor={COLORS.WHITE}
                 isPassword />
-              <TextComponent
-                text={'Mô tả Shop'}
-                color={COLORS.HEX_BLACK}
-                size={14}
-                font={FONTFAMILY.montserrat_bold} />
-              <TextInput
-                placeholder='Nhập mô tả'
-                placeholderTextColor={COLORS.HEX_LIGHT_GREY}
-                value={formState.note}
-                onChangeText={(value) => updateField('note', value)}
-                multiline={true}
-                numberOfLines={8}
-                style={{
-                  backgroundColor: COLORS.WHITE,
-                  textAlignVertical: 'top',
-                  paddingHorizontal: 20,
-                  paddingTop: 10,
-                  paddingBottom: 0,
-                  borderRadius: 16,
-                  color: COLORS.HEX_BLACK,
-                }} />
               <TextComponent
                 text={'Tỉnh / TP'}
                 color={COLORS.HEX_BLACK}
@@ -606,30 +557,35 @@ const AddService = ({ navigation }: any) => {
               <InputComponent
                 placeholder='102 Hoài Thanh'
                 allowClear
-                value={specificAddress}
+                value={formState.specificAddress}
                 backgroundColor={COLORS.WHITE}
-                onChange={val => setSpecificAddress(val)} />
+                onChange={(val) => updateField('specificAddress', val)} />
             </SectionComponent>
             <SectionComponent>
-              <ButtonComponent 
-                type='#00ADEF'
-                text='Tạo Shop'
+              {loadingButton ? <ActivityIndicator size={30} /> : <ButtonComponent
+                text="Tạo Cửa Hàng"
+                type="#00ADEF"
                 onPress={HandleAddShop}
-              />
+              />}
             </SectionComponent>
           </KeyboardAvoidingViewWrapper>
         </>
-       ) : null }
-        </KeyboardAvoidingViewWrapper>
-    );
+      ) : null}
+    </KeyboardAvoidingViewWrapper>
+  );
 };
 
 const styles = StyleSheet.create({
-    image: {
-        width: 100,
-        height: 100,
-        resizeMode: 'contain',
-    },
+  image: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+  },
+  image1: {
+    width: 400,
+    height: 100,
+    borderRadius: 16
+  },
 });
 
 export default AddService;

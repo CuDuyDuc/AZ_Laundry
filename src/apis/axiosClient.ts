@@ -11,9 +11,9 @@ axiosClient.interceptors.request.use(async (config: any) => {
         Accept: 'application/json',
         ...config.headers
     }
-
-    config.data 
-
+    if (config.data instanceof FormData) {
+        config.headers['Content-Type'] = 'multipart/form-data';
+    }
     return config
 })
 
