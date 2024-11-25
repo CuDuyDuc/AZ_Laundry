@@ -42,6 +42,19 @@ const initValues = {
     DetailedDescription: '',
 };
 
+interface FormState {
+  nameShop: string;
+  emailShop: string;
+  passwordShop: string;
+  specificAddress: string;
+  selectedValueProvince: object; 
+  selectedValueDistrict: object;  
+  selectedValueWard: object;      
+  files: any[];  
+  note: string;
+}
+
+
 interface type_spinner {
     label: string;
     value: string;
@@ -54,11 +67,19 @@ const AddService = ({ navigation }: any) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
+    const [formState, setFormState] = useState<FormState>({
+      nameShop: '',
+      emailShop: '',
+      passwordShop: '',
+      specificAddress: '',
+      selectedValueProvince: {},
+      selectedValueDistrict: {},
+      selectedValueWard: {},
+      files: [],
+      note: '',
+    });
+
     const { isShop, isAdmin } = useRole();
-    const [note, setNote] = useState('');
-    const [nameShop, setNameShop] = useState('');
-    const [emailShop, setEmailShop] = useState('');
-    const [passwordShop, setPasswordShop] = useState('');
     const [specificAddress, setSpecificAddress] = useState('')
     const { valueLocation: provinceData } = useGetThirdPartyAPI(1, 0);
     const [selectedValueProvince, setSelectedValueProvince] = useState<any>({});
@@ -201,6 +222,14 @@ const AddService = ({ navigation }: any) => {
         setValues(data);
     };
 
+    const updateField = (key: keyof FormState, value: string | number | object | any[]) => {
+      setFormState((prev) => ({
+        ...prev,
+        [key]: value,
+      }));
+    };
+  
+
     const getDataService_Type = async () => {
         try {
             const res = await serviceAPI.HandleService('/get-service-type');
@@ -229,37 +258,80 @@ const AddService = ({ navigation }: any) => {
             value: item?._id
         }));
     };
+  
     const HandleAddShop = async () => {
-        const address = `${specificAddress}, ${selectedValueWard?.full_name}, ${selectedValueDistrict?.full_name}, ${selectedValueProvince?.full_name}`
-        try {
-          const respones = await authenticationAPI.HandleAuthentication('/create-user', {
-            address: address,
-            nameShop:nameShop,
-            emailShop:emailShop,
-            passwordShop:passwordShop,
-            note:note,
-
-          }, 'post')
-          if (respones) {
-            Burnt.toast({
-              title: "Thêm thành công",
-    
-            });
-          } else {
-            console.log('Lỗi 244')
-          }
-          navigation.navigate('AddressSelectionScreen')
-        } catch (error) {
-          console.log(error);
-    
-        }
+      // Kiểm tra các trường bắt buộc
+      if (!formState.nameShop || !formState.emailShop || !formState.passwordShop) {
+        Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ các trường bắt buộc.');
+        return;
       }
+    
+      // Kiểm tra địa chỉ để đảm bảo tất cả các phần được chọn
+      const address = `${formState.specificAddress}, ${selectedValueWard?.full_name ?? ''}, ${selectedValueDistrict?.full_name ?? ''}, ${selectedValueProvince?.full_name ?? ''}`;
+    
+      try {
+        setLoadingButton(true);
+    
+        const response = await authenticationAPI.HandleAuthentication(
+          '/create-user',
+          {
+            nameShop: formState.nameShop,
+            emailShop: formState.emailShop,
+            password: formState.passwordShop,
+            address,
+            files: formState.files,
+            note: formState.note,
+          },
+          'post'
+        );
+    
+        // Chắc chắn tắt loading khi kết thúc
+        setLoadingButton(false);
+    
+        if (response?.status === 201 || response?.data?.success) {
+          Burnt.toast({
+            title: 'Thành công!',
+            message: 'Shop đã được thêm.',
+          });
+    
+          // Reset form sau khi thành công
+          setFormState({
+            nameShop: '',
+            emailShop: '',
+            passwordShop: '',
+            specificAddress: '',
+            selectedValueProvince: {},
+            selectedValueDistrict: {},
+            selectedValueWard: {},
+            files: [],
+            note: '',
+          });
+        } else {
+          Burnt.toast({
+            title: 'Thất bại!',
+            message: response?.data?.message ?? 'Đã có lỗi xảy ra.',
+          });
+        }
+      } catch (error: any) {
+        // Đảm bảo loading được tắt khi có lỗi
+        setLoadingButton(false);
+        const errorMessage = error?.message || error?.response?.data?.message || 'Không thể thêm shop.';
+        Burnt.toast({
+          title: 'Lỗi!',
+          message: errorMessage,
+        });
+      }
+    };
+    
+  
+  
+  
     useEffect(() => {
         getDataService_Type();
     }, []);
 
     return (
-        <KeyboardAvoidingViewWrapper>
+      <KeyboardAvoidingViewWrapper>
        { isShop ? (
         <>
              <HeaderComponent
@@ -451,8 +523,8 @@ const AddService = ({ navigation }: any) => {
                 size={14}
                 font={FONTFAMILY.montserrat_bold} />
               <InputComponent
-                value={nameShop}
-                onChange={setNameShop}
+                value={formState.nameShop}
+                onChange={(value) => updateField('nameShop', value)}
                 backgroundColor={COLORS.WHITE}
                 allowClear />
               <TextComponent
@@ -461,8 +533,8 @@ const AddService = ({ navigation }: any) => {
                 size={14}
                 font={FONTFAMILY.montserrat_bold} />
               <InputComponent
-                value={emailShop}
-                onChange={setEmailShop}
+                value={formState.emailShop}
+                onChange={(value) => updateField('emailShop', value)}
                 backgroundColor={COLORS.WHITE}
                 allowClear />
               <TextComponent
@@ -471,8 +543,8 @@ const AddService = ({ navigation }: any) => {
                 size={14}
                 font={FONTFAMILY.montserrat_bold} />
               <InputComponent
-                value={passwordShop}
-                onChange={setPasswordShop}
+                value={formState.passwordShop}
+                onChange={(value) => updateField('passwordShop', value)}
                 backgroundColor={COLORS.WHITE}
                 isPassword />
               <TextComponent
@@ -483,8 +555,8 @@ const AddService = ({ navigation }: any) => {
               <TextInput
                 placeholder='Nhập mô tả'
                 placeholderTextColor={COLORS.HEX_LIGHT_GREY}
-                value={note}
-                onChangeText={setNote}
+                value={formState.note}
+                onChangeText={(value) => updateField('note', value)}
                 multiline={true}
                 numberOfLines={8}
                 style={{
