@@ -6,8 +6,11 @@ import paymentAPI from '../../apis/paymentAPI';
 import COLORS from '../../assets/colors/Colors';
 import { BoxStatusShopOrderComponent, ButtonComponent, CardOrderComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../components';
 import { PaymentModel } from '../../model/payment_model';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
 
 const OrderHistoryScreen = ({ navigation }: any) => {
+  const user = useSelector(authSelector);
   const [payment, setPayment] = useState<PaymentModel[]>([]);
   const [filteredPayment, setFilteredPayment] = useState<PaymentModel[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>('Tất cả');
@@ -39,10 +42,12 @@ const OrderHistoryScreen = ({ navigation }: any) => {
   const getDataPayment = async () => {
     try {
       setLoading(true);
-      const res: any = await paymentAPI.HandlePayment(`/get-order`);
+      const res: any = await paymentAPI.HandlePayment(`/get-order-by-id-user/${user?.id}`);
       const data: PaymentModel[] = res.data;
       setPayment(data);
       setFilteredPayment(data);
+
+      console.log("Data payment: ", data);
 
       // Update status counts
       const updatedStatusList = statusList.map((statusItem) => {
@@ -55,6 +60,8 @@ const OrderHistoryScreen = ({ navigation }: any) => {
       setStatusList(updatedStatusList);
     } catch (error) {
       console.log('Error: ', error);
+      setPayment([]); // Gán mảng rỗng khi gặp lỗi
+      setFilteredPayment([]);
     } finally {
       setLoading(false);
     }
@@ -94,7 +101,7 @@ const OrderHistoryScreen = ({ navigation }: any) => {
 
       {loading ? (
         <ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />
-      ) : filteredPayment.length ? (
+      ) : filteredPayment.length > 0 ? (
         <SectionComponent >
           <FlatList
             data={filteredPayment}
