@@ -1,17 +1,26 @@
 import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View, Animated, Image, FlatList, ActivityIndicator } from "react-native";
 import COLORS from "../../../assets/colors/Colors";
-import { CardOrderComponent, HeaderComponent, KeyboardAvoidingViewWrapper, SectionComponent, TextComponent } from "../../../components";
+import { CardOrderComponent, HeaderComponent, KeyboardAvoidingViewWrapper, RowComponent, SectionComponent, TextComponent } from "../../../components";
 import { Box, DiscountShape, NotificationBing, ShoppingBag, TicketDiscount } from "iconsax-react-native";
 import { notification_type } from "../../../utils/constants";
 import paymentAPI from "../../../apis/paymentAPI";
+import { useRole } from "../../../permission/permission";
+import productAPI from "../../../apis/productAPI";
+import { log } from "console";
+import authenticationAPI from "../../../apis/authAPI";
 
 export default function DetailNotificationScreen({ navigation, route }: any) {
     const { item } = route.params;
-    console.log(item);
+    const { isUser, isShop, isAdmin } = useRole();
+
     const [dataPayment, setDataPayment] = useState<any>();
+    const [product, setProduct] = useState<any>();
+    const [shopName, setShopName] = useState<string>();
     const [loading, setLoading] = useState<boolean>(true);
-    console.log({ dataPayment });
+    console.log({dataPayment});
+    console.log({product});
+
 
     const getPaymentById = async (idPayment: string) => {
         try {
@@ -21,15 +30,39 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
         } catch (error) {
             console.log(error);
         }
-
     }
+
     const formatId = (text: string, maxLength: number = 10): string => {
         if (!text || text.length <= maxLength) return text;
         return `${text.slice(-6)}`;
-    };
-
+      };
+      const getProductById = async () => {
+            try {
+                const req = await productAPI.HandleProduct(`/get-product-by-id-product?idProduct=${item?.object_type_id}`);
+                console.log({PRODUCT : req});
+                setProduct(req?.data[0]);
+               setLoading(false);
+            } catch (error) {
+                console.log(error);
+               setLoading(false);
+            }
+      }
+      const getUserById = async (id_user: string) => {
+        try {
+        const req : any = await authenticationAPI.HandleAuthentication(`/get-user-by-id?id_user=${id_user}`);
+        const data = await req[0];
+          
+       if(data) {
+        console.log({dataSHOP: data});
+        setShopName(data?.fullname)
+    }
+        } catch (error) {
+          console.log(error);
+        }
+      }
     useEffect(() => {
-        getPaymentById(item?.object_type_id);
+        getUserById(item?.sender)
+     isAdmin ? getProductById() : getPaymentById(item?.object_type_id);
     }, [])
 
     // Render nội dung dựa trên loại thông báo
@@ -42,26 +75,31 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
                             fontWeight: 'bold',
                             textAlign: 'center',
                             width: '100%'
-                        }} title text="Đơn Hàng Mới" />
-                        <SectionComponent styles={{ display: 'flex', flexDirection: 'row', paddingHorizontal: 0, paddingBottom: 0 }}>
-                            <TextComponent styles={{ fontWeight: 'bold' }} color={COLORS.HEX_BLACK} size={16} text={`Mã Đơn: `} />
-                            <TextComponent color={COLORS.HEX_BLACK} size={16} text={`#${formatId(dataPayment?._id, 7)}`} />
-                        </SectionComponent>
-                        <SectionComponent styles={{ display: 'flex', flexDirection: 'row', paddingHorizontal: 0, paddingBottom: 0 }}>
-                            <TextComponent styles={{ fontWeight: 'bold' }} color={COLORS.HEX_BLACK} size={16} text={`Khách Hàng: `} />
-                            <TextComponent color={COLORS.AZURE_BLUE} size={16} text={dataPayment?.id_user?.fullname || 'fullname'} />
-                        </SectionComponent>
+                        }}  title text={ isUser ?  "Cập nhật đơn hàng" : "Đơn hàng mới"} />
+                        <RowComponent>
+                        <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Mã Đơn: `} />
+                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`#${formatId(dataPayment?._id, 7)}`} />
+                        </RowComponent>
+                       {!isUser ?  <RowComponent>
+                        <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Khách Hàng: `} />
+                        <TextComponent color={COLORS.AZURE_BLUE} size={16} text={dataPayment?.id_user?.fullname || 'fullname'} />
+                        </RowComponent> : 
+                        <RowComponent>
+                        <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Trạng thái đơn: `} />
+                        <TextComponent color={COLORS.AZURE_BLUE} size={16} text={dataPayment?.confirmationStatus || ''} />
+                        </RowComponent>
+                        }
+                       
+                        <RowComponent>
+                        <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Phương thức thanh toán: `} />
+                        <TextComponent color={COLORS.AZURE_BLUE} size={16} text={dataPayment?.method_payment || ''} />
+                        </RowComponent>
+                        <RowComponent>
+                        <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Tổng Tiền: `} />
+                        <TextComponent color={COLORS.AZURE_BLUE} size={16} text={`${dataPayment?.mount_money} VND`} />
+                        </RowComponent>
 
-                        <SectionComponent styles={{ display: 'flex', flexDirection: 'row', paddingHorizontal: 0, paddingBottom: 0 }}>
-                            <TextComponent styles={{ fontWeight: 'bold' }} color={COLORS.HEX_BLACK} size={16} text={`Phương thức thanh toán: `} />
-                            <TextComponent color={COLORS.AZURE_BLUE} size={16} text={dataPayment?.method_payment || ''} />
-                        </SectionComponent>
-                        <SectionComponent styles={{ display: 'flex', flexDirection: 'row', paddingHorizontal: 0, paddingBottom: 0 }}>
-                            <TextComponent styles={{ fontWeight: 'bold' }} color={COLORS.HEX_BLACK} size={16} text={`Tổng Tiền: `} />
-                            <TextComponent color={COLORS.AZURE_BLUE} size={16} text={`${dataPayment?.mount_money} VND`} />
-                        </SectionComponent>
-
-                        <TextComponent styles={{ fontWeight: 'bold' }} color={COLORS.HEX_BLACK} size={16} text={`Dịch vụ khách đặt:`} />
+                        <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`${isUser ? 'Dịch vụ bạn đã đặt' : 'Dịch vụ khách đặt'}:`} />
                         <FlatList
                             data={dataPayment?.id_cart || []}
                             keyExtractor={(item: any) => item?._id.toString()}
@@ -95,10 +133,51 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
             case notification_type.NEW_PRODUCT:
                 return (
                     <SectionComponent styles={styles.contentBox}>
-                        <TextComponent color={COLORS.HEX_BLACK} size={20} title text="Dịch vụ Mới" />
-                        <Image source={{ uri: item.shopImage }} style={styles.shopImage} />
-                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`Tên dịch vụ: ${item.productName}`} />
-                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`Tên Shop: ${item.shopName}`} />
+                          <TextComponent color={COLORS.AZURE_BLUE} size={22} styles={ {
+                            fontWeight: 'bold',
+                            textAlign: 'center',
+                            width: '100%'
+                        }}  title text={"Dịch vụ Mới"} />
+                      <SectionComponent styles={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'flex-start'
+                      }}>
+                        
+                      <RowComponent styles={{
+                        width: '100%',
+                        justifyContent: 'center'
+                      }}>
+                      <Image source={{ uri: product?.product_photo[0] || '' }} style={styles.shopImage} />
+                      </RowComponent>
+                     <SectionComponent styles={{
+                        paddingVertical: 16,
+                        display: 'flex',
+                        paddingHorizontal: 0,
+                        gap: 10
+                     }}>
+                     <RowComponent styles={{alignItems: 'flex-start'}}>
+                      <TextComponent color={COLORS.HEX_BLACK} styles={{fontWeight: 'bold'}} size={16} text={`Tên Shop: `} />
+                        <TextComponent color={COLORS.AZURE_BLUE} size={16} text={`${shopName || ''}`} />
+                        </RowComponent>
+                        <RowComponent>
+                        <TextComponent color={COLORS.HEX_BLACK} size={16} styles={{fontWeight: 'bold'}} text={`Tên dịch vụ: `} />
+                        <TextComponent color={COLORS.AZURE_BLUE} size={16} text={`${product?.id_product_type?.product_type_name || ''}`} />
+                        </RowComponent>
+                        <RowComponent>
+                        <TextComponent color={COLORS.HEX_BLACK} size={16} styles={{fontWeight: 'bold'}} text={`Giá dịch vụ: `} />
+                        <TextComponent color={COLORS.AZURE_BLUE} size={16} text={`${product?.product_price || ''} VNĐ`} />
+                        </RowComponent>
+                        <RowComponent>
+                        <TextComponent color={COLORS.HEX_BLACK} size={16} styles={{fontWeight: 'bold'}} text={`Mô tả ngắn: `} />
+                        <TextComponent color={COLORS.AZURE_BLUE} size={16} text={`${product?.short_description || ''}`} />
+                        </RowComponent>
+                        <RowComponent styles={{alignItems: 'flex-start'}}>
+                        <TextComponent color={COLORS.HEX_BLACK} size={16} styles={{fontWeight: 'bold'}} text={`Mô tả chi tiết: `} />
+                        <TextComponent flex={1} color={COLORS.AZURE_BLUE} size={16} text={`${product?.product_description || ''}`} />
+                        </RowComponent>
+                     </SectionComponent>
+                      </SectionComponent>
                     </SectionComponent>
                 );
             default:
@@ -168,7 +247,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.WHITE,
         borderRadius: 10,
         width: '90%',
-        gap: 10
+        gap: 10,
     },
     shopImage: {
         width: 100,

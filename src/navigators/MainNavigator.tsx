@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import { ChatContextProvider } from '../context/ChatContext'
-import { AllStoresScreen, BookingScreen, ChatBoxScreen, Manage_Address, DateWeek, DetailShopOfService,DetailProductService , DetailsShopScreen, HistoryScreen, InfoScreen, OrderDetatailsScreen, OrderHistoryScreen, ProductOfProductTypeScreen, ProductTypeScreen, SeeReviewsScreen, ReviewProductsScreen, OrderConfirmationScreen , SelectPaymentMethodScreen, SuccessPaymentScreen, VNPayPaymentScreen ,PaymentScreen,AddressSelectionScreen, DetailNotificationScreen, ChangePasswordSceen} from '../screens'
+import { AllStoresScreen, BookingScreen, ChatBoxScreen, Manage_Address, DateWeek, DetailShopOfService,DetailProductService , DetailsShopScreen, HistoryScreen, InfoScreen, OrderDetatailsScreen, OrderHistoryScreen, ProductOfProductTypeScreen, ProductTypeScreen, SeeReviewsScreen, ReviewProductsScreen, OrderConfirmationScreen , SelectPaymentMethodScreen, SuccessPaymentScreen, VNPayPaymentScreen ,PaymentScreen,AddressSelectionScreen, DetailNotificationScreen, ChangePasswordSceen, OrderStatisticsScreen} from '../screens'
 import TabNavigator from './TabNavigator'
 import TopTabNavigator from './TopTabNavigator'
 import { DateTimeProvider } from '../context/DateTimeContext'
@@ -42,6 +42,7 @@ const MainNavigator = () => {
                             <Stack.Screen name="SuccessPaymentScreen" component={SuccessPaymentScreen} />
                             <Stack.Screen name="DetailNotificationScreen"  component={DetailNotificationScreen} />
                             <Stack.Screen name="ChangePasswordScreen"  component={ChangePasswordSceen} />
+                            <Stack.Screen name="OrderStatisticsScreen" component={OrderStatisticsScreen} />
                         </Stack.Navigator>
                     </PaymentMethodProvider>
                 </AddressesProvider>

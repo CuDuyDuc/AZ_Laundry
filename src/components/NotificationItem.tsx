@@ -26,16 +26,11 @@ interface Props {
 
 const NotificationItem = (props: Props) => {
   const {title, message, idItem, userId, notiStatus, createdAt,  onUpdateList, onPress} = props;
-  // Sử dụng moment để xử lý thời gian
-  console.log({createdAt});
-  // Chuyển đổi thời gian từ UTC sang múi giờ Việt Nam (GMT+7)
-  const vietnamTime = moment.utc(createdAt).utcOffset(7);  // Múi giờ Việt Nam GMT+7
+  const vietnamTime = moment.utc(createdAt).utcOffset(7); 
 
-  // Lấy thời gian hiện tại theo múi giờ Việt Nam
   const currentTime = moment().utcOffset(7);
 
-  // Tính thời gian đã trôi qua từ createdAt cho đến giờ hiện tại
-  const formattedTime = vietnamTime.fromNow();  // Kết quả trả về là "vài phút trước" hoặc "vài giờ trước"
+  const formattedTime = vietnamTime.fromNow(); 
 
   const handleDeleteNotification = async () => {
     const res = await notificationAPI.HandleNotification(
