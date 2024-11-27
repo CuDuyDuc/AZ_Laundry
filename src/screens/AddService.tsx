@@ -1,6 +1,14 @@
+import * as Burnt from "burnt";
+import { ObjectId } from 'mongoose';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
+import { useSelector } from 'react-redux';
+import { FONTFAMILY } from '../../assets/fonts';
+import { appInfo } from '../apis/appInfo';
+import authenticationAPI from '../apis/authAPI';
+import productTypeAPI from '../apis/product_typeAPI';
+import serviceAPI from '../apis/serviceAPI';
 import COLORS from '../assets/colors/Colors';
 import IMAGES from '../assets/images/Images';
 import {
@@ -8,28 +16,18 @@ import {
   HeaderComponent,
   InputComponent,
   KeyboardAvoidingViewWrapper,
-  SectionComponent,
   PickerComponent,
-  RowComponent,
+  SectionComponent,
   SpaceComponent,
   SpinnerComponent,
   TextComponent
 } from '../components';
-import { useRole } from '../permission/permission';
-import serviceAPI from '../apis/serviceAPI';
-import { service_type } from '../model/service_type';
-import productTypeAPI from '../apis/product_typeAPI';
-import { ProductTypeModel } from '../model/product_type';
-import { useSelector } from 'react-redux';
-import { authSelector } from '../redux/reducers/authReducer';
-import { appInfo } from '../apis/appInfo';
 import { useGetThirdPartyAPI } from '../hooks/useGetThirdPartyAPI';
-import * as Burnt from "burnt";
-import authenticationAPI from '../apis/authAPI';
-import { FONTFAMILY } from '../../assets/fonts';
+import { ProductTypeModel } from '../model/product_type';
+import { service_type } from '../model/service_type';
+import { useRole } from '../permission/permission';
+import { authSelector } from '../redux/reducers/authReducer';
 import NotificationService from './notification/service/NotificationService';
-import { ObjectId } from 'mongoose';
-import { log } from 'console';
 
 const initValues = {
   images: [] as { uri: string, type: string, name: string }[],
@@ -115,10 +113,10 @@ const AddService = ({ navigation }: any) => {
 
         if (check === 1) {
           setThumbnails((prevFiles) => [...prevFiles, newFile]);
-          newFile={uri:'',type:'',name:'',}
+          newFile = { uri: '', type: '', name: '', }
         } else {
           setShopBanner((prevFiles) => [...prevFiles, newFile]);
-          newFile={uri:'',type:'',name:'',}
+          newFile = { uri: '', type: '', name: '', }
 
 
         }
@@ -126,15 +124,6 @@ const AddService = ({ navigation }: any) => {
       }
     } catch (error) {
       console.log('Error adding file:', error);
-    }
-  };
-
-  const handleRemoveFile = (index: number, check: number) => {
-    if (check === 1) {
-      setThumbnails((prevFiles) => prevFiles.filter((_, i) => i !== index));
-    } else {
-      setShopBanner((prevFiles) => prevFiles.filter((_, i) => i !== index));
-
     }
   };
 
@@ -267,7 +256,7 @@ const AddService = ({ navigation }: any) => {
   };
 
   const HandleAddShop = async () => {
-    // Kiểm tra các trường bắt buộc
+
     if (!formState.nameShop || !formState.emailShop || !formState.passwordShop) {
       Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ các trường bắt buộc.');
       return;
@@ -422,14 +411,22 @@ const AddService = ({ navigation }: any) => {
               color={COLORS.HEX_BLACK}
               size={13}
             />
-            <InputComponent
+            <TextInput
+              placeholder='Nhập mô tả'
+              placeholderTextColor={COLORS.HEX_LIGHT_GREY}
               value={values.DetailedDescription}
-              onChange={val => handleChangeValue('DetailedDescription', val)}
-              allowClear
-              backgroundColor={COLORS.WHITE}
+              onChangeText={val => handleChangeValue('DetailedDescription', val)}
               multiline={true}
-              numberOfLines={6}
-            />
+              numberOfLines={8}
+              style={{
+                backgroundColor: COLORS.WHITE,
+                textAlignVertical: 'top',
+                paddingHorizontal: 20,
+                paddingTop: 10,
+                paddingBottom: 0,
+                borderRadius: 16,
+                color: COLORS.HEX_BLACK,
+              }} />
           </SectionComponent>
           <SectionComponent>
             {loadingButton ? <ActivityIndicator size={30} /> : <ButtonComponent
@@ -452,8 +449,8 @@ const AddService = ({ navigation }: any) => {
                 text={'Ảnh đại diện'}
                 color={COLORS.HEX_BLACK}
                 size={14}
-                font={FONTFAMILY.montserrat_bold} 
-                styles={{marginBottom: 3}}/>
+                font={FONTFAMILY.montserrat_bold}
+                styles={{ marginBottom: 3 }} />
               <TouchableOpacity onPress={() => handleAddFile('photo', 0)}>
                 {shopBanner[0]?.uri ? (
                   <Image source={{ uri: shopBanner[0]?.uri }} style={styles.image} />
@@ -462,13 +459,13 @@ const AddService = ({ navigation }: any) => {
                 )}
               </TouchableOpacity>
             </SectionComponent>
-            <SectionComponent styles={{alignItems:'center'}}>
+            <SectionComponent styles={{ alignItems: 'center' }}>
               <TextComponent
                 text={'Ảnh bìa'}
                 color={COLORS.HEX_BLACK}
                 size={14}
-                font={FONTFAMILY.montserrat_bold} 
-                styles={{marginBottom: 3}}/>
+                font={FONTFAMILY.montserrat_bold}
+                styles={{ marginBottom: 3 }} />
               <TouchableOpacity onPress={() => handleAddFile('photo', 1)}>
                 {thumbnails[0]?.uri ? (
                   <Image source={{ uri: thumbnails[0]?.uri }} style={styles.image1} />
