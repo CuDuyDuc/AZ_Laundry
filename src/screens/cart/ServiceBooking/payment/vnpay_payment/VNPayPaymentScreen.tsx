@@ -40,6 +40,7 @@ const VNPayPaymentScreen = ({navigation, route}: any) => {
                 Burnt.toast({
                 title: 'Thanh toán thất bại',
                 });
+                navigation.goBack()
             }
         }
     };

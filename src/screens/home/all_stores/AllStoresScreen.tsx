@@ -2,27 +2,21 @@ import { SearchNormal1 } from 'iconsax-react-native';
 import React, { useState } from 'react';
 import COLORS from '../../../assets/colors/Colors';
 import { CardShopComponent, ContainerComponent, HeaderComponent, InputComponent, SectionComponent } from '../../../components';
-import { ScrollView } from 'react-native-virtualized-view';
-import { View } from 'react-native';
 
 const AllStoresScreen = ({ route, navigation }: any) => {
-  const { latitude, longitude } = route.params
-  const [search, setSearch] = useState('')
-  const handleDetailShop = (item: any) => {
-    navigation.navigate('DetailsShop', { data: item })
-  }
+    const {latitude,longitude}=route.params
+    const [search, setSearch] = useState('')
+    const handleDetailShop=(item:any)=>{
+        navigation.navigate('DetailsShop', {data:item})
+    }
   return (
-    <View>
-      <HeaderComponent title={`Danh mục cửa hàng`} isBack onBack={() => navigation.goBack()} />
-      <SectionComponent styles={{ marginTop: 15 }}>
-        <InputComponent placeholder='Tìm kiếm' backgroundColor={COLORS.WHITE} suffix={<SearchNormal1 size="32" color={COLORS.AZURE_BLUE} />} value={search} onChange={(val: any) => setSearch(val)} />
-      </SectionComponent>
-      <ScrollView showsVerticalScrollIndicator={false} style = {{marginTop: -30}}>
-        <SectionComponent styles= {{paddingBottom: 200}}>
-          <CardShopComponent onPress={handleDetailShop} currentLatitude={latitude} currentLongitude={longitude} />
+    <ContainerComponent isScroll>
+        <HeaderComponent title={`Danh mục cửa hàng`} isBack onBack={() => navigation.goBack()} />
+        <SectionComponent styles={{marginTop:15}}>
+            <InputComponent placeholder='Tìm kiếm' backgroundColor={COLORS.WHITE} suffix={<SearchNormal1 size="32"color={COLORS.AZURE_BLUE}/>} value={search} onChange={(val:any)=>setSearch(val)}/>
+            <CardShopComponent  onPress={handleDetailShop}  currentLatitude={latitude} currentLongitude={longitude} />
         </SectionComponent>
-      </ScrollView>
-    </View>
+    </ContainerComponent>
   )
 }
 
