@@ -28,8 +28,6 @@ const MessageScreen = ({navigation}:any) => {
                 markNotificationAsRead({ n: matchedNotification,userChats,user,notifications})
             }
         }
-        console.log(item);
-        
         updateCurrentChat(item);
         navigation.navigate('ChatScreen');
     };
