@@ -159,7 +159,7 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
           <SectionComponent styles={{ backgroundColor: COLORS.WHITE, padding: 20, borderRadius: 5 }}>
             <RowComponent justify="space-between" styles={{ alignItems: 'center', marginBottom: 15 }}>
               <TextComponent text="Mã đơn hàng" size={16} color={COLORS.HEX_BLACK} />
-              <TextComponent text={payment.length > 0 ? payment[0]._id.toString() : ""} size={16} color={COLORS.HEX_BLACK} />
+              <TextComponent text={payment.length > 0 ? payment[0]._id.toString().substring(0,10) : ""} size={16} color={COLORS.HEX_BLACK} />
             </RowComponent>
             <RowComponent justify="space-between" styles={{ alignItems: 'center', marginBottom: 15 }}>
               <TextComponent text="Giao hàng" size={16} color={COLORS.HEX_BLACK} />

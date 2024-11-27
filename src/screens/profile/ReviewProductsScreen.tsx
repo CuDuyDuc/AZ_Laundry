@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { ButtonComponent, CardOrderDetailComponent, ContainerComponent, HeaderComponent, InputComponent, RowComponent, SectionComponent, TextComponent } from '../../components';
+import { ButtonComponent, CardOrderDetailComponent, ContainerComponent, HeaderComponent, InputComponent, KeyboardAvoidingViewWrapper, RowComponent, SectionComponent, TextComponent } from '../../components';
 import COLORS from '../../assets/colors/Colors';
 import { FONTFAMILY } from '../../../assets/fonts';
 import IMAGES from '../../assets/images/Images';
-import { Alert, Image, TextInputComponent, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, TouchableOpacity, View } from 'react-native';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import reviewAPI from '../../apis/reviewAPI';
 import { PaymentModel } from '../../model/payment_model';
 import paymentAPI from '../../apis/paymentAPI';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
 
 const ReviewProductsScreen = ({ navigation, route }: any) => {
-
+    const user = useSelector(authSelector);
     const [payment, setPayment] = useState<PaymentModel[]>([]);
     const { paymentId } = route.params;
     const [rating, setRating] = useState(1);
@@ -63,6 +65,7 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
     const addReview = async () => {
         try {
             const reviewData = {
+                id_user: user?.id,
                 orderId: paymentId,
                 rating,
                 comment,
@@ -86,7 +89,7 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
     }, []);
 
     return (
-        <ContainerComponent isScroll>
+        <KeyboardAvoidingViewWrapper>
             <HeaderComponent title="Đánh giá đơn hàng" isBack onBack={() => navigation.goBack()} />
 
             <SectionComponent>
@@ -219,24 +222,26 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                 ))}
             </RowComponent>
 
+            
             <SectionComponent>
                 <TextInput
-                placeholder='Hãy chia sẻ những điều bạn thích ở sản phẩm này nhé'
-                placeholderTextColor={COLORS.HEX_LIGHT_GREY}
-                value={comment}
-                onChangeText={(val) => setComment(val)}
-                multiline={true}
-                numberOfLines={6}
-                style={{
-                    backgroundColor: COLORS.WHITE,
-                    textAlignVertical: 'top',
-                    paddingHorizontal: 20,
-                    paddingTop: 10,
-                    paddingBottom: 0,
-                    borderRadius: 16,
-                    color: COLORS.HEX_BLACK,
-                }} />
+                    placeholder='Hãy chia sẻ những điều bạn thích ở sản phẩm này nhé'
+                    placeholderTextColor={COLORS.HEX_LIGHT_GREY}
+                    value={comment}
+                    onChangeText={(val) => setComment(val)}
+                    multiline={true}
+                    numberOfLines={6}
+                    style={{
+                        backgroundColor: COLORS.WHITE,
+                        textAlignVertical: 'top',
+                        paddingHorizontal: 20,
+                        paddingTop: 10,
+                        paddingBottom: 0,
+                        borderRadius: 16,
+                        color: COLORS.HEX_BLACK,
+                    }} />
             </SectionComponent>
+            
 
             <SectionComponent>
                 <RowComponent>
@@ -249,8 +254,8 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                     />
                 </RowComponent>
             </SectionComponent>
-
-        </ContainerComponent>
+            
+        </KeyboardAvoidingViewWrapper>
     );
 };
 
