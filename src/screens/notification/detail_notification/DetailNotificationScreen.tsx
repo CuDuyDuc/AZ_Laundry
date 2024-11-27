@@ -19,7 +19,7 @@ export default function DetailNotificationScreen({navigation, route}: any) {
     const [shopName, setShopName] = useState<string>();
     const [loading, setLoading] = useState<boolean>(true);
     console.log({dataPayment});
-    console.log({product});
+    console.log({item});
 
 
     const getPaymentById = async (idPayment: string) => {
