@@ -18,6 +18,7 @@ import { useSelector } from 'react-redux';
 import { authSelector } from '../../redux/reducers/authReducer';
 
 const OrderConfirmationScreen = ({ navigation, route }: any) => {
+  const userId = useSelector(authSelector);
   const [payment, setPayment] = useState<PaymentModel[]>([]);
   const [confirmationStatus, setConfirmationStatus] = useState(route.params?.confirmationStatus || '');
   const user = useSelector(authSelector);
@@ -94,7 +95,7 @@ const OrderConfirmationScreen = ({ navigation, route }: any) => {
 
   const getDataPayment = async () => {
     try {
-      const res: any = await paymentAPI.HandlePayment(`/get-orders-by-status?status=${confirmationStatus}`);
+      const res: any = await paymentAPI.HandlePayment(`/get-orders-by-status?status=${confirmationStatus}&userId=${user?.id}`);
       const data: PaymentModel[] = res.data;
       setPayment(data);
     } catch (error) {
@@ -128,7 +129,7 @@ const OrderConfirmationScreen = ({ navigation, route }: any) => {
               <TouchableOpacity>
                 <View style={{ backgroundColor: COLORS.WHITE, borderRadius: 8 }}>
                   <RowComponent justify="space-between" styles={{ padding: 10 }}>
-                    <TextComponent text={`#${item._id}`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
+                    <TextComponent text={`#${item._id.toString().substring(0, 10)}`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
                     <TextComponent text={new Date(item.createdAt).toLocaleDateString('vi-VN')} color={COLORS.BLUE_GRAY} size={15} />
                   </RowComponent>
 

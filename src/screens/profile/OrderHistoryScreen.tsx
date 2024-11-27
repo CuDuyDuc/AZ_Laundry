@@ -6,8 +6,11 @@ import paymentAPI from '../../apis/paymentAPI';
 import COLORS from '../../assets/colors/Colors';
 import { BoxStatusShopOrderComponent, ButtonComponent, CardOrderComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../components';
 import { PaymentModel } from '../../model/payment_model';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
 
 const OrderHistoryScreen = ({ navigation }: any) => {
+  const user = useSelector(authSelector);
   const [payment, setPayment] = useState<PaymentModel[]>([]);
   const [filteredPayment, setFilteredPayment] = useState<PaymentModel[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>('Tất cả');
@@ -39,10 +42,12 @@ const OrderHistoryScreen = ({ navigation }: any) => {
   const getDataPayment = async () => {
     try {
       setLoading(true);
-      const res: any = await paymentAPI.HandlePayment(`/get-order`);
+      const res: any = await paymentAPI.HandlePayment(`/get-order-by-id-user/${user?.id}`);
       const data: PaymentModel[] = res.data;
       setPayment(data);
       setFilteredPayment(data);
+
+      console.log("Data payment: ", data);
 
       // Update status counts
       const updatedStatusList = statusList.map((statusItem) => {
@@ -55,6 +60,8 @@ const OrderHistoryScreen = ({ navigation }: any) => {
       setStatusList(updatedStatusList);
     } catch (error) {
       console.log('Error: ', error);
+      setPayment([]); // Gán mảng rỗng khi gặp lỗi
+      setFilteredPayment([]);
     } finally {
       setLoading(false);
     }
@@ -71,7 +78,7 @@ const OrderHistoryScreen = ({ navigation }: any) => {
   );
 
   return (
-    <ContainerComponent isScroll styleBackground={{ backgroundColor: COLORS.WHITE }}>
+    <View style={{ backgroundColor: COLORS.WHITE, flex: 1 }}>
       <HeaderComponent title="Lịch sử đơn hàng" isBack onBack={() => navigation.goBack()} />
 
       <SectionComponent>
@@ -94,15 +101,16 @@ const OrderHistoryScreen = ({ navigation }: any) => {
 
       {loading ? (
         <ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />
-      ) : filteredPayment.length ? (
-        <SectionComponent >
+      ) : filteredPayment.length > 0 ? (
+        <SectionComponent styles={{ paddingBottom: 200 }}>
           <FlatList
             data={filteredPayment}
             keyExtractor={(item) => item._id.toString()}
+            showsVerticalScrollIndicator={false}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => onOrderPress(item._id.toString())}>
                 <View style={{ backgroundColor: COLORS.WHITE, borderRadius: 8 }}>
-                  <TextComponent text={`#${item._id}`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
+                  <TextComponent text={`#${item._id.toString().substring(0,10)}`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
 
                   <FlatList
                     data={Array.isArray(item.id_cart) ? item.id_cart : []}
@@ -134,6 +142,7 @@ const OrderHistoryScreen = ({ navigation }: any) => {
                           borderColor: COLORS.AZURE_BLUE,
                           borderWidth: 1,
                         }}
+                        onPress={() => navigation.navigate('Cart')}
                       />
                       <ButtonComponent
                         text="Đánh giá"
@@ -152,7 +161,7 @@ const OrderHistoryScreen = ({ navigation }: any) => {
       ) : (
         <TextComponent text="Không có đơn hàng nào" />
       )}
-    </ContainerComponent>
+    </View>
   );
 };
 

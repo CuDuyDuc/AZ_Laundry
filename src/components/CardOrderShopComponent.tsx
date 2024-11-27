@@ -33,15 +33,15 @@ const CardOrderShopComponent = (props: Props) => {
                 <View style={{ width: '78%' }}>
                     <RowComponent justify="space-between">
                         <TextComponent text={`Mã đơn: ${id}`} color={COLORS.BLUE_GRAY} size={15} font={FONTFAMILY.montserrat_bold} />
-                        <TextComponent text={dateOrder} color={COLORS.BLUE_GRAY} styles={{ marginRight: 30 }} size={15} />
+                        <TextComponent text={dateOrder} color={COLORS.BLUE_GRAY} styles={{ marginRight: 10 }} size={15} />
                     </RowComponent>
                     <RowComponent justify="space-between">
                         <TextComponent text="Tổng thanh toán" color={COLORS.BLUE_GRAY} size={15} font={FONTFAMILY.montserrat_bold} />
-                        <TextComponent text={`${price.toLocaleString('vi-VN')} VND`} color={COLORS.HEX_BLACK} styles={{ marginRight: 30 }} size={15} />
+                        <TextComponent text={`${price.toLocaleString('vi-VN')} VND`} color={COLORS.HEX_BLACK} styles={{ marginRight: 10 }} size={15} />
                     </RowComponent>
                     <RowComponent justify="space-between">
                         <TextComponent text="Trạng thái" color={COLORS.BLUE_GRAY} size={15} font={FONTFAMILY.montserrat_bold} />
-                        <TextComponent text={status} color={COLORS.BLUE_GRAY} styles={{ marginRight: 30 }} size={15} />
+                        <TextComponent text={status} color={COLORS.BLUE_GRAY} styles={{ marginRight: 10 }} size={15} />
                     </RowComponent>
                 </View>
             </RowComponent>

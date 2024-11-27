@@ -5,8 +5,11 @@ import COLORS from '../../assets/colors/Colors';
 import { PaymentModel } from '../../model/payment_model';
 import paymentAPI from '../../apis/paymentAPI';
 import { useFocusEffect } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
 
 const HistoryScreen = ({ navigation }: any) => {
+  const user = useSelector(authSelector);
   const [payment, setPayment] = useState<PaymentModel[]>([]);
   const [filteredPayment, setFilteredPayment] = useState<PaymentModel[]>([]);
   const [selectedStatus, setSelectedStatus] = useState<string>('Tất cả'); // Trạng thái được chọn
@@ -40,7 +43,7 @@ const HistoryScreen = ({ navigation }: any) => {
 
   const getDataPayment = async () => {
     try {
-      const res: any = await paymentAPI.HandlePayment(`/get-order`);
+      const res: any = await paymentAPI.HandlePayment(`/get-order-by-id-shop?userId=${user?.id}`);
       const data: PaymentModel[] = res.data;
       setPayment(data);
       setFilteredPayment(data);
@@ -99,7 +102,7 @@ const HistoryScreen = ({ navigation }: any) => {
           keyExtractor={(item) => item._id.toString()}
           renderItem={({ item }) => (
             <CardOrderShopComponent
-              id={item._id.toString()}
+              id={item._id.toString().substring(0, 10)}
               status={item.confirmationStatus.toString()}
               price={item.mount_money}
               imgUrl={item.imgUrl}

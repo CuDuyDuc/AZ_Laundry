@@ -10,7 +10,7 @@ import productAPI from "../../../apis/productAPI";
 import { log } from "console";
 import authenticationAPI from "../../../apis/authAPI";
 
-export default function DetailNotificationScreen({navigation, route}: any) {
+export default function DetailNotificationScreen({ navigation, route }: any) {
     const { item } = route.params;
     const { isUser, isShop, isAdmin } = useRole();
 
@@ -26,14 +26,14 @@ export default function DetailNotificationScreen({navigation, route}: any) {
         try {
             const req = paymentAPI.HandlePayment(`/get-order-by-id/${idPayment}`);
             setDataPayment((await req).data);
-               setLoading(false);
+            setLoading(false);
         } catch (error) {
             console.log(error);
         }
     }
 
     const formatId = (text: string, maxLength: number = 10): string => {
-        if (!text || text.length <= maxLength) return text; 
+        if (!text || text.length <= maxLength) return text;
         return `${text.slice(-6)}`;
       };
       const getProductById = async () => {
@@ -64,21 +64,21 @@ export default function DetailNotificationScreen({navigation, route}: any) {
         getUserById(item?.sender)
      isAdmin ? getProductById() : getPaymentById(item?.object_type_id);
     }, [])
-    
+
     // Render nội dung dựa trên loại thông báo
     const renderNotificationContent = () => {
         switch (item?.notification_type) {
             case notification_type.ORDER_UPDATE:
                 return (
                     <SectionComponent styles={styles.contentBox}>
-                        <TextComponent color={COLORS.AZURE_BLUE} size={22} styles={ {
+                        <TextComponent color={COLORS.AZURE_BLUE} size={22} styles={{
                             fontWeight: 'bold',
                             textAlign: 'center',
                             width: '100%'
                         }}  title text={ isUser ?  "Cập nhật đơn hàng" : "Đơn hàng mới"} />
                         <RowComponent>
                         <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Mã Đơn: `} />
-                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`#${formatId(dataPayment?._id, 7)}`} />
+                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`#${dataPayment?._id.toString().substring(0,10)}`} />
                         </RowComponent>
                        {!isUser ?  <RowComponent>
                         <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Khách Hàng: `} />
@@ -101,31 +101,31 @@ export default function DetailNotificationScreen({navigation, route}: any) {
 
                         <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`${isUser ? 'Dịch vụ bạn đã đặt' : 'Dịch vụ khách đặt'}:`} />
                         <FlatList
-                        data={dataPayment?.id_cart || []}
-                        keyExtractor={(item: any) => item?._id.toString()}
-                        renderItem={({ item  }) => (
-                              <CardOrderComponent 
-                          imgUrl={item?.id_product?.product_photo[0] || ''}
-                          name={item?.id_product?.product_name || ''}
-                          short_description={item?.id_product?.short_description || ""}
-                          status={""}
-                          total={item?.cart_subtotal || 0}
-                          quantity={item?.product_quantity  || 0}
-                          id={""}
+                            data={dataPayment?.id_cart || []}
+                            keyExtractor={(item: any) => item?._id.toString()}
+                            renderItem={({ item }) => (
+                                <CardOrderComponent
+                                    imgUrl={item?.id_product?.product_photo[0] || ''}
+                                    name={item?.id_product?.product_name || ''}
+                                    short_description={item?.id_product?.short_description || ""}
+                                    status={""}
+                                    total={item?.cart_subtotal || 0}
+                                    quantity={item?.product_quantity || 0}
+                                    id={""}
+                                />
+                            )}
                         />
-                        )}
-                        />
-                     
+
                     </SectionComponent>
                 );
             case notification_type.REMINDER:
                 return (
-                    <SectionComponent styles ={styles.contentBox}>
-                        <TextComponent color={COLORS.AZURE_BLUE} size={20} title text={item.title} styles= {{
-                             fontWeight: 'bold',
-                             textAlign: 'center',
-                             width: '100%'
-                        }}/>
+                    <SectionComponent styles={styles.contentBox}>
+                        <TextComponent color={COLORS.AZURE_BLUE} size={20} title text={item.title} styles={{
+                            fontWeight: 'bold',
+                            textAlign: 'center',
+                            width: '100%'
+                        }} />
                         <TextComponent color={COLORS.HEX_BLACK} size={16} text={item.body || 'Content'} />
                         <TextComponent color={COLORS.HEX_BLACK} size={16} text={item.shortDescription || 'shortDescription'} />
                     </SectionComponent>
@@ -190,26 +190,26 @@ export default function DetailNotificationScreen({navigation, route}: any) {
     return (
         <SectionComponent styles={styles.container}>
             <HeaderComponent isBack onBack={() => navigation.goBack()} title="Thông báo chi tiết" />
-        
-                <SectionComponent styles={styles.scrollViewContent} >
-                    <SectionComponent styles= {{
-                        margin: 20,
-                        paddingHorizontal: 0,
-                        paddingBottom: 0,
-                        backgroundColor: COLORS.WHITE,
-                        width: 100,
-                        height: 100,
-                        borderRadius: 50,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}>
-                        {item?.notification_type === notification_type.ORDER_UPDATE ? <ShoppingBag size="40" color={COLORS.AZURE_BLUE}/> : 
-                        item?.notification_type === notification_type.PROMOTION ?  <DiscountShape size="40" color={COLORS.AZURE_BLUE}/> : 
-                        item?.notification_type === notification_type.NEW_PRODUCT ? <Box size="40" color={COLORS.AZURE_BLUE}/> : <NotificationBing size="40" color={COLORS.AZURE_BLUE}/>}
-                    </SectionComponent>
-                    { loading ?  (<ActivityIndicator size="large" color={COLORS.OCEAN_BLUE}/>) :renderNotificationContent()}
+
+            <SectionComponent styles={styles.scrollViewContent} >
+                <SectionComponent styles={{
+                    margin: 20,
+                    paddingHorizontal: 0,
+                    paddingBottom: 0,
+                    backgroundColor: COLORS.WHITE,
+                    width: 100,
+                    height: 100,
+                    borderRadius: 50,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    {item?.notification_type === notification_type.ORDER_UPDATE ? <ShoppingBag size="40" color={COLORS.AZURE_BLUE} /> :
+                        item?.notification_type === notification_type.PROMOTION ? <DiscountShape size="40" color={COLORS.AZURE_BLUE} /> :
+                            item?.notification_type === notification_type.NEW_PRODUCT ? <Box size="40" color={COLORS.AZURE_BLUE} /> : <NotificationBing size="40" color={COLORS.AZURE_BLUE} />}
                 </SectionComponent>
+                {loading ? (<ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />) : renderNotificationContent()}
+            </SectionComponent>
         </SectionComponent>
     );
 }
@@ -219,7 +219,7 @@ const UPPER_HEADER_HEIGHT = 60;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal:0,
+        paddingHorizontal: 0,
         paddingVertical: 0
     },
     upperHeaderPlaceholder: {
