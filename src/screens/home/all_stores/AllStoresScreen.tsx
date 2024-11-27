@@ -10,7 +10,7 @@ const AllStoresScreen = ({ route, navigation }: any) => {
         navigation.navigate('DetailsShop', {data:item})
     }
   return (
-    <ContainerComponent>
+    <ContainerComponent isScroll>
         <HeaderComponent title={`Danh mục cửa hàng`} isBack onBack={() => navigation.goBack()} />
         <SectionComponent styles={{marginTop:15}}>
             <InputComponent placeholder='Tìm kiếm' backgroundColor={COLORS.WHITE} suffix={<SearchNormal1 size="32"color={COLORS.AZURE_BLUE}/>} value={search} onChange={(val:any)=>setSearch(val)}/>

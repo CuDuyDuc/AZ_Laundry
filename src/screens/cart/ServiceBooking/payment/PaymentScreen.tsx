@@ -60,8 +60,11 @@ const PaymentScreen = ({navigation, route}: any) => {
     }, 0);
     const handlePayment=async()=>{
         if (selectedPaymentMethod && dataInfoUser && selectedProductType && selectedShipOption && totalCarts && sendValue && receiveValue){
-            console.log(sendValue);
-            
+            const shopDetail = dataCarts.map((shop:any)=> ({
+                id_shop: shop._id,
+                cart_subtotal_shop: shop.cart_subtotal,
+                shipping_fee_shop :calculateShippingFee(dataInfoUser?.location?.coordinates,shop?.coordinates)
+            }));
             try {
                 const res:any = await paymentAPI.HandlePayment('/create-payment',{
                     id_user:user.id,
@@ -77,7 +80,8 @@ const PaymentScreen = ({navigation, route}: any) => {
                         shipping_mode:selectedProductType==='wet'?'Sản phẩm dạng ướt':'Sản phẩm dạng khô',
                         note:notes,
                         total:totalCarts
-                    }
+                    },
+                    shop_details:shopDetail
                 },'post')
                 if(res){
                     if(res.paymentUrl){
@@ -112,6 +116,8 @@ const PaymentScreen = ({navigation, route}: any) => {
         }
         
     }
+
+    
   return (
     <View style={{backgroundColor:COLORS.WHISPER_GRAY,position:'relative', flex:1}}>
         <HeaderComponent title={`Thanh toán`} isBack onBack={() => navigation.goBack()}/>

@@ -32,7 +32,7 @@ import { ObjectId } from 'mongoose';
 
 const initValues = {
     images: [] as { uri: string, type: string, name: string }[], 
-    serviceName: '',
+    serviceName: 'Áo khoác dài',
     serviceType: '',
     idServiceType: '',
     idproductType: '',
@@ -41,19 +41,6 @@ const initValues = {
     ShortDescription: '',
     DetailedDescription: '',
 };
-
-interface FormState {
-  nameShop: string;
-  emailShop: string;
-  passwordShop: string;
-  specificAddress: string;
-  selectedValueProvince: object; 
-  selectedValueDistrict: object;  
-  selectedValueWard: object;      
-  files: any[];  
-  note: string;
-}
-
 
 interface type_spinner {
     label: string;
@@ -67,24 +54,14 @@ const AddService = ({ navigation }: any) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [loadingButton, setLoadingButton] = useState<boolean>(false);
 
-    const [formState, setFormState] = useState<FormState>({
-      nameShop: '',
-      emailShop: '',
-      passwordShop: '',
-      specificAddress: '',
-      selectedValueProvince: {},
-      selectedValueDistrict: {},
-      selectedValueWard: {},
-      files: [],
-      note: '',
-    });
-
-    const { isShop, isAdmin } = useRole();
-    const [specificAddress, setSpecificAddress] = useState('')
-    const { valueLocation: provinceData } = useGetThirdPartyAPI(1, 0);
-    const [selectedValueProvince, setSelectedValueProvince] = useState<any>({});
-    const [files, setFiles] = useState<{ uri: string | undefined; type: string | undefined; name: string | undefined; }[]>([]);
-    const { valueLocation: districtData } = useGetThirdPartyAPI(
+  const { isShop, isAdmin } = useRole();
+    const [note, setNote] = useState('')
+  const [specificAddress, setSpecificAddress] = useState('')
+  const [value, setValue] = useState('')
+  const { valueLocation: provinceData } = useGetThirdPartyAPI(1, 0);
+  const [selectedValueProvince, setSelectedValueProvince] = useState<any>({});
+  const [files, setFiles] = useState<{ uri: string | undefined; type: string | undefined; name: string | undefined; }[]>([]);
+  const { valueLocation: districtData } = useGetThirdPartyAPI(
     2,
     selectedValueProvince?.id,
   );
@@ -222,14 +199,6 @@ const AddService = ({ navigation }: any) => {
         setValues(data);
     };
 
-    const updateField = (key: keyof FormState, value: string | number | object | any[]) => {
-      setFormState((prev) => ({
-        ...prev,
-        [key]: value,
-      }));
-    };
-  
-
     const getDataService_Type = async () => {
         try {
             const res = await serviceAPI.HandleService('/get-service-type');
@@ -258,80 +227,33 @@ const AddService = ({ navigation }: any) => {
             value: item?._id
         }));
     };
-  
     const HandleAddShop = async () => {
-      // Kiểm tra các trường bắt buộc
-      if (!formState.nameShop || !formState.emailShop || !formState.passwordShop) {
-        Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ các trường bắt buộc.');
-        return;
-      }
+        const address = `${specificAddress}, ${selectedValueWard?.full_name}, ${selectedValueDistrict?.full_name}, ${selectedValueProvince?.full_name}`
+        try {
+          const respones = await authenticationAPI.HandleAuthentication('/create-user', {
+            
+            address: address
+          }, 'post')
+          if (respones) {
+            Burnt.toast({
+              title: "Thêm thành công",
     
-      // Kiểm tra địa chỉ để đảm bảo tất cả các phần được chọn
-      const address = `${formState.specificAddress}, ${selectedValueWard?.full_name ?? ''}, ${selectedValueDistrict?.full_name ?? ''}, ${selectedValueProvince?.full_name ?? ''}`;
+            });
+          } else {
+            console.log('Sai dòng 118')
+          }
+          navigation.navigate('AddressSelectionScreen')
+        } catch (error) {
+          console.log(error);
     
-      try {
-        setLoadingButton(true);
-    
-        const response = await authenticationAPI.HandleAuthentication(
-          '/create-user',
-          {
-            nameShop: formState.nameShop,
-            emailShop: formState.emailShop,
-            password: formState.passwordShop,
-            address,
-            files: formState.files,
-            note: formState.note,
-          },
-          'post'
-        );
-    
-        // Chắc chắn tắt loading khi kết thúc
-        setLoadingButton(false);
-    
-        if (response?.status === 201 || response?.data?.success) {
-          Burnt.toast({
-            title: 'Thành công!',
-            message: 'Shop đã được thêm.',
-          });
-    
-          // Reset form sau khi thành công
-          setFormState({
-            nameShop: '',
-            emailShop: '',
-            passwordShop: '',
-            specificAddress: '',
-            selectedValueProvince: {},
-            selectedValueDistrict: {},
-            selectedValueWard: {},
-            files: [],
-            note: '',
-          });
-        } else {
-          Burnt.toast({
-            title: 'Thất bại!',
-            message: response?.data?.message ?? 'Đã có lỗi xảy ra.',
-          });
         }
-      } catch (error: any) {
-        // Đảm bảo loading được tắt khi có lỗi
-        setLoadingButton(false);
-        const errorMessage = error?.message || error?.response?.data?.message || 'Không thể thêm shop.';
-        Burnt.toast({
-          title: 'Lỗi!',
-          message: errorMessage,
-        });
       }
-    };
-    
-  
-  
-  
     useEffect(() => {
         getDataService_Type();
     }, []);
 
     return (
-      <KeyboardAvoidingViewWrapper>
+        <KeyboardAvoidingViewWrapper>
        { isShop ? (
         <>
              <HeaderComponent
@@ -523,8 +445,8 @@ const AddService = ({ navigation }: any) => {
                 size={14}
                 font={FONTFAMILY.montserrat_bold} />
               <InputComponent
-                value={formState.nameShop}
-                onChange={(value) => updateField('nameShop', value)}
+                value={value}
+                onChange={setValue}
                 backgroundColor={COLORS.WHITE}
                 allowClear />
               <TextComponent
@@ -533,8 +455,8 @@ const AddService = ({ navigation }: any) => {
                 size={14}
                 font={FONTFAMILY.montserrat_bold} />
               <InputComponent
-                value={formState.emailShop}
-                onChange={(value) => updateField('emailShop', value)}
+                value={value}
+                onChange={setValue}
                 backgroundColor={COLORS.WHITE}
                 allowClear />
               <TextComponent
@@ -543,8 +465,8 @@ const AddService = ({ navigation }: any) => {
                 size={14}
                 font={FONTFAMILY.montserrat_bold} />
               <InputComponent
-                value={formState.passwordShop}
-                onChange={(value) => updateField('passwordShop', value)}
+                value={value}
+                onChange={setValue}
                 backgroundColor={COLORS.WHITE}
                 isPassword />
               <TextComponent
@@ -555,8 +477,8 @@ const AddService = ({ navigation }: any) => {
               <TextInput
                 placeholder='Nhập mô tả'
                 placeholderTextColor={COLORS.HEX_LIGHT_GREY}
-                value={formState.note}
-                onChangeText={(value) => updateField('note', value)}
+                value={note}
+                onChangeText={setNote}
                 multiline={true}
                 numberOfLines={8}
                 style={{
@@ -614,7 +536,6 @@ const AddService = ({ navigation }: any) => {
               <ButtonComponent 
                 type='#00ADEF'
                 text='Tạo Shop'
-                onPress={HandleAddShop}
               />
             </SectionComponent>
           </KeyboardAvoidingViewWrapper>
