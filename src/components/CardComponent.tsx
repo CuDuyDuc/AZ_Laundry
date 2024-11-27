@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { GestureResponderEvent, Image, TouchableOpacity, View } from 'react-native';
 import { FONTFAMILY } from '../../assets/fonts';
 import COLORS from '../assets/colors/Colors';
@@ -10,6 +10,8 @@ import { unreadNotificationsFunc } from '../utils/unreadNotificationsFunc';
 import { useAxiosLastesMessage } from './../hooks/useAxiosLatestMessage';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
+import messageAPI from '../apis/messageAPI';
+import { useAxiosPutIsRead } from '../hooks/useAxiosPutIsRead';
 
 interface Props {
     user: any;
@@ -26,7 +28,7 @@ const CardComponent = (props: Props) => {
     const unreadNotifications = unreadNotificationsFunc(notifications); //hàm này để tính số lượng tin nhắn false có nghĩa chưa đọc
     const thisUserNotifications = unreadNotifications?.filter((n:any)=> n?.senderId == recipientUser?._id)
     const isActive = onlineUsers.some((user: any) => user.userId === recipientUser?._id);
-    console.log(notifications);
+    const [countIsRead,setCountIsRead]= useState<number>(0)
     
     const truncateText = (text: any) => {
         let shortText = text.substring(0, 20);
@@ -39,6 +41,8 @@ const CardComponent = (props: Props) => {
         if(thisUserNotifications?.length!==0){
             markThisUserNotificationsAsRead({thisUserNotifications,notifications})
         }
+        useAxiosPutIsRead(chats)
+
         
     }
     const handlePress = (event: GestureResponderEvent) => {
@@ -47,6 +51,19 @@ const CardComponent = (props: Props) => {
             onPress(event); 
         }
     };
+    
+    useEffect(()=>{
+        const getCountIsRead =async()=>{
+            try {
+                const res:any = await messageAPI.HandleMessage(`/get-count-isread/${chats._id}/${user.id}`)
+                setCountIsRead(res.isReadTrueCount)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getCountIsRead()
+    },[lastestMessage])
+    
     return (
         <TouchableOpacity onPress={handlePress} style={{ marginBottom: 15 }}>
             <RowComponent>
@@ -63,17 +80,17 @@ const CardComponent = (props: Props) => {
                         <TextComponent text={recipientUser?.fullname} font={FONTFAMILY.montserrat_medium} color={COLORS.DARK_BLUE} />
                         <TextComponent
                             text={moment(lastestMessage?.createdAt).format('HH:mm')}
-                            color={thisUserNotifications && thisUserNotifications?.length>0 ? COLORS.HEX_BLACK : COLORS.GRAY_WHITE  }
-                            font={thisUserNotifications && thisUserNotifications?.length>0 ? FONTFAMILY.montserrat_semibold :FONTFAMILY.montserrat_regular}
+                            color={(thisUserNotifications && thisUserNotifications?.length>0 || countIsRead>0) ? COLORS.HEX_BLACK : COLORS.GRAY_WHITE  }
+                            font={(thisUserNotifications && thisUserNotifications?.length>0 || countIsRead>0) ? FONTFAMILY.montserrat_semibold :FONTFAMILY.montserrat_regular}
                         />
                     </RowComponent>
                     <RowComponent justify="space-between">
                         <TextComponent
                             text={lastestMessage && truncateText(lastestMessage?.text)}
-                            color={thisUserNotifications && thisUserNotifications?.length>0 ?COLORS.HEX_BLACK : COLORS.GRAY_WHITE }
-                            font={thisUserNotifications && thisUserNotifications?.length>0 ? FONTFAMILY.montserrat_semibold : FONTFAMILY.montserrat_regular }
+                            color={(thisUserNotifications && thisUserNotifications?.length>0 || countIsRead>0) ?COLORS.HEX_BLACK : COLORS.GRAY_WHITE }
+                            font={(thisUserNotifications && thisUserNotifications?.length>0 || countIsRead>0) ? FONTFAMILY.montserrat_semibold : FONTFAMILY.montserrat_regular }
                         />
-                        {thisUserNotifications && thisUserNotifications?.length>0 ?  <TextComponent text={`${thisUserNotifications?.length}`}  color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold}/>:undefined}
+                        {thisUserNotifications && thisUserNotifications?.length>0 ?  <TextComponent text={`${thisUserNotifications?.length}`}  color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold}/>:<TextComponent text={`${countIsRead>0 ?countIsRead:''}`}  color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold}/>}
                     </RowComponent>
                 </View>
             </RowComponent>

@@ -127,13 +127,11 @@ const OrderConfirmationScreen = ({ navigation, route }: any) => {
             return (
               <TouchableOpacity>
                 <View style={{ backgroundColor: COLORS.WHITE, borderRadius: 8 }}>
-                  {/* Header */}
                   <RowComponent justify="space-between" styles={{ padding: 10 }}>
                     <TextComponent text={`#${item._id}`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
                     <TextComponent text={new Date(item.createdAt).toLocaleDateString('vi-VN')} color={COLORS.BLUE_GRAY} size={15} />
                   </RowComponent>
 
-                  {/* Cart Items */}
                   <FlatList
                     data={Array.isArray(item.id_cart) ? item.id_cart : []}
                     keyExtractor={(cartItem) => cartItem._id.toString()}
@@ -149,8 +147,6 @@ const OrderConfirmationScreen = ({ navigation, route }: any) => {
                       />
                     )}
                   />
-
-                  {/* Payment Info */}
                   <SectionComponent>
                   <RowComponent>
                     <TextComponent text="Thông tin thanh toán" color={COLORS.BLUE_GRAY} size={15} font={FONTFAMILY.montserrat_bold} />
@@ -170,8 +166,6 @@ const OrderConfirmationScreen = ({ navigation, route }: any) => {
                       <TextComponent text={`${item.mount_money.toLocaleString('vi-VN')} VND`} color={COLORS.HEX_BLACK} size={15} />
                     </RowComponent>
                   </SectionComponent>
-
-                  {/* Buttons */}
                   {buttonConfig && (
                     <RowComponent justify="center" styles={{ marginTop: 5, marginBottom: 20 }}>
                       <ButtonComponent

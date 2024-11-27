@@ -94,16 +94,16 @@ const BookingScreen = ({navigation, route}: any) => {
   }
 
 
-  // const handleSendNotificationOrder = async () => {
-  //     const req = await NotificationService.sendNotificationToServer({
-  //       title: 'string',
-  //       body: 'string',
-  //       userId: '670eb43123dc57e4d392af1a',
-  //       notification_type: 'order'
-  //     })
-  //     console.log(req);
+  const handleSendNotificationOrder = async () => {
+      const req = await NotificationService.sendNotificationToServer({
+        title: 'string',
+        body: 'string',
+        userId: '670eb43123dc57e4d392af1a',
+        notification_type: 'order'
+      })
+      console.log(req);
       
-  // }
+  }
   const renderItem = ({item}: any) => (
     <ContainerComponent>
       <RowComponent>

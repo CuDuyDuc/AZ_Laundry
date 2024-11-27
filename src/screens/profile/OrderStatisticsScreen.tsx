@@ -57,7 +57,7 @@ const OrderStatisticsScreen = ({ navigation }: any) => {
         const orderDate = new Date(order.createdAt);
         if (orderDate >= startDate && orderDate <= endDate && (order.status === 'Paid' || order.status === 'COD')) {
           const orderDateString = orderDate.toLocaleDateString('vi-VN');
-          
+
           if (order.id_cart && Array.isArray(order.id_cart)) {
             order.id_cart.forEach((cartItem: any) => {
               if (cartItem.id_product && cartItem.id_product.id_user) {
@@ -109,7 +109,7 @@ const OrderStatisticsScreen = ({ navigation }: any) => {
       },
     ],
   };
-  
+
   const chartConfig = {
     backgroundGradientFrom: COLORS.WHITE,
     backgroundGradientTo: COLORS.WHITE,
@@ -191,123 +191,113 @@ const OrderStatisticsScreen = ({ navigation }: any) => {
               />
             </SectionComponent>
           </RowComponent>
-          <SectionComponent>
-            <SectionComponent
-              styles={{
-                backgroundColor: COLORS.WHITE,
-                borderRadius: 8,
-                marginTop: 20,
-                padding: 10,
-              }}>
-              <RowComponent justify="space-between">
-                <SectionComponent>
-                  <TextComponent
-                    text={'Tổng doanh thu'}
-                    size={13}
-                    color={COLORS.HEX_LIGHT_GREY}
-                    font={FONTFAMILY.montserrat_bold}
-                  />
-                  <TextComponent
-                    text={`${totalRevenue.toLocaleString('vi-VN')} VND`}
-                    font={FONTFAMILY.montserrat_bold}
-                    size={24}
-                    color={COLORS.HEX_BLACK}
-                  />
-                </SectionComponent>
-                <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-                  <RowComponent>
-                    <Text>{`${startDate.toLocaleDateString('vi-VN')} - ${selectedDate.toLocaleDateString('vi-VN')}`}</Text>
-                    <ArrowDown2
-                      size="18"
-                      color={COLORS.HEX_BLACK}
-                      variant="Outline"
-                    />
-                  </RowComponent>
-                </TouchableOpacity>
-              </RowComponent>
-            </SectionComponent>
-            {showDatePicker && (
-              <DateTimePicker
-                value={selectedDate}
-                mode="date"
-                display="default"
-                onChange={handleDateChange}
+          <SectionComponent styles = {{marginTop: 5}}>
+            <TextComponent
+              text={'Tổng doanh thu'}
+              size={13}
+              color={COLORS.HEX_LIGHT_GREY}
+              font={FONTFAMILY.montserrat_bold}
+            />
+            <RowComponent justify="space-between">
+              <TextComponent
+                text={`${totalRevenue.toLocaleString('vi-VN')} VND`}
+                font={FONTFAMILY.montserrat_bold}
+                size={20}
+                color={COLORS.HEX_BLACK}
               />
-            )}
-              {Object.keys(revenueByDate).length > 0 ? (
-                <View
-                  style={{
-                    backgroundColor: COLORS.WHITE,
-                    borderRadius: 8,
-                    padding: 10,
-                  }}>
-                  <LineChart
-                    data={chartData}
-                    width={screenWidth - 40}
-                    height={220}
-                    chartConfig={chartConfig}
-                    bezier
-                    style={{
-                      marginVertical: 8,
-                      borderRadius: 16,
-                      paddingRight: 40, 
-                      paddingBottom: 20, 
-                    }}
-                    withVerticalLines={false}
-                    withHorizontalLines={true}
-                    withDots={true}
-                    withInnerLines={true}
-                    withOuterLines={false}
-                    withVerticalLabels={true}
-                    withHorizontalLabels={true}
-                    fromZero={true}
+              <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                <RowComponent>
+                  <Text>{`${startDate.toLocaleDateString('vi-VN')} - ${selectedDate.toLocaleDateString('vi-VN')}`}</Text>
+                  <ArrowDown2
+                    size="18"
+                    color={COLORS.HEX_BLACK}
+                    variant="Outline"
                   />
-                </View>
-              ) : (
-                <TextComponent text="Không có dữ liệu" />
-              )}
-            <SectionComponent
-              styles={{
+                </RowComponent>
+              </TouchableOpacity>
+            </RowComponent>
+          </SectionComponent>
+          {showDatePicker && (
+            <DateTimePicker
+              value={selectedDate}
+              mode="date"
+              display="default"
+              onChange={handleDateChange}
+            />
+          )}
+          {Object.keys(revenueByDate).length > 0 ? (
+            <View
+              style={{
                 backgroundColor: COLORS.WHITE,
                 borderRadius: 8,
-                marginTop: 20,
                 padding: 10,
               }}>
-              <RowComponent justify="space-between">
-                <TextComponent
-                  text={'Đánh giá'}
-                  size={13}
-                  color={COLORS.HEX_LIGHT_GRAY}
-                  font={FONTFAMILY.montserrat_bold}
-                />
-                <ButtonComponent
-                  text="Xem tất cả đánh giá"
-                  type="link"
-                  color={COLORS.AZURE_BLUE}
-                />
-              </RowComponent>
-              <SpaceComponent height={20} />
-              <RowComponent>
-                <TouchableOpacity>
-                  <RowComponent>
-                    <Star1 color={COLORS.AZURE_BLUE} size={20} variant="Bold" />
-                    <TextComponent
-                      text={'4.9'}
-                      size={13}
-                      color={COLORS.AZURE_BLUE}
-                      font={FONTFAMILY.montserrat_bold}
-                    />
-                  </RowComponent>
-                </TouchableOpacity>
-                <SpaceComponent width={20} />
-                <TextComponent
-                  text={'Tổng 30 Đánh giá'}
-                  size={13}
-                  color={COLORS.HEX_LIGHT_GREY}
-                  font={FONTFAMILY.montserrat_bold}
-                />
-              </RowComponent>
-            </SectionComponent>
+              <LineChart
+                data={chartData}
+                width={screenWidth - 40}
+                height={220}
+                chartConfig={chartConfig}
+                bezier
+                style={{
+                  marginVertical: 8,
+                  borderRadius: 16,
+                  paddingRight: 40,
+                  paddingBottom: 20,
+                }}
+                withVerticalLines={false}
+                withHorizontalLines={true}
+                withDots={true}
+                withInnerLines={true}
+                withOuterLines={false}
+                withVerticalLabels={true}
+                withHorizontalLabels={true}
+                fromZero={true}
+              />
+            </View>
+          ) : (
+            <TextComponent text="Không có dữ liệu" />
+          )}
+          <SectionComponent
+            styles={{
+              backgroundColor: COLORS.WHITE,
+              borderRadius: 8,
+              marginTop: 20,
+              padding: 10,
+            }}>
+            <RowComponent justify="space-between">
+              <TextComponent
+                text={'Đánh giá'}
+                size={13}
+                color={COLORS.HEX_LIGHT_GRAY}
+                font={FONTFAMILY.montserrat_bold}
+              />
+              <ButtonComponent
+                text="Xem tất cả đánh giá"
+                type="link"
+                color={COLORS.AZURE_BLUE}
+              />
+            </RowComponent>
+            <SpaceComponent height={20} />
+            <RowComponent>
+              <TouchableOpacity>
+                <RowComponent>
+                  <Star1 color={COLORS.AZURE_BLUE} size={20} variant="Bold" />
+                  <TextComponent
+                    text={'4.9'}
+                    size={13}
+                    color={COLORS.AZURE_BLUE}
+                    font={FONTFAMILY.montserrat_bold}
+                  />
+                </RowComponent>
+              </TouchableOpacity>
+              <SpaceComponent width={20} />
+              <TextComponent
+                text={'Tổng 30 Đánh giá'}
+                size={13}
+                color={COLORS.HEX_LIGHT_GREY}
+                font={FONTFAMILY.montserrat_bold}
+              />
+            </RowComponent>
           </SectionComponent>
         </ContainerComponent>
       )}
