@@ -7,33 +7,74 @@ import COLORS from '../assets/colors/Colors';
 import RowComponent from './RowComponent';
 import SectionComponent from './SectionComponent';
 import TextComponent from './TextComponent';
+import CircleComponent from './CircleComponent';
+import moment from 'moment'; 
+import 'moment/locale/vi'; 
+var EventEmitter = require('eventemitter3');
+export const eventEmitterUpdateRead = new EventEmitter();
 interface Props {
   title?: string;
   message?: string;
   idItem?: string;
   userId?: string;
+  notiStatus?: string;
+  createdAt?: string;
   onUpdateList?: () => void;
+  onPress?: () => void;
+  
 }
 
 const NotificationItem = (props: Props) => {
-  const {title, message, idItem, userId, onUpdateList} = props;
+  const {title, message, idItem, userId, notiStatus, createdAt,  onUpdateList, onPress} = props;
+  const vietnamTime = moment.utc(createdAt).utcOffset(7); 
+
+  const currentTime = moment().utcOffset(7);
+
+  const formattedTime = vietnamTime.fromNow(); 
 
   const handleDeleteNotification = async () => {
     const res = await notificationAPI.HandleNotification(
       '/delete',
       {
         userId: userId,
-        notificationDetailsId: idItem,
+        notificationId: idItem,
       },
       'delete',
     );
     if (res.status == 200) {
       onUpdateList?.();
+      eventEmitterUpdateRead.emit('updateCountNotiRead');
+
       Burnt.toast({
         title: 'Xoá thành công',
       });
     }
   };
+  const markNotificationAsRead = async () => {
+    try {
+      const res = await notificationAPI.HandleNotification(
+        '/update-mark-read',
+        {
+          userId: userId,
+          notificationId: idItem,
+        },
+        'patch',
+      );
+      if (res.status == 200) {
+        onUpdateList?.();
+      }
+    } catch (error) {
+      console.log(error);
+      
+    }
+  };
+  const handleUpdateMark = async () => {
+    await markNotificationAsRead();
+    onUpdateList?.();
+    onPress?.();
+    eventEmitterUpdateRead.emit('updateCountNotiRead');
+  }
+  
   // Hàm để render thùng rác khi vuốt sang trái
   const renderRightActions = () => (
     <TouchableOpacity onPress={handleDeleteNotification}>
@@ -52,7 +93,8 @@ const NotificationItem = (props: Props) => {
   );
 
   return (
-    <Swipeable renderRightActions={renderRightActions}>
+   <TouchableOpacity onPress={notiStatus =='read' ? () =>{onPress?.()} : handleUpdateMark} >
+     <Swipeable renderRightActions={renderRightActions}>
       <RowComponent
         justify="space-between"
         styles={{
@@ -86,14 +128,18 @@ const NotificationItem = (props: Props) => {
             />
             <TextComponent size={12} text={message} color={COLORS.HEX_BLACK} />
             <TextComponent
-              text="20 phút trước"
+              text={formattedTime}
               color={COLORS.HEX_BLACK}
               size={10}
             />
           </SectionComponent>
+          { notiStatus === 'unread' && <CircleComponent color='red' size={10} />}
+
         </RowComponent>
+        
       </RowComponent>
     </Swipeable>
+   </TouchableOpacity>
   );
 };
 

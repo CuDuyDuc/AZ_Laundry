@@ -1,44 +1,171 @@
 import { Camera } from 'iconsax-react-native';
-import React, { useState } from 'react';
-import { Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, Image, TouchableOpacity } from 'react-native';
 import { useSelector } from 'react-redux';
 import COLORS from '../../assets/colors/Colors';
 import { ButtonComponent, ContainerComponent, HeaderComponent, InputComponent, RowComponent, SectionComponent } from '../../components';
 import { authSelector } from '../../redux/reducers/authReducer';
+import authenticationAPI from '../../apis/authAPI';
+import * as Burnt from "burnt";
+import { launchImageLibrary } from 'react-native-image-picker';
+import { appInfo } from '../../apis/appInfo';
+var EventEmitter = require('eventemitter3');
+export const eventEmitterUpdateInfo = new EventEmitter();
+const initValues = {
+  images: [] as { uri: string, type: string, name: string }[], 
+};
 const InfoScreen = ({ navigation }: any) => {
   const user = useSelector(authSelector);
-
+  console.log(user);
+  
   const [fullname, setFullname] = useState(user?.fullname || '');
   const [address, setAddress] = useState(user?.address || '');
   const [phone, setPhone] = useState(user?.phone || '');
-  // const [isDisable, setIsDisable] = useState(true);
+  const [photo, setPhoto] = useState(user?.photo || '');
+  const [loading, setLoading] = useState(false);
 
+  const [values, setValues] = useState(initValues);
 
+  const handleImagePick = async () => {
+    try {
+        const result = await launchImageLibrary({
+            mediaType: 'photo',
+            quality: 1,
+            selectionLimit: 1,
+        });
+
+        if (result.didCancel) {
+            console.log('User cancelled image picker');
+        } else if (result.errorCode) {
+            console.log('Image Picker Error: ', result.errorCode);
+        } else if (result.assets && result.assets.length > 0) {
+            const images = result.assets.map(asset => ({
+                uri: asset.uri ?? '',
+                type: asset.type ?? 'image/jpg',
+                name: asset.fileName ?? `${new Date().toISOString()}.jpg`,
+            }));
+            setValues({ ...values, images });
+        } else {
+            console.log('No assets found');
+            Alert.alert('Error', 'No image selected, please try again.');
+        }
+    } catch (error) {
+        console.error('Error picking images: ', error);
+        Alert.alert('Error', 'An error occurred while picking the images.');
+    }
+};
+  const getUserById = async (id_user: string) => {
+  
+    try {
+    const req : any = await authenticationAPI.HandleAuthentication(`/get-user-by-id?id_user=${id_user}`);
+    const data = await req[0];
+      
+   if(data) {
+    setAddress(data.address);
+    setPhone(data.phone_number);
+    setPhoto(data.photo);
+   }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    getUserById(user?.id);
+    
+    return () => {
+      
+    }
+  }, [])
+  
+  const handleChangeInfo = async () => {
+
+    if(!phone || !address) {
+      return  Burnt.toast({
+        title: 'Địa chỉ hoặc số điện thoại không được để trống!'
+      });
+    }
+    if (values?.images?.length === 0) {
+      Alert.alert('Error', 'Please select images before saving.');
+      return;
+  }
+
+  const formData = new FormData();
+  formData.append('userId', user?.id);
+  formData.append('address', address);
+  formData.append('phone_number', phone);
+
+  values.images.forEach((image, index) => {
+      formData.append('image', {
+          uri: image.uri,
+          type: image.type,
+          name: image.name,
+      });
+  });
+  try {
+    setLoading(true);
+    const response = await fetch(`${appInfo.BASE_URL}/auth/update-info`, {
+        method: 'PUT',
+        body: formData,
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+
+    if (response.status == 200 ) {
+        Alert.alert('Success', 'Data and images uploaded successfully.');
+    getUserById(user?.id);
+    console.log(response);
+    setLoading(false);
+    eventEmitterUpdateInfo.emit('updateInfo');
+    } else {
+        console.error('Error uploading:', response.status);
+        Alert.alert('Error', 'An error occurred during the upload.');
+    setLoading(false);
+
+    }
+} catch (error) {
+    console.error('Upload Error:', error);
+    Alert.alert('Error', 'Unable to upload images.');
+    setLoading(false);
+    
+}
+  }
+  
   return (
     <ContainerComponent>
       <HeaderComponent title='Thông tin cá nhân' isBack onBack={() => navigation.goBack()} />
       <SectionComponent>
         <RowComponent justify={'center'} styles={{ padding: 20 }} onPress={() => { }}>
           <SectionComponent>
-            {user?.photo ? (
+          <TouchableOpacity onPress={handleImagePick}>
+
+            {   values?.images[0]?.uri ? (
+              <Image source={{ uri: values?.images[0]?.uri }}    style={{
+                borderRadius: 40,
+                width: 80,
+                height: 80,
+              }} />
+          ) : photo ? (
               <Image
                 style={{
-                  width: 100,
-                  height: 100,
-                  borderRadius: 100,
+                  width: 80,
+                  height: 80,
+                  borderRadius: 40,
                 }}
-                source={{ uri: user?.photo }} />
-            ) : (
+                source={{ uri: photo }} />
+            )  : (
               <Image
                 style={{
                   borderRadius: 40,
-                  width: 60,
-                  height: 60,
+                  width: 80,
+                  height: 80,
                 }}
                 source={{
                   uri: 'https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png',
                 }} />
             )}
+                </TouchableOpacity>
+
             <RowComponent
               styles={{
                 borderRadius: 1000,
@@ -55,30 +182,30 @@ const InfoScreen = ({ navigation }: any) => {
           </SectionComponent>
         </RowComponent>
         <InputComponent
-          value={fullname}
+          value={fullname || ''}
           placeholder='Họ và tên'
           onChange={val => setFullname(val)}
-          allowClear
+          editKeyboard={true}
           backgroundColor={COLORS.WHITE} />
         <InputComponent
-          value={address}
+          value={address || ''}
           placeholder='Địa chỉ'
           onChange={val => setAddress(val)}
           allowClear
           backgroundColor={COLORS.WHITE} />
         <InputComponent
-          value={phone}
+          value={phone || ''}
           placeholder='Phone'
           onChange={val => setPhone(val)}
           allowClear
           backgroundColor={COLORS.WHITE} />
       </SectionComponent>
       <SectionComponent styles={{alignItems: 'center'}}>
-        <ButtonComponent
+       {loading ? (<ActivityIndicator size={30} />) :  (<ButtonComponent
           text='Lưu thay đổi'
           type='#00ADEF'
           styles = {{width: '80%'}}
-          onPress={() => { }} />
+          onPress={handleChangeInfo} />)}
       </SectionComponent>
     </ContainerComponent>
   );

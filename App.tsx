@@ -5,6 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
 import AppRouters from './src/navigators/AppRouters';
 import store from './src/redux/store';
+import { navigationRef } from './src/navigators/service/RootNavigation';
 const App = () => {
 
   return (
@@ -15,7 +16,7 @@ const App = () => {
             barStyle="light-content"
             backgroundColor="transparent"
             translucent />
-          <NavigationContainer>
+          <NavigationContainer ref={navigationRef}>
             <AppRouters />
           </NavigationContainer>
         </Provider>

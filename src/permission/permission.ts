@@ -8,3 +8,4 @@ export const useRole = () => {
     const isAdmin = user?.role_id?.name_role === "admin";
     return { isUser, isShop, isAdmin };
 };
+

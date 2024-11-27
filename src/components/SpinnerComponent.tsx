@@ -1,23 +1,31 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import {StyleProp, StyleSheet, TextStyle, ActivityIndicator} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import COLORS from '../assets/colors/Colors';
 interface props {
   items: {label: string; value: string}[];
   placeholder?: string;
   onValueChange: (value: string) => void;
+  isLoading: boolean;
 }
 const SpinnerComponent = (props: props) => {
-  const {items, placeholder, onValueChange} = props;
-  return (
-    <RNPickerSelect
-      onValueChange={onValueChange}
-      items={items}
-      placeholder={{label: placeholder, value: null}}
-      style={{
-        inputAndroid: styless.input,
-      }}
-    />
+  const {items, placeholder, onValueChange, isLoading } = props;
+  return (<>
+  
+  {
+      isLoading ?  (<ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />) 
+      : (
+        <RNPickerSelect
+        onValueChange={onValueChange}
+        items={items}
+        placeholder={{label: placeholder, value: null}}
+        style={{
+          inputAndroid: styless.input,
+        }}
+      />
+      )
+    }
+  </>
   );
 };
 

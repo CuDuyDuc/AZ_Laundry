@@ -1,6 +1,6 @@
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { ArrowRight2, Book, LanguageCircle, Logout, Trash, Unlock } from 'iconsax-react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 import { LoginManager } from 'react-native-fbsdk-next';
 import ReactNativeModal from 'react-native-modal';
@@ -9,8 +9,9 @@ import COLORS from '../../assets/colors/Colors';
 import { AccountComponent, HeaderComponent, RowComponent, SectionComponent, SpaceComponent, TextComponent } from '../../components';
 import { authSelector, removeAuth } from '../../redux/reducers/authReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import authenticationAPI from '../../apis/authAPI';
 import { useRole } from '../../permission/permission';
-
+import { eventEmitterUpdateInfo } from './InfoScreen';
 
 const ProfileScreen = ({ navigation }: any) => {
 
@@ -18,7 +19,21 @@ const ProfileScreen = ({ navigation }: any) => {
     const { isUser } = useRole()
     const dispatch = useDispatch();
     const [isModalVisible, setModalVisible] = useState(false);
+    const [phone, setPhone] = useState('');
+    const [photo, setPhoto] = useState('');
 
+    const getUserById = async () => {
+        try {
+        const req : any = await authenticationAPI.HandleAuthentication(`/get-user-by-id?id_user=${user?.id}`);
+        console.log(req);
+       if(req) {
+        setPhone(req[0].phone_number);
+        setPhoto(req[0].photo);
+       }
+        } catch (error) {
+          console.log(error);
+        }
+      }
     const handleLogout = async () => {
         setModalVisible(true);
     };
@@ -30,7 +45,6 @@ const ProfileScreen = ({ navigation }: any) => {
         await LoginManager.logOut();
         dispatch(removeAuth({}));
 
-        // Ẩn modal sau khi đăng xuất thành công
         setModalVisible(false);
     };
 
@@ -38,6 +52,16 @@ const ProfileScreen = ({ navigation }: any) => {
         setModalVisible(false);
     };
 
+    useEffect(() => {
+
+    getUserById();
+    const subscriptionUpdateInfo = eventEmitterUpdateInfo.on('updateInfo', getUserById);
+        
+        return () => {
+            subscriptionUpdateInfo.off('updateInfo', getUserById);
+        };
+    }, [])
+    
     return (
         <>
             <SectionComponent
@@ -55,10 +79,10 @@ const ProfileScreen = ({ navigation }: any) => {
                         height: 100,
                     }}>
                     <RowComponent>
-                        {user?.photo ? (
+                        {photo ? (
                             <Image
                                 style={{ borderRadius: 40, width: 60, height: 60,}}
-                                source={{ uri: user.photo, }}/>
+                                source={{ uri: photo }}/>
                         ) : (
                             <Image
                                 style={{ borderRadius: 40, width: 60, height: 60, }}
@@ -81,7 +105,7 @@ const ProfileScreen = ({ navigation }: any) => {
                                 size={14}
                                 color={COLORS.BLUE_GRAY}
                             /> : <TextComponent
-                                text={'Add new phone number'}
+                                text={phone || 'Add new phone number'}
                                 size={14}
                                 color={COLORS.BLUE_GRAY}
                             />}
@@ -97,7 +121,7 @@ const ProfileScreen = ({ navigation }: any) => {
                             title="Lịch sử đặt hàng"/>
                     </TouchableOpacity>
                 ):(
-                    <TouchableOpacity >
+                    <TouchableOpacity onPress={() => {navigation.navigate('OrderStatisticsScreen')}}>
                         <AccountComponent
                             icon={<Book size="28" color={COLORS.AZURE_BLUE} />}
                             title="Thống kê"/>
@@ -108,7 +132,9 @@ const ProfileScreen = ({ navigation }: any) => {
                         icon={<LanguageCircle size="28" color={COLORS.AZURE_BLUE} />}
                         title="Ngôn ngữ"/>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity  onPress={() => {
+                        navigation.navigate('ChangePasswordScreen');
+                    }}>
                     <AccountComponent
                         icon={<Unlock size="28" color={COLORS.AZURE_BLUE} />}
                         title="Đổi mật khẩu"/>
