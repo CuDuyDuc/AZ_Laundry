@@ -78,7 +78,7 @@ const OrderHistoryScreen = ({ navigation }: any) => {
   );
 
   return (
-    <ContainerComponent isScroll styleBackground={{ backgroundColor: COLORS.WHITE }}>
+    <View style={{ backgroundColor: COLORS.WHITE, flex: 1 }}>
       <HeaderComponent title="Lịch sử đơn hàng" isBack onBack={() => navigation.goBack()} />
 
       <SectionComponent>
@@ -102,14 +102,15 @@ const OrderHistoryScreen = ({ navigation }: any) => {
       {loading ? (
         <ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />
       ) : filteredPayment.length > 0 ? (
-        <SectionComponent >
+        <SectionComponent styles={{ paddingBottom: 200 }}>
           <FlatList
             data={filteredPayment}
             keyExtractor={(item) => item._id.toString()}
+            showsVerticalScrollIndicator={false}
             renderItem={({ item }) => (
               <TouchableOpacity onPress={() => onOrderPress(item._id.toString())}>
                 <View style={{ backgroundColor: COLORS.WHITE, borderRadius: 8 }}>
-                  <TextComponent text={`#${item._id}`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
+                  <TextComponent text={`#${item._id.toString().substring(0,10)}`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
 
                   <FlatList
                     data={Array.isArray(item.id_cart) ? item.id_cart : []}
@@ -141,6 +142,7 @@ const OrderHistoryScreen = ({ navigation }: any) => {
                           borderColor: COLORS.AZURE_BLUE,
                           borderWidth: 1,
                         }}
+                        onPress={() => navigation.navigate('Cart')}
                       />
                       <ButtonComponent
                         text="Đánh giá"
@@ -159,7 +161,7 @@ const OrderHistoryScreen = ({ navigation }: any) => {
       ) : (
         <TextComponent text="Không có đơn hàng nào" />
       )}
-    </ContainerComponent>
+    </View>
   );
 };
 

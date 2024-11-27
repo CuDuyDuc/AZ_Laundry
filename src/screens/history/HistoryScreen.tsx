@@ -43,7 +43,7 @@ const HistoryScreen = ({ navigation }: any) => {
 
   const getDataPayment = async () => {
     try {
-      const res: any = await paymentAPI.HandlePayment(`/get-order?userId=${user?.id}`);
+      const res: any = await paymentAPI.HandlePayment(`/get-order-by-id-shop?userId=${user?.id}`);
       const data: PaymentModel[] = res.data;
       setPayment(data);
       setFilteredPayment(data);
@@ -102,7 +102,7 @@ const HistoryScreen = ({ navigation }: any) => {
           keyExtractor={(item) => item._id.toString()}
           renderItem={({ item }) => (
             <CardOrderShopComponent
-              id={item._id.toString()}
+              id={item._id.toString().substring(0, 10)}
               status={item.confirmationStatus.toString()}
               price={item.mount_money}
               imgUrl={item.imgUrl}

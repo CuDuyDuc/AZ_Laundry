@@ -78,7 +78,7 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
                         }}  title text={ isUser ?  "Cập nhật đơn hàng" : "Đơn hàng mới"} />
                         <RowComponent>
                         <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Mã Đơn: `} />
-                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`#${formatId(dataPayment?._id, 7)}`} />
+                        <TextComponent color={COLORS.HEX_BLACK} size={16} text={`#${dataPayment?._id.toString().substring(0,10)}`} />
                         </RowComponent>
                        {!isUser ?  <RowComponent>
                         <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Khách Hàng: `} />

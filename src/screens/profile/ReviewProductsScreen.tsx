@@ -9,9 +9,11 @@ import reviewAPI from '../../apis/reviewAPI';
 import { PaymentModel } from '../../model/payment_model';
 import paymentAPI from '../../apis/paymentAPI';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
 
 const ReviewProductsScreen = ({ navigation, route }: any) => {
-
+    const user = useSelector(authSelector);
     const [payment, setPayment] = useState<PaymentModel[]>([]);
     const { paymentId } = route.params;
     const [rating, setRating] = useState(1);
@@ -63,6 +65,7 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
     const addReview = async () => {
         try {
             const reviewData = {
+                id_user: user?.id,
                 orderId: paymentId,
                 rating,
                 comment,
