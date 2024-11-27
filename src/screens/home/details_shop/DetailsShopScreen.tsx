@@ -104,7 +104,7 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
     }, [data._id]);
     const handleDetailProduct = (item: any) => {
         navigation.navigate('DetailProductService', {data: item});
-      };
+    };
     return (
         <>
             {loading ? (

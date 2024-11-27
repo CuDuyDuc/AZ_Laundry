@@ -164,7 +164,7 @@ const AddService = ({ navigation }: any) => {
     }
 
     const formData = new FormData();
-    formData.append('product_name', values.productType);
+    formData.append('product_name', values.serviceName);
     formData.append('product_price', values.price);
     formData.append('short_description', values.ShortDescription);
     formData.append('product_description', values.DetailedDescription);
