@@ -22,13 +22,11 @@ axiosClient.interceptors.response.use(res => {
         return res.data;
     }
 
-    throw new Error('Error');
 }, error => {
     console.log(`Error api ${JSON.stringify(error.response.data)}`);
     Burnt.alert({
         title:JSON.stringify(error.response.data?.message)
     })
-    throw new Error(JSON.stringify(error.response.data.message));
 });
 
 export default axiosClient;

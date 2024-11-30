@@ -1,27 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { ButtonComponent, CardOrderDetailComponent, ContainerComponent, HeaderComponent, InputComponent, KeyboardAvoidingViewWrapper, RowComponent, SectionComponent, TextComponent } from '../../components';
-import COLORS from '../../assets/colors/Colors';
-import { FONTFAMILY } from '../../../assets/fonts';
-import IMAGES from '../../assets/images/Images';
-import { Alert, Image, ScrollView, TouchableOpacity, View } from 'react-native';
-import { FlatList, TextInput } from 'react-native-gesture-handler';
-import reviewAPI from '../../apis/reviewAPI';
-import { PaymentModel } from '../../model/payment_model';
-import paymentAPI from '../../apis/paymentAPI';
-import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
+import React, { useState } from 'react';
+import { FlatList, Image, TextInput, TouchableOpacity, View } from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { useSelector } from 'react-redux';
+import { FONTFAMILY } from '../../../assets/fonts';
+import COLORS from '../../assets/colors/Colors';
+import IMAGES from '../../assets/images/Images';
+import { ButtonComponent, CardOrderDetailComponent, HeaderComponent, KeyboardAvoidingViewWrapper, RowComponent, SectionComponent, TextComponent } from '../../components';
 import { authSelector } from '../../redux/reducers/authReducer';
 
 const ReviewProductsScreen = ({ navigation, route }: any) => {
     const user = useSelector(authSelector);
-    const [payment, setPayment] = useState<PaymentModel[]>([]);
-    const { paymentId } = route.params;
+    const { productData} = route.params;
     const [rating, setRating] = useState(1);
     const [comment, setComment] = useState('');
     const [files, setFiles] = useState<{ uri: string | undefined; type: string | undefined; name: string | undefined; }[]>([]);
 
-    const totalProducts = payment.length > 0 && Array.isArray(payment[0].id_cart)
-        ? payment[0].id_cart.length
+    const totalProducts = Array.isArray(productData.products)
+        ? productData.products.length
         : 0;
 
     const handleAddFile = async (type: string) => {
@@ -51,42 +46,40 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
         setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
     };
 
-    const getDataPayment = async () => {
-        try {
-            const res: any = await paymentAPI.HandlePayment(`/get-order-by-id/${paymentId}`);
-            const data = res.data;
-            setPayment([data]);
-            console.log('Payment data review:', data);
-        } catch (error) {
-            console.log('Error: ', error);
-        }
-    };
+    // const getDataPayment = async () => {
+    //     try {
+    //         const res: any = await paymentAPI.HandlePayment(`/get-order-by-id/${paymentId}`);
+    //         const data = res.data;
+    //         setPayment([data]);
+    //         console.log('Payment data review:', data);
+    //     } catch (error) {
+    //         console.log('Error: ', error);
+    //     }
+    // };
 
-    const addReview = async () => {
-        try {
-            const reviewData = {
-                id_user: user?.id,
-                orderId: paymentId,
-                rating,
-                comment,
-                files
-            };
-            const res = await reviewAPI.HandleReview('/add-review', reviewData, 'post');
-            console.log('Review added successfully:', res.data);
-            Alert.alert('Thành công', 'Đánh giá đã được thêm.', [
-                {
-                    text: 'OK',
-                    onPress: () => navigation.goBack(),
-                },
-            ]);
-        } catch (error: any) {
-            console.log('Error adding review:', error);
-        }
-    };
+    // const addReview = async () => {
+    //     try {
+    //         const reviewData = {
+    //             id_user: user?.id,
+    //             orderId: paymentId,
+    //             rating,
+    //             comment,
+    //             files
+    //         };
+    //         const res = await reviewAPI.HandleReview('/add-review', reviewData, 'post');
+    //         console.log('Review added successfully:', res.data);
+    //         Alert.alert('Thành công', 'Đánh giá đã được thêm.', [
+    //             {
+    //                 text: 'OK',
+    //                 onPress: () => navigation.goBack(),
+    //             },
+    //         ]);
+    //     } catch (error: any) {
+    //         console.log('Error adding review:', error);
+    //     }
+    // };
 
-    useEffect(() => {
-        getDataPayment();
-    }, []);
+   
 
     return (
         <KeyboardAvoidingViewWrapper>
@@ -109,29 +102,21 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                     <Image source={IMAGES.iconshop} style={{ width: 20, height: 20, marginTop: 5, marginRight: 10 }} />
                     <TextComponent text={'Cửa hàng giặt sấy Minh Đức'} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
                 </RowComponent>
-                <FlatList
-                    data={payment}
-                    keyExtractor={(item) => item._id.toString()}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity >
-                            <View style={{ backgroundColor: COLORS.WHITE, borderRadius: 8 }}>
-                                {/* Hiển thị danh sách sản phẩm trong id_cart */}
-                                <FlatList
-                                    data={Array.isArray(item.id_cart) ? item.id_cart : []} // Duyệt qua từng giỏ hàng (cart) trong đơn hàng
-                                    keyExtractor={(cartItem) => cartItem._id.toString()}
-                                    renderItem={({ item: cartItem }) => (
-                                        <CardOrderDetailComponent
-                                            imageUrl={cartItem.id_product.product_photo[0]}
-                                            productName={cartItem.id_product.product_name}
-                                            short_description={cartItem.id_product.short_description}
-                                            price={cartItem.cart_subtotal}
-                                        />
-                                    )}
-                                />
-                            </View>
-                        </TouchableOpacity>
-                    )}
-                />
+                {productData.products.map((cartItem:any) => (
+                <View key={cartItem._id.toString()}
+                    style={{
+                        backgroundColor: COLORS.WHITE,
+                        borderRadius: 8,
+                        paddingTop: 15,
+                        marginBottom: 8,
+                    }}>
+                    <CardOrderDetailComponent
+                        imageUrl={cartItem.id_product.product_photo[0]}
+                        productName={cartItem.id_product.product_name}
+                        short_description={cartItem.id_product.short_description}
+                        price={cartItem.cart_subtotal}/>
+                </View>
+                ))}
             </SectionComponent>
 
             <SectionComponent>
@@ -250,7 +235,6 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                         type="#00ADEF"
                         styles={{ width: "100%" }}
                         textStyles={{ fontFamily: FONTFAMILY.montserrat_medium }}
-                        onPress={addReview}
                     />
                 </RowComponent>
             </SectionComponent>
