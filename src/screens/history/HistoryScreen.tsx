@@ -1,11 +1,11 @@
+import { useFocusEffect } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
-import { HeaderComponent, SectionComponent, BoxStatusShopOrderComponent, CardOrderShopComponent } from '../../components';
-import COLORS from '../../assets/colors/Colors';
-import { PaymentModel } from '../../model/payment_model';
-import paymentAPI from '../../apis/paymentAPI';
-import { useFocusEffect } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+import paymentAPI from '../../apis/paymentAPI';
+import COLORS from '../../assets/colors/Colors';
+import { BoxStatusShopOrderComponent, CardOrderShopComponent, HeaderComponent, SectionComponent } from '../../components';
+import { PaymentModel } from '../../model/payment_model';
 import { authSelector } from '../../redux/reducers/authReducer';
 
 const HistoryScreen = ({ navigation }: any) => {
@@ -31,7 +31,7 @@ const HistoryScreen = ({ navigation }: any) => {
       console.log('Payment data:', payment);
     } else {
       console.log(`Selected status 1: ${status}`);
-      const filtered = payment.filter((item) => item.confirmationStatus == status);
+      const filtered = payment.filter((item) => item.shop_details[0].confirmationStatus == status);
       setFilteredPayment(filtered);
       console.log('Filtered data:', filtered);
     }
@@ -51,11 +51,17 @@ const HistoryScreen = ({ navigation }: any) => {
       // Đếm số lượng đơn hàng theo từng trạng thái
       const updatedStatusList = statusList.map((statusItem) => {
         if (statusItem.status === 'Tất cả') {
-          return { ...statusItem, number: data.length };
+            return { ...statusItem, number: data.length };
         }
-        const count = data.filter((item) => item.confirmationStatus == statusItem.status).length;
+    
+        const count = data.reduce((acc, item) => {
+            // Duyệt qua tất cả các shop_details và kiểm tra confirmationStatus
+            const matchingStatus = item.shop_details.some((shop) => shop.confirmationStatus === statusItem.status);
+            return matchingStatus ? acc + 1 : acc;
+        }, 0);
+    
         return { ...statusItem, number: count };
-      });
+    });
 
       setStatusList(updatedStatusList);
     } catch (error) {
@@ -72,7 +78,9 @@ const HistoryScreen = ({ navigation }: any) => {
       getDataPayment();
     }, [])
   );
-
+  const mountServiceByIdShop=(service_fee:any,shipping_fee:any)=>{
+    return service_fee + shipping_fee
+  }
   return (
     <View style={{ backgroundColor: COLORS.WHITE, flex: 1 }}>
       <HeaderComponent title="Đơn hàng" isBack onBack={() => navigation.goBack()} />
@@ -99,15 +107,15 @@ const HistoryScreen = ({ navigation }: any) => {
         <FlatList
           data={filteredPayment}
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item._id.toString()}
+          keyExtractor={(item) => item?._id.toString()}
           renderItem={({ item }) => (
             <CardOrderShopComponent
-              id={item._id.toString().substring(0, 10)}
-              status={item.confirmationStatus.toString()}
-              price={item.mount_money}
-              imgUrl={item.imgUrl}
+              id={item?._id.toString().substring(0, 10)}
+              status={item.shop_details[0].confirmationStatus}
+              price={mountServiceByIdShop(item.shop_details[0].service_fee,item.shop_details[0].shipping_fee)}
+              imgUrl={item?.id_cart[0]?.id_product?.product_photo[0]}
               dateOrder={new Date(item.createdAt).toLocaleDateString('vi-VN')}
-              onPress={() => navigation.navigate('OrderConfirmationScreen', { confirmationStatus: item.confirmationStatus })}
+              onPress={() => navigation.navigate('OrderConfirmationScreen', { confirmationStatus: item.shop_details[0].confirmationStatus ,paymentData:item})}
             />
           )}
         />

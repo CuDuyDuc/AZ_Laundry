@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View, Animated, Image, FlatList, ActivityIndicator } from "react-native";
+import { SafeAreaView,  StatusBar, StyleSheet, Text, View, Animated, Image, FlatList, ActivityIndicator } from "react-native";
 import COLORS from "../../../assets/colors/Colors";
-import { CardOrderComponent, HeaderComponent, KeyboardAvoidingViewWrapper, RowComponent, SectionComponent, TextComponent } from "../../../components";
+import { CardOrderComponent, ContainerComponent, HeaderComponent, KeyboardAvoidingViewWrapper, RowComponent, SectionComponent, TextComponent } from "../../../components";
 import { Box, DiscountShape, NotificationBing, ShoppingBag, TicketDiscount } from "iconsax-react-native";
 import { notification_type } from "../../../utils/constants";
 import paymentAPI from "../../../apis/paymentAPI";
@@ -9,6 +9,7 @@ import { useRole } from "../../../permission/permission";
 import productAPI from "../../../apis/productAPI";
 import { log } from "console";
 import authenticationAPI from "../../../apis/authAPI";
+import { ScrollView } from "react-native-virtualized-view";
 
 export default function DetailNotificationScreen({ navigation, route }: any) {
     const { item } = route.params;
@@ -188,59 +189,36 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
     };
 
     return (
-        <SectionComponent styles={styles.container}>
+        <ContainerComponent >
             <HeaderComponent isBack onBack={() => navigation.goBack()} title="Thông báo chi tiết" />
 
-            <SectionComponent styles={styles.scrollViewContent} >
-                <SectionComponent styles={{
-                    margin: 20,
-                    paddingHorizontal: 0,
-                    paddingBottom: 0,
-                    backgroundColor: COLORS.WHITE,
-                    width: 100,
-                    height: 100,
-                    borderRadius: 50,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
-                    {item?.notification_type === notification_type.ORDER_UPDATE ? <ShoppingBag size="40" color={COLORS.AZURE_BLUE} /> :
-                        item?.notification_type === notification_type.PROMOTION ? <DiscountShape size="40" color={COLORS.AZURE_BLUE} /> :
-                            item?.notification_type === notification_type.NEW_PRODUCT ? <Box size="40" color={COLORS.AZURE_BLUE} /> : <NotificationBing size="40" color={COLORS.AZURE_BLUE} />}
+           <ScrollView>
+                <SectionComponent styles={{alignItems:'center'}} >
+                    <SectionComponent styles={{
+                        margin: 20,
+                        paddingHorizontal: 0,
+                        paddingBottom: 0,
+                        backgroundColor: COLORS.WHITE,
+                        width: 100,
+                        height: 100,
+                        borderRadius: 50,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                        {item?.notification_type === notification_type.ORDER_UPDATE ? <ShoppingBag size="40" color={COLORS.AZURE_BLUE} /> :
+                            item?.notification_type === notification_type.PROMOTION ? <DiscountShape size="40" color={COLORS.AZURE_BLUE} /> :
+                                item?.notification_type === notification_type.NEW_PRODUCT ? <Box size="40" color={COLORS.AZURE_BLUE} /> : <NotificationBing size="40" color={COLORS.AZURE_BLUE} />}
+                    </SectionComponent>
+                    {loading ? (<ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />) : renderNotificationContent()}
                 </SectionComponent>
-                {loading ? (<ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />) : renderNotificationContent()}
-            </SectionComponent>
-        </SectionComponent>
+           </ScrollView>
+        </ContainerComponent>
     );
 }
 
-const UPPER_HEADER_HEIGHT = 60;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingHorizontal: 0,
-        paddingVertical: 0
-    },
-    upperHeaderPlaceholder: {
-        height: UPPER_HEADER_HEIGHT,
-    },
-    header: {
-        position: "absolute",
-        width: "100%",
-        backgroundColor: COLORS.AZURE_BLUE,
-        paddingHorizontal: 16,
-        paddingVertical: 16,
-    },
-    notificationText: {
-        fontSize: 24,
-        fontWeight: "bold",
-    },
-    scrollViewContent: {
-        display: 'flex',
-        justifyContent: 'flex-start',
-        alignItems: 'center'
-    },
     contentBox: {
         marginVertical: 10,
         padding: 10,
