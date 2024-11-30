@@ -12,18 +12,17 @@ import { authSelector } from '../../../redux/reducers/authReducer';
 import { globalStyle } from '../../../styles/globalStyle';
 
 
-const MessageComponentMemo = React.memo(MessageComponent);
 const ChatBoxScreen = ({ navigation }: any) => {
     const user = useSelector(authSelector);
     const [sendMessage, setSendMessage] = useState('');
     const [isMessageSent, setIsMessageSent] = useState(false);
-    const { currentChat, messages, sendTextMessage, onlineUsers,markMessagesAsRead,setCurrentChat } = useChatContext();
+    const { currentChat, messages, sendTextMessage, onlineUsers, markMessagesAsRead, setCurrentChat } = useChatContext();
     const { recipientUser } = useAxiosRecipient({ chats: currentChat, user });
     const flatListRef = useRef<FlatList>(null);
 
     useEffect(() => {
-        if (currentChat && messages.some((msg:any) => msg.isRead === false)) {
-            markMessagesAsRead(currentChat._id); 
+        if (currentChat && messages.some((msg: any) => msg.isRead === false)) {
+            markMessagesAsRead(currentChat._id);
         }
     }, [currentChat, messages]);
 
@@ -68,9 +67,18 @@ const ChatBoxScreen = ({ navigation }: any) => {
             }, 100);
         }
     }, [isMessageSent]);
+    const formatDay = (date:any) => {
+        const dayOfWeek = moment(date).weekday(); // Lấy số ngày trong tuần (0 = Chủ Nhật, 1 = Thứ Hai, ..., 6 = Thứ Bảy)
+    
+        if (dayOfWeek === 0) {
+            return "CN"; // Chủ Nhật
+        } else {
+            return `T.${dayOfWeek + 1}`; // Thứ 2 -> Thứ 7
+        }
+    };
     const isActive = onlineUsers.some((user: any) => user?.userId === recipientUser?._id);
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, }}>
             <StatusBar barStyle={'dark-content'} />
             <View style={[globalStyle.shadowCard, { zIndex: 1 }]}>
                 <SectionComponent styles={{ marginTop: 60 }}>
@@ -112,24 +120,65 @@ const ChatBoxScreen = ({ navigation }: any) => {
                     </RowComponent>
                 </SectionComponent>
             </View>
-            <SectionComponent styles={{ flex: 0.9 }}>
+            <SectionComponent styles={{ flex: 0.9, backgroundColor:COLORS.WHITE }}>
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     ref={flatListRef}
                     style={{ flex: 1 }}
                     data={messages}
                     keyExtractor={(item) => item._id.toString()}
-                    renderItem={({ item }) => (
-                        <RowComponent
-                            justify={item?.senderId === user?.id ? 'flex-end' : 'flex-start'}
-                            styles={{ marginBottom: 25 }}>
-                            <MessageComponent
-                                text={item?.text}
-                                backgroundColor={item?.senderId === user?.id ? COLORS.AZURE_BLUE : COLORS.HEX_LIGHT_GREY}
-                                colorText={item?.senderId === user?.id ? COLORS.WHITE : COLORS.HEX_BLACK}
-                                timeCurrent={moment(item?.createdAt).format('HH:mm')}/>
-                        </RowComponent>
-                    )}
+                    renderItem={({ item, index }) => {
+                        const prevMessage = messages[index - 1];
+                        const showTime =
+                            index === 0 || // Luôn hiển thị thời gian với tin nhắn đầu tiên
+                            !moment(item.createdAt).isSame(prevMessage?.createdAt, 'hour'); // Khác giờ
+
+                        const showDate =
+                            index === 0 || // Luôn hiển thị ngày với tin nhắn đầu tiên
+                            !moment(item.createdAt).isSame(prevMessage?.createdAt, 'day'); // Khác ngày
+
+                        const showMonth =
+                            index === 0 || // Luôn hiển thị tháng với tin nhắn đầu tiên
+                            !moment(item.createdAt).isSame(prevMessage?.createdAt, 'month'); // Khác tháng
+
+                        const showYear =
+                            index === 0 || // Luôn hiển thị năm với tin nhắn đầu tiên
+                            !moment(item.createdAt).isSame(prevMessage?.createdAt, 'year'); // Khác năm
+
+                        const timeFormat = showYear
+                            ? moment(item.createdAt).format('DD/MM/YYYY HH:mm')
+                            : showMonth
+                                ? moment(item.createdAt).format('DD/MM HH:mm')
+                                : showDate
+                                    ?`${formatDay(item.createdAt)} LÚC ${moment(item.createdAt).format('HH:mm')}` // Hiển thị thứ và giờ
+                                    : moment(item.createdAt).format('HH:mm'); // Chỉ giờ
+
+                        return (
+                            <View>
+                                {(showDate || showTime) && (
+                                    <RowComponent justify="center">
+                                        <TextComponent text={timeFormat} color={COLORS.HEX_LIGHT_GREY} size={13} />
+                                    </RowComponent>
+                                )}
+                                <RowComponent
+                                    justify={item?.senderId === user?.id ? 'flex-end' : 'flex-start'}
+                                    styles={{ marginBottom: 25 }}
+                                >
+                                    <MessageComponent
+                                        text={item?.text}
+                                        backgroundColor={
+                                            item?.senderId === user?.id
+                                                ? COLORS.AZURE_BLUE
+                                                : COLORS.MESSAGE_GRAY
+                                        }
+                                        colorText={
+                                            item?.senderId === user?.id ? COLORS.WHITE : COLORS.HEX_BLACK
+                                        }
+                                    />
+                                </RowComponent>
+                            </View>
+                        );
+                    }}
                     onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
                 />
             </SectionComponent>

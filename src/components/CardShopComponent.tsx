@@ -41,7 +41,7 @@ const CardShopComponent = (props: Props) => {
         return (
             <TouchableOpacity onPress={()=>onPress(item)} style={{ marginTop: 15, backgroundColor: COLORS.WHITE, padding: 7, borderRadius: 16 }} >
                 <RowComponent >
-                    <Image source={{ uri: item.data_user.thumbnail }} style={{ width: 80, height: 80 }} />
+                    <Image source={{ uri: item.data_user.thumbnail }} style={{ width: 80, height: 80, borderRadius:8 }} />
                     <View style={{ width: '78%', paddingHorizontal: 10 }}>
                         <TextComponent text={item.data_user.shop_name} color={COLORS.DARK_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
                         <TextComponent styles={{ paddingVertical: 3 }} text={item.address} color={COLORS.HEX_LIGHT_GRAY} size={13} />

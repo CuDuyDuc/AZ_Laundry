@@ -27,8 +27,8 @@ interface ChatContextType {
     markMessagesAsRead:any;
     setCurrentChat:any;
     markNotificationAsReadUpdate:any;
-    setChatId:(ob: any) => void;
-    chatId:any
+    setUserChats:(ob:any)=>void
+    
 }
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -54,7 +54,6 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [notifications, setNotifications] = useState<any>([]);
     const [allUsers, setAllUsers] = useState<any>([]);
-    const [chatId, setChatId] = useState(null);
     
     
     useEffect(() => {
@@ -117,38 +116,7 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
         socket.emit('markMessagesAsRead',chats); 
     }, [newMessage]);
     
-    useEffect(() => {
-        if (socket == null) return;
-        if (!chatId) return;
-    
-        // Khi chatId thay đổi, gửi yêu cầu lấy dữ liệu mới
-        socket.emit('getCountIsRead', chatId);
-    }, [chatId]);
-    const prevUserChatsRef = useRef(null);
-    useEffect(() => {
-        if (socket == null || !user || !chatId) return;
-    
-        // Lắng nghe sự kiện 'countIsRead' chỉ một lần
-        socket.emit('getCountIsRead', chatId);
-    
-        // Dùng useEffect để đảm bảo socket chỉ được lắng nghe 1 lần
-        const onCountIsRead = (chatIdData: any) => {
-            // Kiểm tra xem dữ liệu nhận về có thay đổi không
-            if (chatIdData !== prevUserChatsRef.current) {
-                setUserChats(chatIdData);
-                console.log('dòng 139',userChats);
-                
-                prevUserChatsRef.current = chatIdData; // Cập nhật giá trị trước đó
-            }
-        };
-    
-        socket.on('countIsRead', onCountIsRead);
-        return () => {
-            socket.off('countIsRead', onCountIsRead);
-        };
-       
-    
-    }, [userChats,chatId,user,socket]); 
+
     useEffect(() => {
         const getUsers = async () => {
             try {
@@ -177,6 +145,7 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
             setIsUserChatsLoading(true);
             try {
                 const response = await chatAPI.HandleChat(`/find-user-chat/${user?.id}`);
+                
                 setUserChats(response);
                 setIsUserChatsLoading(false);
                 setUserChatsError(null);
@@ -310,8 +279,7 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
                 markMessagesAsRead,
                 setCurrentChat,
                 markNotificationAsReadUpdate,
-                setChatId,
-                chatId
+                setUserChats
             }}
         >
             {children}

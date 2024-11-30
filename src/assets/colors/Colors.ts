@@ -21,7 +21,8 @@ const COLORS = {
     GRAY: '#DDDDDD',
     HEX_YELLOW: "#FFC700",
     ORANGE: "#FF9883",
-    HEX_GRAY: "#F6F6F7"
+    HEX_GRAY: "#F6F6F7",
+    MESSAGE_GRAY:'#EEEEEE'
 }
 
 export default COLORS;

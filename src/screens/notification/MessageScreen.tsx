@@ -1,16 +1,16 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FlatList } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { CardComponent, CardListFriend, ContainerComponent, SectionComponent } from '../../components';
 import { useChatContext } from '../../context/ChatContext';
 import { authSelector } from '../../redux/reducers/authReducer';
 import COLORS from '../../assets/colors/Colors';
+import chatAPI from '../../apis/chatAPI';
 
 const MessageScreen = ({navigation}:any) => {
     const dispatch = useDispatch();
     const user = useSelector(authSelector);
-
-    const { userChats, potentialChats, createChat, updateCurrentChat,notifications,allUsers,markNotificationAsRead,setChatId,chatId} =useChatContext();
+    const { userChats, potentialChats, createChat, updateCurrentChat,notifications,allUsers,markNotificationAsRead,setUserChats} =useChatContext();
     const modifiedNotifications= notifications?.map((n:any) => {
         const sender =allUsers?.find((user:any) => user.id===n.senderId);
             return {
@@ -18,7 +18,7 @@ const MessageScreen = ({navigation}:any) => {
                 senderName: sender?.fullname,
             };
     })
-    const handleChatBoxs =  (item: any) => {
+    const handleChatBoxs = async (item: any) => {
         
         if(modifiedNotifications||notifications){
             const matchedNotification = modifiedNotifications?.find((n: any) => {
@@ -29,21 +29,25 @@ const MessageScreen = ({navigation}:any) => {
             }
         }
         updateCurrentChat(item);
+        updateIsCountRead(item)
         navigation.navigate('ChatScreen');
     };
-    const prevUserChatsRef = useRef();
-
-    useEffect(() => {
-        if (!userChats) return; // Nếu không có dữ liệu chat thì không làm gì
-
-        // Kiểm tra xem userChats có thay đổi so với giá trị trước đó không
-        if (prevUserChatsRef.current !== userChats) {
-            setChatId(userChats);
-            prevUserChatsRef.current = userChats; // Lưu lại giá trị hiện tại
-            console.log('render');
+    console.log(userChats);
+    const updateIsCountRead= async(item:any)=>{
+        try {
+            const res:any = await chatAPI.HandleChat('/update-chat-isRead',{
+                chatId:item._id, userId:user.id
+            },'post')
+            if(res.message==='success'){
+                setUserChats(res.data)
+            }
+            
+        } catch (error) {
+            console.log(error);
+            
         }
-        
-    }, []);
+    }
+    
     return (
         <ContainerComponent styleBackground={{backgroundColor:COLORS.WHITE}}>
             <SectionComponent styles={{marginTop:20}}>
