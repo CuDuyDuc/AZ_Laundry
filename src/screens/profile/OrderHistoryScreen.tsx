@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { authSelector } from '../../redux/reducers/authReducer';
 import { ScrollView } from 'react-native-virtualized-view';
 
-const OrderHistoryScreen = ({ navigation }: any) => {
+const OrderHistoryScreen = ({ navigation, route }: any) => {
   const user = useSelector(authSelector);
   const [payment, setPayment] = useState<PaymentModel[]>([]);
   const [filteredPayment, setFilteredPayment] = useState<PaymentModel[]>([]);
@@ -42,7 +42,7 @@ const OrderHistoryScreen = ({ navigation }: any) => {
       setPayment(data);
       setFilteredPayment(data);
 
-      console.log("Data payment: ", data);
+      // console.log("Data payment: ", data);
 
       // Update status counts
       const updatedStatusList = statusList.map((statusItem) => {

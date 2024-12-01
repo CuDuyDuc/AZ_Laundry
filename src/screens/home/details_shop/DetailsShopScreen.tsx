@@ -140,7 +140,7 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
                                 <ArchiveAdd size={18} color={COLORS.GRAY_WHITE} />
                                 <TextComponent styles={{ marginLeft: 5 }} text={details[0]?.data_user.order_count} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} size={13} />
                             </RowComponent>
-                            <ButtonComponent type='link' text='Xem đánh giá' color={COLORS.AZURE_BLUE} onPress={() => { navigation.navigate("SeeReviewsScreen") }} />
+                            <ButtonComponent type='link' text='Xem đánh giá' color={COLORS.AZURE_BLUE} onPress={() => { navigation.navigate("SeeReviewsScreen", { id_shop: data._id.toString() })}} />
                         </RowComponent>
                     </SectionComponent>
                     <SectionComponent styles={{ position: 'relative', top: 120, paddingBottom: isUser?520:400 }}>

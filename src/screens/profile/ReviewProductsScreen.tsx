@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FlatList, Image, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, Image, TextInput, TouchableOpacity, View } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useSelector } from 'react-redux';
 import { FONTFAMILY } from '../../../assets/fonts';
@@ -7,10 +7,14 @@ import COLORS from '../../assets/colors/Colors';
 import IMAGES from '../../assets/images/Images';
 import { ButtonComponent, CardOrderDetailComponent, HeaderComponent, KeyboardAvoidingViewWrapper, RowComponent, SectionComponent, TextComponent } from '../../components';
 import { authSelector } from '../../redux/reducers/authReducer';
+import paymentAPI from '../../apis/paymentAPI';
+import reviewAPI from '../../apis/reviewAPI';
 
 const ReviewProductsScreen = ({ navigation, route }: any) => {
     const user = useSelector(authSelector);
     const { productData} = route.params;
+    // console.log("productData hahaha: ", productData)
+    console.log("Shop ID: ", productData.shopDetail.id_shop); 
     const [rating, setRating] = useState(1);
     const [comment, setComment] = useState('');
     const [files, setFiles] = useState<{ uri: string | undefined; type: string | undefined; name: string | undefined; }[]>([]);
@@ -46,38 +50,28 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
         setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
     };
 
-    // const getDataPayment = async () => {
-    //     try {
-    //         const res: any = await paymentAPI.HandlePayment(`/get-order-by-id/${paymentId}`);
-    //         const data = res.data;
-    //         setPayment([data]);
-    //         console.log('Payment data review:', data);
-    //     } catch (error) {
-    //         console.log('Error: ', error);
-    //     }
-    // };
-
-    // const addReview = async () => {
-    //     try {
-    //         const reviewData = {
-    //             id_user: user?.id,
-    //             orderId: paymentId,
-    //             rating,
-    //             comment,
-    //             files
-    //         };
-    //         const res = await reviewAPI.HandleReview('/add-review', reviewData, 'post');
-    //         console.log('Review added successfully:', res.data);
-    //         Alert.alert('Thành công', 'Đánh giá đã được thêm.', [
-    //             {
-    //                 text: 'OK',
-    //                 onPress: () => navigation.goBack(),
-    //             },
-    //         ]);
-    //     } catch (error: any) {
-    //         console.log('Error adding review:', error);
-    //     }
-    // };
+    const addReview = async () => {
+        try {
+            const reviewData = {
+                id_user: user?.id,
+                id_shop: productData.shopDetail.id_shop,
+                orderId: productData.products[0]._id,
+                rating,
+                comment,
+                files
+            };
+            const res = await reviewAPI.HandleReview('/add-review', reviewData, 'post');
+            console.log('Review added successfully:', res.data);
+            Alert.alert('Thành công', 'Đánh giá đã được thêm.', [
+                {
+                    text: 'OK',
+                    onPress: () => navigation.goBack(),
+                },
+            ]);
+        } catch (error: any) {
+            console.log('Error adding review:', error);
+        }
+    };
 
    
 
@@ -100,7 +94,7 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                 </RowComponent>
                 <RowComponent styles={{ marginBottom: 15 }}>
                     <Image source={IMAGES.iconshop} style={{ width: 20, height: 20, marginTop: 5, marginRight: 10 }} />
-                    <TextComponent text={'Cửa hàng giặt sấy Minh Đức'} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
+                    <TextComponent text={`Cửa hàng giặt sấy ${productData.shopDetail.fullname}`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
                 </RowComponent>
                 {productData.products.map((cartItem:any) => (
                 <View key={cartItem._id.toString()}
@@ -235,6 +229,7 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                         type="#00ADEF"
                         styles={{ width: "100%" }}
                         textStyles={{ fontFamily: FONTFAMILY.montserrat_medium }}
+                        onPress={addReview}
                     />
                 </RowComponent>
             </SectionComponent>

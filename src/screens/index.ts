@@ -35,6 +35,7 @@ import VNPayPaymentScreen from './cart/ServiceBooking/payment/vnpay_payment/VNPa
 import SuccessPaymentScreen from './cart/ServiceBooking/payment/success_payment/SuccessPaymentScreen';
 import ChangePasswordSceen from './profile/ChangePasswordScreen';
 import OrderStatisticsScreen from './profile/OrderStatisticsScreen';
+import ReviewShopScreen from './profile/ReviewShopScreen';
 
 export {
     SplashScreen,
@@ -73,6 +74,7 @@ export {
     SelectPaymentMethodScreen,
     VNPayPaymentScreen,
     SuccessPaymentScreen,
-    OrderStatisticsScreen
+    OrderStatisticsScreen,
+    ReviewShopScreen
 
 }
