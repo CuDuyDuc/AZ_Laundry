@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import COLORS from '../../../../../assets/colors/Colors'
-import { ButtonComponent, CheckBoxComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../../../../components'
+import { CheckBoxComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../../../../components'
 import { Add, Cd, Trash } from 'iconsax-react-native'
 import { useSelector } from 'react-redux'
 import { authSelector } from '../../../../../redux/reducers/authReducer'

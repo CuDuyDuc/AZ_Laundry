@@ -1,4 +1,4 @@
-import notifee, { AndroidImportance, TriggerType } from '@notifee/react-native';
+import notifee, { AndroidImportance} from '@notifee/react-native';
 import firebaseAPI from '../../../apis/firebaseNotiAPI';
 import { ObjectId } from 'mongoose';
 

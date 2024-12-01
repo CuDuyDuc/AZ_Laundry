@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { FlatList } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
+import chatAPI from '../../apis/chatAPI';
+import COLORS from '../../assets/colors/Colors';
 import { CardComponent, CardListFriend, ContainerComponent, SectionComponent } from '../../components';
 import { useChatContext } from '../../context/ChatContext';
 import { authSelector } from '../../redux/reducers/authReducer';
-import COLORS from '../../assets/colors/Colors';
-import chatAPI from '../../apis/chatAPI';
 
 const MessageScreen = ({navigation}:any) => {
     const dispatch = useDispatch();

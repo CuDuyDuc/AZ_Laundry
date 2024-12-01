@@ -1,15 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
-import { SafeAreaView,  StatusBar, StyleSheet, Text, View, Animated, Image, FlatList, ActivityIndicator } from "react-native";
-import COLORS from "../../../assets/colors/Colors";
-import { CardOrderComponent, ContainerComponent, HeaderComponent, KeyboardAvoidingViewWrapper, RowComponent, SectionComponent, TextComponent } from "../../../components";
-import { Box, DiscountShape, NotificationBing, ShoppingBag, TicketDiscount } from "iconsax-react-native";
-import { notification_type } from "../../../utils/constants";
-import paymentAPI from "../../../apis/paymentAPI";
-import { useRole } from "../../../permission/permission";
-import productAPI from "../../../apis/productAPI";
-import { log } from "console";
-import authenticationAPI from "../../../apis/authAPI";
+import { Box, DiscountShape, NotificationBing, ShoppingBag } from "iconsax-react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, FlatList, Image, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-virtualized-view";
+import authenticationAPI from "../../../apis/authAPI";
+import paymentAPI from "../../../apis/paymentAPI";
+import productAPI from "../../../apis/productAPI";
+import COLORS from "../../../assets/colors/Colors";
+import { CardOrderComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from "../../../components";
+import { useRole } from "../../../permission/permission";
+import { notification_type } from "../../../utils/constants";
 
 export default function DetailNotificationScreen({ navigation, route }: any) {
     const { item } = route.params;

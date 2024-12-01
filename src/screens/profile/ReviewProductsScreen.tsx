@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FlatList, Image, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, TextInput, TouchableOpacity, View } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useSelector } from 'react-redux';
 import { FONTFAMILY } from '../../../assets/fonts';
@@ -46,40 +46,6 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
         setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
     };
 
-    // const getDataPayment = async () => {
-    //     try {
-    //         const res: any = await paymentAPI.HandlePayment(`/get-order-by-id/${paymentId}`);
-    //         const data = res.data;
-    //         setPayment([data]);
-    //         console.log('Payment data review:', data);
-    //     } catch (error) {
-    //         console.log('Error: ', error);
-    //     }
-    // };
-
-    // const addReview = async () => {
-    //     try {
-    //         const reviewData = {
-    //             id_user: user?.id,
-    //             orderId: paymentId,
-    //             rating,
-    //             comment,
-    //             files
-    //         };
-    //         const res = await reviewAPI.HandleReview('/add-review', reviewData, 'post');
-    //         console.log('Review added successfully:', res.data);
-    //         Alert.alert('Thành công', 'Đánh giá đã được thêm.', [
-    //             {
-    //                 text: 'OK',
-    //                 onPress: () => navigation.goBack(),
-    //             },
-    //         ]);
-    //     } catch (error: any) {
-    //         console.log('Error adding review:', error);
-    //     }
-    // };
-
-   
 
     return (
         <KeyboardAvoidingViewWrapper>

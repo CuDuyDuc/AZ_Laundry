@@ -1,11 +1,11 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { CheckBoxComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../../../../components'
 import { Card, Cd, MoneyRecive } from 'iconsax-react-native'
-import COLORS from '../../../../../assets/colors/Colors'
+import React from 'react'
+import { TouchableOpacity } from 'react-native'
 import { FONTFAMILY } from '../../../../../../assets/fonts'
-import { globalStyle } from '../../../../../styles/globalStyle'
+import COLORS from '../../../../../assets/colors/Colors'
+import { CheckBoxComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../../../../components'
 import { usePaymentMethod } from '../../../../../context/PaymentMethodContext'
+import { globalStyle } from '../../../../../styles/globalStyle'
 
 const SelectPaymentMethodScreen = ({navigation, route}: any) => {
     const {selectedPaymentMethod, setSelectedPaymentMethod}=usePaymentMethod()
