@@ -14,10 +14,8 @@ import {
 import reviewAPI from '../../apis/reviewAPI';
 import { useSelector } from 'react-redux';
 import { authSelector } from '../../redux/reducers/authReducer';
-import Video from 'react-native-video';
 
-const SeeReviewsScreen = ({ navigation, route }: any) => {
-  const { id_shop } = route.params;
+const ReviewShopScreen = ({ navigation }: any) => {
   const user = useSelector(authSelector);
   const [reviews, setReviews] = useState<[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -25,7 +23,7 @@ const SeeReviewsScreen = ({ navigation, route }: any) => {
   const getDataReview = async () => {
     try {
       setLoading(true);
-      const res: any = await reviewAPI.HandleReview(`/get-review-by-shop/${id_shop}`);
+      const res: any = await reviewAPI.HandleReview(`/get-review-by-shop/${user?.id}`);
       const data = res.data;
       setReviews(data);
       console.log('Reviewwwww: ', data);
@@ -78,16 +76,12 @@ const SeeReviewsScreen = ({ navigation, route }: any) => {
       </RowComponent>
       <TextComponent text={item.comment} color={COLORS.HEX_BLACK} size={14} />
       <RowComponent styles={{ marginTop: 10 }}>
-        {item.images?.map((img: string, index: number) => (
-          <Image key={index} source={{ uri: img }} style={styles.image} />
-        ))}
-        {item.videos?.map((video: string, index: number) => (
-          <Video
-            key={index}
-            source={{ uri: video }}
-            style={styles.video}
-            resizeMode="cover"
-            controls
+        {/* Chỉ hiển thị ảnh nếu có */}
+        {item.images && item.images.length > 0 && item.images.map((image: string, idx: number) => (
+          <Image
+            key={idx}
+            source={{ uri: image }}
+            style={styles.image}
           />
         ))}
       </RowComponent>
@@ -133,14 +127,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     resizeMode: 'contain',
-    marginRight: 20
   },
-  video: {
-    width: 100,
-    height: 100,
-    borderRadius: 5,
-    backgroundColor: COLORS.HEX_LIGHT_GREY,
-  },  
 });
 
-export default SeeReviewsScreen;
+export default ReviewShopScreen;
