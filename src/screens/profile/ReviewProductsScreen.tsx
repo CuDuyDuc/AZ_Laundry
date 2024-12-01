@@ -73,8 +73,6 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
         }
     };
 
-   
-
     return (
         <KeyboardAvoidingViewWrapper>
             <HeaderComponent title="Đánh giá đơn hàng" isBack onBack={() => navigation.goBack()} />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StatusBar, Switch, TouchableOpacity } from 'react-native';
-import { ButtonComponent, ContainerComponent, HeaderComponent, InputComponent, KeyboardAvoidingViewWrapper, PickerComponent, RowComponent, SectionComponent, SpinnerComponent, TextComponent } from '../../../../../../components';
+import { ButtonComponent, HeaderComponent, InputComponent, KeyboardAvoidingViewWrapper, PickerComponent, RowComponent, SectionComponent, TextComponent } from '../../../../../../components';
 import COLORS from '../../../../../../assets/colors/Colors';
 import { FONTFAMILY } from '../../../../../../../assets/fonts';
 import { useGetThirdPartyAPI } from '../../../../../../hooks/useGetThirdPartyAPI';

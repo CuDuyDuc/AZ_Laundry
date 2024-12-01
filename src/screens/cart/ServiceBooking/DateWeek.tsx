@@ -1,6 +1,7 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
+import * as Burnt from 'burnt';
 import moment from 'moment';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   Platform,
@@ -10,7 +11,7 @@ import {
   View,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
-import {FONTFAMILY} from '../../../../assets/fonts';
+import { FONTFAMILY } from '../../../../assets/fonts';
 import COLORS from '../../../assets/colors/Colors';
 import {
   HeaderComponent,
@@ -20,8 +21,6 @@ import {
   TextComponent,
 } from '../../../components';
 import ContainerComponent from '../../../components/ContainerComponent';
-import * as Burnt from 'burnt';
-import {title} from 'process';
 import { useDateTime } from '../../../context/DateTimeContext';
 
 const {height} = Dimensions.get('window');

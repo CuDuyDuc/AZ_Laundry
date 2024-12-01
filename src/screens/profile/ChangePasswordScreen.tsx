@@ -1,12 +1,11 @@
-import { Camera, Lock } from 'iconsax-react-native';
-import React, { useState } from 'react';
-import { Image } from 'react-native';
-import { useSelector } from 'react-redux';
-import COLORS from '../../assets/colors/Colors';
-import { ButtonComponent, ContainerComponent, HeaderComponent, InputComponent, RowComponent, SectionComponent } from '../../components';
-import { authSelector } from '../../redux/reducers/authReducer';
-import authenticationAPI from '../../apis/authAPI';
 import * as Burnt from "burnt";
+import { Lock } from 'iconsax-react-native';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import authenticationAPI from '../../apis/authAPI';
+import COLORS from '../../assets/colors/Colors';
+import { ButtonComponent, ContainerComponent, HeaderComponent, InputComponent, SectionComponent } from '../../components';
+import { authSelector } from '../../redux/reducers/authReducer';
 const ChangePasswordSceen = ({ navigation }: any) => {
   const user = useSelector(authSelector);
 

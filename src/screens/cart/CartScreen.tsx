@@ -1,13 +1,13 @@
-import { View, Text } from 'react-native'
+import * as Burnt from 'burnt'
 import React, { useEffect, useState } from 'react'
+import { View } from 'react-native'
+import { useSelector } from 'react-redux'
+import { FONTFAMILY } from '../../../assets/fonts'
+import cartAPI from '../../apis/cartAPI'
+import COLORS from '../../assets/colors/Colors'
 import { ButtonComponent, CardProductOfProductType, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../components'
 import { CartModel } from '../../model/cart_model'
-import cartAPI from '../../apis/cartAPI'
 import { authSelector } from '../../redux/reducers/authReducer'
-import { useSelector } from 'react-redux'
-import * as Burnt from 'burnt'
-import COLORS from '../../assets/colors/Colors'
-import { FONTFAMILY } from '../../../assets/fonts'
 
 const CartScreen = ({navigation}: any) => {
     const [carts,setCarts]= useState<CartModel[]>([])

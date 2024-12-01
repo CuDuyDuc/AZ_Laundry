@@ -1,14 +1,14 @@
-import { Alert, Button, FlatList, Image, TouchableOpacity, View } from 'react-native';
-import { ButtonComponent, CardOrderDetailComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../components';
+import { useState } from 'react';
+import { Alert, FlatList, Image, View } from 'react-native';
+import { ScrollView } from 'react-native-virtualized-view';
 import { FONTFAMILY } from '../../../assets/fonts';
+import paymentAPI from '../../apis/paymentAPI';
 import COLORS from '../../assets/colors/Colors';
 import IMAGES from '../../assets/images/Images';
-import StepProgress from './StepProgress';
-import { useEffect, useState } from 'react';
-import { PaymentModel } from '../../model/payment_model';
-import paymentAPI from '../../apis/paymentAPI';
+import { ButtonComponent, CardOrderDetailComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../components';
 import { usePaymentMethod } from '../../context/PaymentMethodContext';
-import { ScrollView } from 'react-native-virtualized-view';
+import { PaymentModel } from '../../model/payment_model';
+import StepProgress from './StepProgress';
 
 const OrderDetatailsScreen = ({ navigation, route }: any) => {
   const {selectedPaymentMethod}=usePaymentMethod()

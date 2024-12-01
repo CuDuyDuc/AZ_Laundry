@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import { appInfo } from '../apis/appInfo';

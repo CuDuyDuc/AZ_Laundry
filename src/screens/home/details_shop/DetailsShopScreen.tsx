@@ -76,6 +76,8 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
         getChats();
     }, []);
     const HandleChatBox=()=>{
+        console.log(data._id);
+        
         if(!chat){
             createChat(user.id, data._id)
             getChats();

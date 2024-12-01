@@ -1,6 +1,6 @@
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native'
+import { View, Text, TouchableOpacity, FlatList } from 'react-native'
 import React from 'react'
-import { ButtonComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../../../components'
+import { ButtonComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../../../components'
 import COLORS from '../../../../assets/colors/Colors'
 import { ArrowRight2, Location } from 'iconsax-react-native'
 import { FONTFAMILY } from '../../../../../assets/fonts'
