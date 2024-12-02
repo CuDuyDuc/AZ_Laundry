@@ -1,4 +1,4 @@
-const IP_ADDRESS='192.168.100.221'
+const IP_ADDRESS='192.168.89.84'
 export const appInfo = {
 
     BASE_URL: `http://${IP_ADDRESS}:3000/api`,

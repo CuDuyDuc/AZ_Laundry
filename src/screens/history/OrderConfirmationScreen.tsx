@@ -45,6 +45,7 @@ const OrderConfirmationScreen = ({navigation, route}: any) => {
       setPayment(prevPayment =>
         prevPayment.filter(item => item._id.toString() !== itemId),
       );
+      navigation.navigate('History',{confirmStatus:newStatus})
       NotificationService.sendNotificationToServer({
         title: 'Cập nhật đơn hàng',
         body: 'Đơn hàng của bạn đã được xác nhận!💎💎',
@@ -59,7 +60,10 @@ const OrderConfirmationScreen = ({navigation, route}: any) => {
         [
           {
             text: 'OK',
-            onPress: () => getDataPayment(), // Lấy lại dữ liệu
+            onPress: () => {
+              navigation.navigate('History',{ confirmStatus:newStatus})
+              return getDataPayment()
+            }
           },
         ],
       );
@@ -126,9 +130,13 @@ const OrderConfirmationScreen = ({navigation, route}: any) => {
         Alert.alert('Thành công', 'Đơn hàng đã được hủy.', [
           {
             text: 'OK',
-            onPress: () => getDataPayment(), // Lấy lại dữ liệu
+            onPress: () =>{
+              navigation.navigate('History',{ confirmStatus:"Đã hủy"})
+              return getDataPayment() // Lấy lại dữ liệu
+            }  
           },
         ]);
+        
       }
     } catch (error) {
       console.error('Error:', error);
@@ -143,6 +151,7 @@ const OrderConfirmationScreen = ({navigation, route}: any) => {
       );
       const data: PaymentModel[] = res.data;
       setPayment(data);
+      
     } catch (error) {
       console.log('Error: ', error);
     }
@@ -168,7 +177,7 @@ const OrderConfirmationScreen = ({navigation, route}: any) => {
       <HeaderComponent
         title="Đơn hàng yêu cầu"
         isBack
-        onBack={() => navigation.goBack()}
+        onBack={() => navigation.navigate('History',{ confirmStatus:confirmationStatus})}
       />
 
       <SectionComponent styles={{paddingBottom: 150}}>
@@ -268,6 +277,7 @@ const OrderConfirmationScreen = ({navigation, route}: any) => {
                 <ButtonComponent
                   text="Hủy"
                   type="#00ADEF"
+                  disable={confirmationStatus!=='Chờ duyệt'}
                   textColor={COLORS.RED}
                   styles={{
                     width: '45%',
