@@ -61,7 +61,7 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
         }
       }
     useEffect(() => {
-        getUserById(item?.sender)
+    isUser && getUserById(item?.sender)
      isAdmin ? getProductById() : getPaymentById(item?.object_type_id);
     }, [])
 
@@ -86,7 +86,7 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
                         </RowComponent> : 
                         <RowComponent>
                         <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`Trạng thái đơn: `} />
-                        <TextComponent color={COLORS.AZURE_BLUE} size={16} text={dataPayment?.confirmationStatus || ''} />
+                        <TextComponent color={COLORS.AZURE_BLUE} size={16} text={dataPayment?.status || ''} />
                         </RowComponent>
                         }
                        
