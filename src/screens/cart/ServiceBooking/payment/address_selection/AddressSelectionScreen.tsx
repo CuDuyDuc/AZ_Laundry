@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, FlatList } from 'react-native'
+import { View, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import COLORS from '../../../../../assets/colors/Colors'
 import { CheckBoxComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from '../../../../../components'
@@ -17,6 +17,7 @@ const AddressSelection = ({navigation, route}: any) => {
   const {dataInfoUser,setDataInfoUser}= useAddresses()
   const [dataUser,setDataUser]= useState<UserModel[]>([])
   const [selectedItem, setSelectedItem] = useState<ObjectId | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
   const user = useSelector(authSelector)
   const getUserById=async()=>{
     try {
@@ -24,10 +25,12 @@ const AddressSelection = ({navigation, route}: any) => {
       setDataUser(res)
     } catch (error) {
       console.log(error);
+
       
     }
   }
   const handleDelete= async(item:any)=>{
+    setLoading(true)
     
     try {
       const res:any = await authenticationAPI.HandleAuthentication(`/delete-list-addresses/${user.id}/${item._id}`,{},'delete')
@@ -35,11 +38,15 @@ const AddressSelection = ({navigation, route}: any) => {
         Burnt.toast({
           title: res.message,
 
-      });
+        });
+      
       }
+    setLoading(false)
       
     } catch (error) {
       console.log(error);
+      setLoading(false)
+
       
     }
   }
@@ -73,43 +80,48 @@ const AddressSelection = ({navigation, route}: any) => {
   return (
     <View style={{backgroundColor:COLORS.WHISPER_GRAY,position:'relative', flex:1}}>
       <HeaderComponent title={`Địa chỉ của bạn`} isBack onBack={() => navigation.goBack()}/>
-      <FlatList data={dataUser[0]?.list_addresses}
-        keyExtractor={(item) => item._id.toString()}
-        renderItem={({item})=>(
-          <SectionComponent styles={globalStyle.styleSection}>
-            <TouchableOpacity onPress={()=>handleChoseAddress(item)}>
-              <RowComponent justify='space-between' >
-                <View style={{flex:1}}>
-                  <CheckBoxComponent icon={
-                    <Cd
-                      size="18"
-                      color={selectedItem===item._id?COLORS.AZURE_BLUE:COLORS.HEX_LIGHT_GREY}/>
-                    }/>
-                </View>
-                <View style={{flex:8}}>
-                  <TextComponent text={`${item?.full_name} | ${item?.phone_number?item.phone_number:'Trống'}`} color={COLORS.HEX_LIGHT_GRAY}/>
-                  <TextComponent text={`${item?.address}`} color={COLORS.HEX_LIGHT_GRAY}/>
-                </View>
-                <View>
-                  <TouchableOpacity >
-                    <TextComponent text={'Sửa'} color={COLORS.RED} font={FONTFAMILY.montserrat_bold} size={13}/>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={()=>handleDelete(item)}>
-                    <Trash size="32" color={COLORS.HEX_LIGHT_GRAY}/>
-                  </TouchableOpacity>
-                </View>
-              </RowComponent>
-            </TouchableOpacity>
-          </SectionComponent>
-        )}/>
-      <SectionComponent styles={globalStyle.styleSection}>
-        <TouchableOpacity onPress={()=>navigation.navigate('ManageAddressScreen')}>
-          <RowComponent justify='space-between'>
-            <TextComponent text={'Thêm địa chỉ mới'} color={COLORS.HEX_BLACK}/>
-            <Add size="32" color={COLORS.ORANGE}/>
-          </RowComponent>
-        </TouchableOpacity>
+      {loading? <ActivityIndicator size={30}/>:(
+        <>
+          <FlatList data={dataUser[0]?.list_addresses}
+          keyExtractor={(item) => item._id.toString()}
+          renderItem={({item})=>(
+            <SectionComponent styles={globalStyle.styleSection}>
+              <TouchableOpacity onPress={()=>handleChoseAddress(item)}>
+                <RowComponent justify='space-between' >
+                  <View style={{flex:1}}>
+                    <CheckBoxComponent icon={
+                      <Cd
+                        size="18"
+                        color={selectedItem===item._id?COLORS.AZURE_BLUE:COLORS.HEX_LIGHT_GREY}/>
+                      }/>
+                  </View>
+                  <View style={{flex:8}}>
+                    <TextComponent text={`${item?.full_name} | ${item?.phone_number?item.phone_number:'Trống'}`} color={COLORS.HEX_LIGHT_GRAY}/>
+                    <TextComponent text={`${item?.address}`} color={COLORS.HEX_LIGHT_GRAY}/>
+                  </View>
+                  <View>
+                    <TouchableOpacity >
+                      <TextComponent text={'Sửa'} color={COLORS.RED} font={FONTFAMILY.montserrat_bold} size={13}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={()=>handleDelete(item)}>
+                      <Trash size="32" color={COLORS.HEX_LIGHT_GRAY}/>
+                    </TouchableOpacity>
+                  </View>
+                </RowComponent>
+              </TouchableOpacity>
+            </SectionComponent>
+          )}/>
+        <SectionComponent styles={globalStyle.styleSection}>
+          <TouchableOpacity onPress={()=>navigation.navigate('ManageAddressScreen')}>
+            <RowComponent justify='space-between'>
+              <TextComponent text={'Thêm địa chỉ mới'} color={COLORS.HEX_BLACK}/>
+              <Add size="32" color={COLORS.ORANGE}/>
+            </RowComponent>
+          </TouchableOpacity>
       </SectionComponent>
+        </>
+      )}
+      
     </View>
   )
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StatusBar, Switch, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, StatusBar, Switch, TouchableOpacity } from 'react-native';
 import { ButtonComponent, HeaderComponent, InputComponent, KeyboardAvoidingViewWrapper, PickerComponent, RowComponent, SectionComponent, TextComponent } from '../../../../../../components';
 import COLORS from '../../../../../../assets/colors/Colors';
 import { FONTFAMILY } from '../../../../../../../assets/fonts';
@@ -12,6 +12,8 @@ import * as Burnt from "burnt";
 const Manage_Address = ({navigation}: any) => {
     const user = useSelector(authSelector)
     const [fullname, setFullname]= useState('')
+    const [loadingButton, setLoadingButton] = useState<boolean>(false);
+
     const [specificAddress, setSpecificAddress]= useState('')
     const [phoneNumber, setPhoneNumber]= useState('')
     const {valueLocation: provinceData} = useGetThirdPartyAPI(1, 0);
@@ -36,6 +38,20 @@ const Manage_Address = ({navigation}: any) => {
         setSelectedValueWard(data);
     };
     const HandleAddAddressByUser = async()=>{
+        if (!fullname || !specificAddress || !phoneNumber) {
+            Burnt.toast({
+                title: "Vui lòng điền đầy đủ thông tin!",
+            });
+            return; // Dừng lại nếu không có đủ thông tin
+        }
+        const phoneRegex = /^0\d{9}$/;
+        if (!phoneRegex.test(phoneNumber)) {
+            Burnt.toast({
+                title: "Số điện thoại không hợp lệ! Số điện thoại phải đủ 10 số và bắt đầu bằng 0.",
+            });
+            return; // Dừng lại nếu số điện thoại không hợp lệ
+        }
+        setLoadingButton(true);
         const address =`${specificAddress}, ${selectedValueWard?.full_name}, ${selectedValueDistrict?.full_name}, ${selectedValueProvince?.full_name}`
         try {
             const respones = await authenticationAPI.HandleAuthentication('/add-address-by-id-user',{
@@ -49,11 +65,16 @@ const Manage_Address = ({navigation}: any) => {
                     title: "Thêm thành công",
 
                 });
+                setLoadingButton(false);
+
             }else{
+                setLoadingButton(false);
+
                 console.log('Sai dòng 118')
             }
             navigation.navigate('AddressSelectionScreen')
         } catch (error) {
+            setLoadingButton(false);
             console.log(error);
 
         }
@@ -152,11 +173,13 @@ const Manage_Address = ({navigation}: any) => {
                 </RowComponent>
             </SectionComponent>
             <SectionComponent>
+                {loadingButton ? (<ActivityIndicator size={30} />) : 
                 <ButtonComponent
-                    onPress={HandleAddAddressByUser} 
-                    text='Hoàn thành'
+                    text="Hoàn thành"
+                    type="#00ADEF"
                     textColor={COLORS.WHITE}
-                    type='#00ADEF'/>
+                    onPress={HandleAddAddressByUser}
+                />}
             </SectionComponent>
         </KeyboardAvoidingViewWrapper>
     )
