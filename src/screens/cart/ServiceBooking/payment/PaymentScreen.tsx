@@ -84,14 +84,16 @@ const PaymentScreen = ({navigation, route}: any) => {
                     shop_details:shopDetail
                 },'post')
                 if(res){
+                    const listShopId =  shopDetail.map((item: { id_shop: any }) => item?.id_shop);
                     if(res.paymentUrl){
-                        navigation.replace('VNPayPaymentScreen',{vnpayUrl:res.paymentUrl, orderId: res?.orderId})
+                        navigation.replace('VNPayPaymentScreen',{vnpayUrl:res.paymentUrl, orderId: res?.orderId, listShopId})
                     }else{
                         navigation.replace('SuccessPaymentScreen')
                         NotificationService.sendNotificationToServer({
                             title: "Bạn có một đơn hàng mới" ,
                             body: "Có đơn hàng mới Shop ơi💎💎",
                             sender: user?.id,
+                            listShopId,
                             object_type_id: res?.data?._id,
                             notification_type: "order_update",
                         })
@@ -99,6 +101,7 @@ const PaymentScreen = ({navigation, route}: any) => {
                             title: "Đặt hàng thành công" ,
                             body: `Đơn hàng #${res?.data?._id} của bạn đang chờ xác nhận! 💎💎`,
                             userId: user?.id,
+                            sender: listShopId[0],
                             object_type_id: res?.data?._id,
                             notification_type: "order_update",
                         })

@@ -9,6 +9,7 @@ interface NotificationData {
     sender?: string;
     object_type_id?: ObjectId;
     notification_type?: string;
+    listShopId?: string[];
 }
 
 class NotificationService {

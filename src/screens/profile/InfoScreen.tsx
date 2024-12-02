@@ -9,6 +9,7 @@ import authenticationAPI from '../../apis/authAPI';
 import * as Burnt from "burnt";
 import { launchImageLibrary } from 'react-native-image-picker';
 import { appInfo } from '../../apis/appInfo';
+import { useRole } from '../../permission/permission';
 var EventEmitter = require('eventemitter3');
 export const eventEmitterUpdateInfo = new EventEmitter();
 const initValues = {
@@ -17,7 +18,8 @@ const initValues = {
 const InfoScreen = ({ navigation }: any) => {
   const user = useSelector(authSelector);
   console.log(user);
-  
+  const { isShop } = useRole();
+
   const [fullname, setFullname] = useState(user?.fullname || '');
   const [address, setAddress] = useState(user?.address || '');
   const [phone, setPhone] = useState(user?.phone || '');
@@ -191,7 +193,8 @@ const InfoScreen = ({ navigation }: any) => {
           value={address || ''}
           placeholder='Địa chỉ'
           onChange={val => setAddress(val)}
-          allowClear
+          allowClear= {isShop ? false : true}
+          editKeyboard={isShop ? true : false}
           backgroundColor={COLORS.WHITE} />
         <InputComponent
           value={phone || ''}

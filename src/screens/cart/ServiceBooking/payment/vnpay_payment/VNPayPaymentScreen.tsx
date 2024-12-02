@@ -15,7 +15,7 @@ const getQueryParams = (url: string) => {
 const VNPayPaymentScreen = ({navigation, route}: any) => {
   const user = useSelector(authSelector);
     const [loading, setLoading] = useState(true);
-    const { vnpayUrl, orderId } = route.params
+    const { vnpayUrl, orderId, listShopId } = route.params
     const handleNavigationStateChange = (navState: any) => {
         if (navState.url.includes('vnpay_return')) {
           // Lấy tham số từ URL trả về từ VNPay
@@ -31,10 +31,19 @@ const VNPayPaymentScreen = ({navigation, route}: any) => {
                   NotificationService.sendNotificationToServer({
                     title: "Bạn có một đơn hàng mới" ,
                     body: "Có đơn hàng mới Shop ơi💎💎",
+                    listShopId,
                     sender: user?.id,
                     object_type_id: orderId,
                     notification_type: "order_update",
                 })
+                NotificationService.sendNotificationToServer({
+                  title: "Đặt hàng thành công" ,
+                  body: `Đơn hàng #${orderId} của bạn đang chờ xác nhận! 💎💎`,
+                  userId: user?.id,
+                  sender: listShopId[0],
+                  object_type_id: orderId,
+                  notification_type: "order_update",
+              })
                 }
             }else {
                 Burnt.toast({
