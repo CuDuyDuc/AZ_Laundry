@@ -1,9 +1,8 @@
 import React from 'react';
-import { Image, StyleProp, View, ImageStyle, TouchableOpacity } from 'react-native';
-import { RowComponent, SectionComponent, ButtonComponent, TextComponent } from '../components';
-import COLORS from '../assets/colors/Colors';
+import { Image, View } from 'react-native';
 import { FONTFAMILY } from '../../assets/fonts';
-import IMAGES from '../assets/images/Images';
+import COLORS from '../assets/colors/Colors';
+import { RowComponent, SectionComponent, TextComponent } from '../components';
 
 interface Props {
     productName: string;
@@ -18,16 +17,14 @@ const CardOrderDetailComponent = (props: Props) => {
   
     return (
       <SectionComponent>
-        
-        <RowComponent justify="space-between" styles={{ alignItems: 'flex-start' }}>
-          <Image source={{ uri: imageUrl}} style={{ width: 100, height: 100, marginRight: 10 }} />
-          <View style={{ width: '78%' }}>
-            <TextComponent text={productName} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold}/>
-            <TextComponent text={short_description} size={16} color={COLORS.HEX_BLACK} />
-            <TextComponent text={`${price.toLocaleString('vi-VN')} VND`} size={18} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold}/>
+        <RowComponent justify="space-between">
+          <Image source={{ uri: imageUrl}} style={{ width: 80, height: 80, marginRight: 10, borderRadius: 10 }} />
+          <View style = {{width:"75%"}}>
+            <TextComponent text={productName} size={16} color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold}/>
+            <TextComponent text={short_description} size={16} color={COLORS.AZURE_BLUE} />
+            <TextComponent text={`${price.toLocaleString('vi-VN')} VND`} size={18} color={COLORS.RED} font={FONTFAMILY.montserrat_medium}/>
           </View>
         </RowComponent>
-
       </SectionComponent>
     );
   };

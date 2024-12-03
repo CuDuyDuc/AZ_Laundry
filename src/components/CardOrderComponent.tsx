@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, View, FlatList, TouchableOpacity } from 'react-native';
 import { RowComponent, SectionComponent, ButtonComponent, TextComponent } from '../components';
 import COLORS from '../assets/colors/Colors';
+import { globalStyle } from './../styles/globalStyle';
 
 interface Props {
     id: string;
@@ -21,7 +22,7 @@ const Test = (props: Props) => {
                 <RowComponent justify="space-between" styles={{ marginTop: 10 }}>
                     <Image
                         source={{ uri: imgUrl }}
-                        style={{ width: 80, height: 80, resizeMode: 'contain' }}
+                        style={{ width: 80, height: 80, resizeMode: 'contain' , borderRadius: 10}}
                     />
                     <View style={{ flex: 1, marginLeft: 10 }}>
                         <TextComponent text={name} size={16} color={COLORS.BLUE_GRAY} />

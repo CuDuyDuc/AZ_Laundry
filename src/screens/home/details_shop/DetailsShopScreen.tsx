@@ -38,7 +38,7 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
     const getChats = async()=>{
         try {
             const res: any = await chatAPI.HandleChat(`/find-chat/${user.id}/${data._id}`) ;
-            setChats(res)
+            setChats(res[0])
             setLoading(false);
         } catch (error) {
             console.log('Error fetching shop: ', error);
@@ -75,13 +75,17 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
         getDataDetailShop();
         getChats();
     }, []);
-    const HandleChatBox=()=>{
-        console.log(data._id);
-        
+    const HandleChatBox=async()=>{
+        let currentChat = chat;
         if(!chat){
-            createChat(user.id, data._id)
-            getChats();
+            const newchat=await createChat(user.id, data._id)
+            if(newchat){
+                setChats(newchat)
+                currentChat = newchat
+            }
+            
         }
+        await getChats();
         const modifiedNotifications= notifications?.map((n:any) => {
             const sender =allUsers?.find((user:any) => user.id===n.senderId);
                 return {
@@ -91,14 +95,14 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
         })
         if(modifiedNotifications||notifications){
             const matchedNotification = modifiedNotifications?.find((n: any) => {
-                return chat[0]?.members.includes(n?.senderId)
+                return currentChat?.members?.includes(n?.senderId)
         });
             if(matchedNotification){
                 markNotificationAsRead({ n: matchedNotification,userChats,user,notifications})
             }
         }
         
-        updateCurrentChat(chat[0]);
+        await updateCurrentChat(currentChat);
         navigation.navigate('ChatScreen');
     }
     useEffect(() => {

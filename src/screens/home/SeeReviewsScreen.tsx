@@ -15,6 +15,8 @@ import reviewAPI from '../../apis/reviewAPI';
 import { useSelector } from 'react-redux';
 import { authSelector } from '../../redux/reducers/authReducer';
 import Video from 'react-native-video';
+import { globalStyle } from '../../styles/globalStyle';
+import { ScrollView } from 'react-native-virtualized-view';
 
 const SeeReviewsScreen = ({ navigation, route }: any) => {
   const { id_shop } = route.params;
@@ -39,11 +41,10 @@ const SeeReviewsScreen = ({ navigation, route }: any) => {
   }, []);
 
   const renderItem = ({ item }: any) => (
-    <SectionComponent styles={{ paddingHorizontal: 10, paddingVertical: 10 }}>
+    <View style={[{ paddingHorizontal: 10, paddingVertical: 10, marginBottom: 5, borderRadius: 15 }, globalStyle.shadow]}>
       <RowComponent>
-        {/* Avatar người dùng */}
         <Image
-          source={item.id_user?.photo ? { uri: item.id_user.photo } : IMAGES.user}
+          source={item.id_user?.photo ? { uri: item.id_user.photo } : { uri: 'https://e7.pngegg.com/pngimages/84/165/png-clipart-united-states-avatar-organization-information-user-avatar-service-computer-wallpaper-thumbnail.png' }}
           style={styles.profileImage}
         />
         <SectionComponent styles={{ flex: 1, marginTop: 20 }}>
@@ -91,25 +92,27 @@ const SeeReviewsScreen = ({ navigation, route }: any) => {
           />
         ))}
       </RowComponent>
-    </SectionComponent>
+    </View>
   );
 
   return (
-    <ContainerComponent>
+    <View>
       <HeaderComponent
         title="Đánh giá về cửa hàng"
         isBack
         onBack={() => navigation.goBack()}
       />
-      <SectionComponent styles={{ marginTop: 20 }}>
-        <FlatList
-          data={reviews}
-          renderItem={renderItem}
-          keyExtractor={(item: any) => item._id}
-          showsVerticalScrollIndicator={false}
-        />
-      </SectionComponent>
-    </ContainerComponent>
+      <ScrollView>
+        <SectionComponent styles={{ marginTop: 20, paddingBottom: 100 }}>
+          <FlatList
+            data={reviews}
+            renderItem={renderItem}
+            keyExtractor={(item: any) => item._id}
+            showsVerticalScrollIndicator={false}
+          />
+        </SectionComponent>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -140,7 +143,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 5,
     backgroundColor: COLORS.HEX_LIGHT_GREY,
-  },  
+  },
 });
 
 export default SeeReviewsScreen;

@@ -1,4 +1,4 @@
-const IP_ADDRESS='192.168.89.84'
+const IP_ADDRESS='10.2.6.184'
 
 export const appInfo = {
 

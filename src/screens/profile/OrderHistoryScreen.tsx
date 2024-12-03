@@ -9,6 +9,7 @@ import { PaymentModel } from '../../model/payment_model';
 import { useSelector } from 'react-redux';
 import { authSelector } from '../../redux/reducers/authReducer';
 import { ScrollView } from 'react-native-virtualized-view';
+import { globalStyle } from '../../styles/globalStyle';
 
 const OrderHistoryScreen = ({ navigation, route }: any) => {
   const user = useSelector(authSelector);
@@ -30,10 +31,6 @@ const OrderHistoryScreen = ({ navigation, route }: any) => {
 
   };
 
-  const onOrderPress = (id: string) => {
-    navigation.navigate('OrderDetatailsScreen', { paymentId: id });
-  };
-
   const getDataPayment = async () => {
     try {
       setLoading(true);
@@ -41,10 +38,6 @@ const OrderHistoryScreen = ({ navigation, route }: any) => {
       const data: PaymentModel[] = res.data;
       setPayment(data);
       setFilteredPayment(data);
-
-      // console.log("Data payment: ", data);
-
-      // Update status counts
       const updatedStatusList = statusList.map((statusItem) => {
         if (statusItem.status === 'Tất cả') {
             return { ...statusItem, number: data.length };
@@ -165,7 +158,7 @@ const OrderHistoryScreen = ({ navigation, route }: any) => {
               renderItem={({ item }) => (
               <>
                 {groupedProducts(item).groupedProducts && groupedProducts(item).groupedProducts.length > 0?(
-                  <View style={{ backgroundColor: COLORS.WHITE, borderRadius: 8, padding:5 , marginBottom:8}}>
+                  <View style={{backgroundColor: COLORS.WHITE, borderRadius: 8, padding:5 , marginBottom:8}}>
                     <TextComponent text={`#${item._id.toString().substring(0,10)}`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
                     <FlatList
                       data={groupedProducts(item).groupedProducts}

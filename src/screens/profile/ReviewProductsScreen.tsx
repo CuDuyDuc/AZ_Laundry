@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, FlatList, Image, TextInput, TouchableOpacity, View } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { useSelector } from 'react-redux';
@@ -7,14 +7,16 @@ import COLORS from '../../assets/colors/Colors';
 import IMAGES from '../../assets/images/Images';
 import { ButtonComponent, CardOrderDetailComponent, HeaderComponent, KeyboardAvoidingViewWrapper, RowComponent, SectionComponent, TextComponent } from '../../components';
 import { authSelector } from '../../redux/reducers/authReducer';
-import paymentAPI from '../../apis/paymentAPI';
 import reviewAPI from '../../apis/reviewAPI';
+import { UserModel } from '../../model/user_model';
+import authenticationAPI from '../../apis/authAPI';
 
 const ReviewProductsScreen = ({ navigation, route }: any) => {
     const user = useSelector(authSelector);
-    const { productData} = route.params;
-    // console.log("productData hahaha: ", productData)
-    console.log("Shop ID: ", productData.shopDetail.id_shop); 
+    const { productData } = route.params;
+    console.log("Shop ID: ", productData.shopDetail.id_shop);
+    const [details, setDetailShop] = useState<UserModel[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const [rating, setRating] = useState(1);
     const [comment, setComment] = useState('');
     const [files, setFiles] = useState<{ uri: string | undefined; type: string | undefined; name: string | undefined; }[]>([]);
@@ -22,6 +24,21 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
     const totalProducts = Array.isArray(productData.products)
         ? productData.products.length
         : 0;
+
+        const getDataDetailShop = async () => {
+            try {
+                const res: any = await authenticationAPI.HandleAuthentication(`/get-user-by-id?id_user=${productData.shopDetail.id_shop}`);
+                if (Array.isArray(res)) {
+                    setDetailShop(res);
+                } else {
+                    console.log("Invalid data format from API", res);
+                }
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching shop: ', error);
+                setLoading(false);
+            }
+        };        
 
     const handleAddFile = async (type: string) => {
         try {
@@ -73,16 +90,20 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
         }
     };
 
+    useEffect(() => {
+        getDataDetailShop();
+    }, []);    
+
     return (
         <KeyboardAvoidingViewWrapper>
             <HeaderComponent title="Đánh giá đơn hàng" isBack onBack={() => navigation.goBack()} />
 
             <SectionComponent>
                 <RowComponent justify='center' styles={{ marginTop: 30 }}>
-                    <TextComponent text={'Thêm đánh giá sản phẩm mua hàng từ shop'} color={COLORS.ORANGE} size={13} font='Nunito' styles={{ fontStyle: 'italic' }} />
+                    <TextComponent text={'Thêm đánh giá sản phẩm mua hàng từ shop.'} color={COLORS.ORANGE} size={13} font='Nunito' styles={{ fontStyle: 'italic' }} />
                 </RowComponent>
                 <RowComponent justify='center' styles={{ marginTop: 5 }}>
-                    <TextComponent text={'để shop hoàn thiện hơn mỗi ngày. Cảm ơn bạn đã đồng hành cùng shop!'} color={COLORS.ORANGE} size={13} font='Nunito' styles={{ fontStyle: 'italic' }} />
+                    <TextComponent text={'Để shop hoàn thiện hơn mỗi ngày. Cảm ơn bạn đã đồng hành cùng shop!'} color={COLORS.ORANGE} size={13} font='Nunito' styles={{ fontStyle: 'italic' }} />
                 </RowComponent>
             </SectionComponent>
 
@@ -92,22 +113,22 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                 </RowComponent>
                 <RowComponent styles={{ marginBottom: 15 }}>
                     <Image source={IMAGES.iconshop} style={{ width: 20, height: 20, marginTop: 5, marginRight: 10 }} />
-                    <TextComponent text={`Cửa hàng giặt sấy ${productData.shopDetail.fullname}`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
+                    <TextComponent text={`${details[0]?.data_user?.shop_name}`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
                 </RowComponent>
-                {productData.products.map((cartItem:any) => (
-                <View key={cartItem._id.toString()}
-                    style={{
-                        backgroundColor: COLORS.WHITE,
-                        borderRadius: 8,
-                        paddingTop: 15,
-                        marginBottom: 8,
-                    }}>
-                    <CardOrderDetailComponent
-                        imageUrl={cartItem.id_product.product_photo[0]}
-                        productName={cartItem.id_product.product_name}
-                        short_description={cartItem.id_product.short_description}
-                        price={cartItem.cart_subtotal}/>
-                </View>
+                {productData.products.map((cartItem: any) => (
+                    <View key={cartItem._id.toString()}
+                        style={{
+                            backgroundColor: COLORS.WHITE,
+                            borderRadius: 8,
+                            paddingTop: 15,
+                            marginBottom: 8,
+                        }}>
+                        <CardOrderDetailComponent
+                            imageUrl={cartItem.id_product.product_photo[0]}
+                            productName={cartItem.id_product.product_name}
+                            short_description={cartItem.id_product.short_description}
+                            price={cartItem.cart_subtotal} />
+                    </View>
                 ))}
             </SectionComponent>
 
@@ -199,7 +220,7 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                 ))}
             </RowComponent>
 
-            
+
             <SectionComponent>
                 <TextInput
                     placeholder='Hãy chia sẻ những điều bạn thích ở sản phẩm này nhé'
@@ -218,7 +239,7 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                         color: COLORS.HEX_BLACK,
                     }} />
             </SectionComponent>
-            
+
 
             <SectionComponent>
                 <RowComponent>
@@ -231,7 +252,7 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                     />
                 </RowComponent>
             </SectionComponent>
-            
+
         </KeyboardAvoidingViewWrapper>
     );
 };

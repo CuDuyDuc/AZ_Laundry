@@ -9,13 +9,14 @@ import { ButtonComponent, CardOrderDetailComponent, ContainerComponent, HeaderCo
 import { usePaymentMethod } from '../../context/PaymentMethodContext';
 import { PaymentModel } from '../../model/payment_model';
 import StepProgress from './StepProgress';
+import { ArchiveTick, Card, Location } from 'iconsax-react-native';
 
 const OrderDetatailsScreen = ({ navigation, route }: any) => {
-  const {selectedPaymentMethod}=usePaymentMethod()
+  const { selectedPaymentMethod } = usePaymentMethod()
   const [payment, setPayment] = useState<PaymentModel[]>([]);
-  const { productData,paymentData } = route.params;
+  const { productData, paymentData } = route.params;
 
- 
+
 
   const totalProducts = Array.isArray(productData?.products)
     ? productData?.products.length
@@ -42,11 +43,11 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
     try {
       const response = await paymentAPI.HandlePayment('/update-confirmation-status', {
         _id: paymentData?._id,
-        id_shop:productData?.shopDetail?.id_shop,
+        id_shop: productData?.shopDetail?.id_shop,
         confirmationStatus: 'Đã hủy',
       }, 'post');
 
-      if(response){
+      if (response) {
         Alert.alert('Thành công', 'Đơn hàng đã được hủy.', [
           {
             text: 'OK',
@@ -60,7 +61,7 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
       Alert.alert('Lỗi', 'Không thể hủy đơn hàng.');
     }
   };
-  const mountServiceByIdShop=(service_fee:any,shipping_fee:any)=>{
+  const mountServiceByIdShop = (service_fee: any, shipping_fee: any) => {
     return service_fee + shipping_fee
   }
   return (
@@ -68,34 +69,32 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
     <ContainerComponent>
       <HeaderComponent title='Chi tiết đơn hàng' isBack onBack={() => navigation.goBack()} />
       <SectionComponent>
-        <StepProgress status={ productData?.shopDetail?.confirmationStatus} />
+        <StepProgress status={productData?.shopDetail?.confirmationStatus} />
       </SectionComponent>
 
       <ScrollView>
-        <SectionComponent styles={{marginBottom:400}}>
-
-
-          <TextComponent text={`Sản phẩm(${totalProducts})`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} styles={{ marginBottom: 20, marginTop: 10 }} />
+        <SectionComponent styles={{ marginBottom: 400 }}>
+          <TextComponent text={`Sản phẩm(${totalProducts})`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} styles={{ marginBottom: 20, marginTop: 10 }} />
           <RowComponent>
-          <FlatList
-            data={productData.products} // Duyệt qua từng giỏ hàng (cart) trong đơn hàng
-            keyExtractor={(cartItem) => cartItem._id.toString()}
-            renderItem={({ item: cartItem }) => (
-              <View style={{ backgroundColor: COLORS.WHITE, borderRadius: 8, paddingTop:15, marginBottom:8}}>
-                <CardOrderDetailComponent
-                imageUrl={cartItem.id_product.product_photo[0]}
-                productName={cartItem.id_product.product_name}
-                short_description={cartItem.id_product.short_description}
-                price={cartItem.cart_subtotal}/>
-              </View>
-            )}/>
+            <FlatList
+              data={productData.products}
+              keyExtractor={(cartItem) => cartItem._id.toString()}
+              renderItem={({ item: cartItem }) => (
+                <View style={{ backgroundColor: COLORS.WHITE, borderRadius: 8, paddingTop: 10, marginBottom: 8 }}>
+                  <CardOrderDetailComponent
+                    imageUrl={cartItem.id_product.product_photo[0]}
+                    productName={cartItem.id_product.product_name}
+                    short_description={cartItem.id_product.short_description}
+                    price={cartItem.cart_subtotal} />
+                </View>
+              )} />
 
           </RowComponent>
 
           <RowComponent justify="flex-start" styles={{ alignItems: 'flex-start', marginTop: 10, marginBottom: 10 }}>
-            <Image source={IMAGES.iconStatus} style={{ width: 20, height: 20, marginTop: 5, marginRight: 10 }} />
+            <ArchiveTick size="24" color="#FF8A65" style={{ marginRight: 3 }} />
             <View style={{ flex: 1 }}>
-              <TextComponent text="Trạng thái đơn hàng" size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
+              <TextComponent text="Trạng thái đơn hàng" size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} />
               <RowComponent justify="flex-start" styles={{ marginTop: 5, alignItems: 'flex-start' }}>
                 <TextComponent text={productData?.shopDetail?.confirmationStatus} size={14} color={COLORS.HEX_BLACK} styles={{ width: 100 }} />
               </RowComponent>
@@ -107,9 +106,9 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
           </RowComponent>
 
           <RowComponent justify="flex-start" styles={{ alignItems: 'flex-start', marginTop: 10, marginBottom: 10 }}>
-            <Image source={IMAGES.iconadress} style={{ width: 20, height: 20, marginTop: 5, marginRight: 10 }} />
+            <Location size="24" color="#FF8A65" style={{ marginRight: 3 }} />
             <View style={{ flex: 1 }}>
-              <TextComponent text="Địa chỉ nhận hàng" size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
+              <TextComponent text="Địa chỉ nhận hàng" size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} />
               <RowComponent justify="flex-start" styles={{ marginTop: 5, alignItems: 'flex-start' }}>
                 <TextComponent text="Địa chỉ" size={14} color={COLORS.HEX_BLACK} styles={{ width: 60 }} />
                 <TextComponent
@@ -117,50 +116,46 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
                   size={15}
                   color={COLORS.HEX_BLACK}
                   font={FONTFAMILY.montserrat_medium}
-                  styles={{ flex: 1, flexWrap: 'wrap', marginLeft: 10 , textAlign:'right'}}
+                  styles={{ flex: 1, flexWrap: 'wrap', marginLeft: 10, textAlign: 'right' }}
                 />
               </RowComponent>
             </View>
           </RowComponent>
-
           <RowComponent justify="center" styles={{ marginBottom: 5, marginTop: 5 }}>
             <Image source={IMAGES.line} />
           </RowComponent>
 
           <RowComponent justify="flex-start" styles={{ alignItems: 'flex-start', marginTop: 10, marginBottom: 10 }}>
-            <Image source={IMAGES.iconpayment} style={{ width: 20, height: 20, marginTop: 5, marginRight: 10 }} />
+            <Card size="24" color="#FF8A65" style={{ marginRight: 3 }} />
             <View style={{ flex: 1 }}>
-              <TextComponent text="Phương thức thanh toán" size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
+              <TextComponent text="Phương thức thanh toán" size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} />
               <RowComponent justify="flex-start" styles={{ marginTop: 5, alignItems: 'flex-start' }}>
-                <TextComponent text={paymentData.method_payment ==='COD' ?"Thanh toán khi nhận hàng"  : " Thanh toán VNPay"} size={14} color={COLORS.HEX_BLACK} styles={{ width: 200 }} />
+                <TextComponent text={paymentData.method_payment === 'COD' ? "Thanh toán khi nhận hàng" : " Thanh toán VNPay"} size={14} color={COLORS.HEX_BLACK} styles={{ width: 200 }} />
               </RowComponent>
             </View>
           </RowComponent>
-
-          <SectionComponent>
-            <TextComponent text='Chi tiết đơn hàng' size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
-            <SectionComponent styles={{ backgroundColor: COLORS.WHITE, padding: 20, borderRadius: 5 }}>
+          <View style = {{marginBottom: 20}}>
+            <TextComponent text='Chi tiết đơn hàng' size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} />
+            <SectionComponent styles={{ backgroundColor: COLORS.WHITE, padding: 10, borderRadius: 15, marginTop: 10}}>
               <RowComponent justify="space-between" styles={{ alignItems: 'center', marginBottom: 15 }}>
                 <TextComponent text="Mã đơn hàng" size={16} color={COLORS.HEX_BLACK} />
-                <TextComponent text={ paymentData._id.toString().substring(0,10) } size={16} color={COLORS.HEX_BLACK} />
+                <TextComponent text={paymentData._id.toString().substring(0, 10)} size={16} color={COLORS.HEX_BLACK} />
               </RowComponent>
               <RowComponent justify="space-between" styles={{ alignItems: 'center', marginBottom: 15 }}>
                 <TextComponent text="Tiền dịch vụ" size={16} color={COLORS.HEX_BLACK} />
-                <TextComponent text={ `${productData?.shopDetail?.shipping_fee.toLocaleString('vi-VN')} VND`} size={16} color={COLORS.HEX_BLACK} />
+                <TextComponent text={`${productData?.shopDetail?.shipping_fee.toLocaleString('vi-VN')} VND`} size={16} color={COLORS.HEX_BLACK} />
               </RowComponent>
               <RowComponent justify="space-between" styles={{ alignItems: 'center', marginBottom: 15 }}>
                 <TextComponent text="Tiền vận chuyển" size={16} color={COLORS.HEX_BLACK} />
-                <TextComponent text={ `${productData?.shopDetail?.service_fee.toLocaleString('vi-VN')} VND`} size={16} color={COLORS.HEX_BLACK} />
+                <TextComponent text={`${productData?.shopDetail?.service_fee.toLocaleString('vi-VN')} VND`} size={16} color={COLORS.HEX_BLACK} />
               </RowComponent>
-              <RowComponent justify="space-between" styles={{ alignItems: 'center', marginBottom: 15 }}>
+              <RowComponent justify="space-between" styles={{ alignItems: 'center'}}>
                 <TextComponent text="Tổng tiền" size={16} color={COLORS.HEX_BLACK} />
-                <TextComponent text={ `${mountServiceByIdShop(productData?.shopDetail?.service_fee,productData?.shopDetail?.shipping_fee).toLocaleString('vi-VN')} VND`} size={18} color={COLORS.RED} />
+                <TextComponent text={`${mountServiceByIdShop(productData?.shopDetail?.service_fee, productData?.shopDetail?.shipping_fee).toLocaleString('vi-VN')} VND`} size={18} color={COLORS.RED} />
               </RowComponent>
             </SectionComponent>
-          </SectionComponent>
-
-          
-          {productData?.shopDetail?.confirmationStatus==="Chờ duyệt"?(
+          </View>
+          {productData?.shopDetail?.confirmationStatus === "Chờ duyệt" ? (
             <RowComponent justify='center'>
               <ButtonComponent
                 text="Hủy đơn"
@@ -174,10 +169,10 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
                   borderColor: COLORS.AZURE_BLUE,
                   borderWidth: 1
                 }}
-                onPress={handleCancelOrder} 
+                onPress={handleCancelOrder}
               />
-          </RowComponent>
-          ):undefined}
+            </RowComponent>
+          ) : undefined}
         </SectionComponent>
       </ScrollView>
 
