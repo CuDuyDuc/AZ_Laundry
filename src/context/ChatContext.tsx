@@ -207,8 +207,10 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
                     'post',
                 );
                 setUserChats((prev: any) => [...prev, response]);
+                return response
             } catch (error) {
                 console.log('create chat error', error);
+                return null
             }
         }
     }, []);
