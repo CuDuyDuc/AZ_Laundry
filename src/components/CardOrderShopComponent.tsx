@@ -16,7 +16,7 @@ interface Props {
     onPress: () => void;
 }
 
-const CardOrderShopComponent = (props: Props) => {
+const CardOrderShopComponent = React.memo((props: Props) => {
     const {
         id,
         status,
@@ -60,6 +60,6 @@ const CardOrderShopComponent = (props: Props) => {
             </RowComponent>
         </TouchableOpacity>
     );
-}
+})
 
 export default CardOrderShopComponent;
