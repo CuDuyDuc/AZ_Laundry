@@ -22,6 +22,8 @@ import { PaymentModel } from '../../model/payment_model';
 import paymentAPI from '../../apis/paymentAPI';
 import { FONTFAMILY } from '../../../assets/fonts';
 import COLORS from '../../assets/colors/Colors';
+import { useSelector } from 'react-redux';
+import { authSelector } from '../../redux/reducers/authReducer';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -34,6 +36,7 @@ const OrderStatisticsScreen = ({ navigation }: any) => {
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [revenueByDate, setRevenueByDate] = useState<{ [key: string]: number }>({});
   const [loading, setLoading] = useState<boolean>(true);
+  const user = useSelector(authSelector);
 
   const getDataPayment = async (endDate: Date) => {
     setLoading(true);
@@ -53,26 +56,25 @@ const OrderStatisticsScreen = ({ navigation }: any) => {
         revenueByDate[d.toLocaleDateString('vi-VN')] = 0;
       }
 
-      data.forEach(order => {
-        const orderDate = new Date(order.createdAt);
-        if (orderDate >= startDate && orderDate <= endDate && (order.status === 'Paid' || order.status === 'COD')) {
-          const orderDateString = orderDate.toLocaleDateString('vi-VN');
-
-          if (order.id_cart && Array.isArray(order.id_cart)) {
-            order.id_cart.forEach((cartItem: any) => {
-              if (cartItem.id_product && cartItem.id_product.id_user) {
-                const price = cartItem.cart_subtotal || 0;
-                const quantity = cartItem.product_quantity || 0;
-                const revenue = price * quantity;
-
-                revenueByDate[orderDateString] = (revenueByDate[orderDateString] || 0) + revenue;
-                totalRevenue += revenue;
+      data.forEach(payment => {
+        const orderDate = new Date(payment.createdAt);
+        if (
+          (payment.status === "COD" || payment.status === "Paid") &&
+          orderDate >= startDate && orderDate <= endDate
+        ) {
+          payment.shop_details
+            .filter(shop => shop.id_shop.toString() === user.id.toString())
+            .forEach(shop => {
+              const dateKey = orderDate.toLocaleDateString('vi-VN');
+              revenueByDate[dateKey] = (revenueByDate[dateKey] || 0) + shop.service_fee;
+              totalRevenue += shop.service_fee;
+              if (shop.confirmationStatus === "Đang giao") {
+                totalPaidOrders++;
+              }
+              if (shop.confirmationStatus === "Chờ duyệt") {
+                totalCODOrders++;
               }
             });
-          }
-
-          if (order.status === 'Paid') totalPaidOrders++;
-          if (order.status === 'COD') totalCODOrders++;
         }
       });
 
@@ -118,15 +120,16 @@ const OrderStatisticsScreen = ({ navigation }: any) => {
     fillShadowGradient: 'rgba(34, 139, 230, 0.5)',
     fillShadowGradientOpacity: 0.2,
     propsForDots: {
-      r: '6',
+      r: '4',
       strokeWidth: '2',
-      stroke: '#fff',
+      stroke: '#228BE6',
     },
     decimalPlaces: 0,
     labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
     propsForBackgroundLines: {
       strokeDasharray: '',
     },
+    formatYLabel: (value: any) => Math.round(value).toLocaleString('vi-VN'),
   };
 
   const startDate = new Date(selectedDate);
@@ -191,7 +194,7 @@ const OrderStatisticsScreen = ({ navigation }: any) => {
               />
             </SectionComponent>
           </RowComponent>
-          <SectionComponent styles = {{marginTop: 5}}>
+          <SectionComponent styles={{ marginTop: 5 }}>
             <TextComponent
               text={'Tổng doanh thu'}
               size={13}
@@ -241,17 +244,16 @@ const OrderStatisticsScreen = ({ navigation }: any) => {
                 style={{
                   marginVertical: 8,
                   borderRadius: 16,
-                  paddingRight: 40,
-                  paddingBottom: 20,
                 }}
-                withVerticalLines={false}
+                withVerticalLines={true}
                 withHorizontalLines={true}
                 withDots={true}
                 withInnerLines={true}
-                withOuterLines={false}
+                withOuterLines={true}
                 withVerticalLabels={true}
                 withHorizontalLabels={true}
                 fromZero={true}
+                yAxisInterval={4}
               />
             </View>
           ) : (
@@ -275,7 +277,6 @@ const OrderStatisticsScreen = ({ navigation }: any) => {
                 text="Xem tất cả đánh giá"
                 type="link"
                 color={COLORS.AZURE_BLUE}
-                onPress={() => navigation.navigate('ReviewShopScreen')}
               />
             </RowComponent>
             <SpaceComponent height={20} />

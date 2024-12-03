@@ -113,7 +113,7 @@ const HistoryScreen = ({ navigation }: any) => {
               id={item?._id.toString().substring(0, 10)}
               status={item.shop_details[0].confirmationStatus}
               price={mountServiceByIdShop(item.shop_details[0].service_fee,item.shop_details[0].shipping_fee)}
-              imgUrl={item?.id_cart[0]?.id_product?.product_photo[0]}
+              imgUrl={item?.id_cart}
               dateOrder={new Date(item.createdAt).toLocaleDateString('vi-VN')}
               onPress={() => navigation.navigate('OrderConfirmationScreen', { confirmationStatus: item.shop_details[0].confirmationStatus ,paymentData:item})}
             />
