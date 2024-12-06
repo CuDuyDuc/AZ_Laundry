@@ -45,16 +45,16 @@ const CardOrderShopComponent = React.memo((props: Props) => {
                 <Image source={{ uri: productPhotos[0] }} style={{ width: 80, height: 80, marginRight: 10, borderRadius:8 }} />
                 <View style={{ width: '78%' }}>
                     <RowComponent justify="space-between">
-                        <TextComponent text={`Mã đơn: ${id}`} color={COLORS.BLUE_GRAY} size={15} font={FONTFAMILY.montserrat_bold} />
-                        <TextComponent text={dateOrder} color={COLORS.BLUE_GRAY} styles={{ marginRight: 10 }} size={15} />
+                        <TextComponent text={`Mã đơn: ${id}`} color={COLORS.AZURE_BLUE} size={15} font={FONTFAMILY.montserrat_medium} />
+                        <TextComponent text={dateOrder} color={COLORS.AZURE_BLUE} styles={{ marginRight: 10 }} size={15} />
                     </RowComponent>
                     <RowComponent justify="space-between">
-                        <TextComponent text="Tổng thanh toán" color={COLORS.BLUE_GRAY} size={15} font={FONTFAMILY.montserrat_bold} />
-                        <TextComponent text={`${price.toLocaleString('vi-VN')} VND`} color={COLORS.HEX_BLACK} styles={{ marginRight: 10 }} size={15} />
+                        <TextComponent text="Tổng thanh toán" color={COLORS.AZURE_BLUE} size={15} font={FONTFAMILY.montserrat_medium} />
+                        <TextComponent text={`${price.toLocaleString('vi-VN')} VND`} color={COLORS.RED} styles={{ marginRight: 10 }} size={15} />
                     </RowComponent>
                     <RowComponent justify="space-between">
-                        <TextComponent text="Trạng thái" color={COLORS.BLUE_GRAY} size={15} font={FONTFAMILY.montserrat_bold} />
-                        <TextComponent text={status} color={COLORS.BLUE_GRAY} styles={{ marginRight: 10 }} size={15} />
+                        <TextComponent text="Trạng thái" color={COLORS.AZURE_BLUE} size={15} font={FONTFAMILY.montserrat_medium} />
+                        <TextComponent text={status} color={COLORS.RED} styles={{ marginRight: 10 }} size={15} />
                     </RowComponent>
                 </View>
             </RowComponent>

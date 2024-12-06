@@ -150,25 +150,22 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
                             <ButtonComponent type='link' text='Xem đánh giá' color={COLORS.AZURE_BLUE} onPress={() => { navigation.navigate("SeeReviewsScreen", { id_shop: data._id.toString() })}} />
                         </RowComponent>
                     </SectionComponent>
-                    <SectionComponent styles={{ position: 'relative', top: 120, paddingBottom: isUser?520:400 }}>
+                    <SectionComponent styles={{ position: 'relative', top: 120, paddingBottom: isUser?320:400 }}>
                         <CardProductComponent onPress={handleDetailProduct} groupProductsByServiceType={groupProductsByServiceType(products)} />
                     </SectionComponent>
                     {isUser?(
                         <View style={{ backgroundColor: COLORS.WHITE, position: 'absolute', bottom: 0, left: 0, right: 0, paddingTop: 15 }}>
-                            <SectionComponent styles={{ justifyContent: 'flex-start' }}>
-                                <TouchableOpacity onPress={HandleChatBox}>
-                                    <RowComponent>
-                                        <Message size={18} variant='Bold' color={COLORS.AZURE_BLUE} />
-                                        <TextComponent styles={{ marginLeft: 5 }} text={'Hỗ trợ khách hàng'} color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
-                                    </RowComponent>
-                                </TouchableOpacity>
-                            </SectionComponent>
                             <SectionComponent>
                                 <RowComponent justify='space-between'>
                                     <TouchableOpacity onPress={() => navigation.navigate('Cart')} >
                                         <ShoppingCart size={40} color={COLORS.AZURE_BLUE} />
                                     </TouchableOpacity>
-                                    <ButtonComponent styles={{ width: '80%' }} type='#00ADEF' text='Đến trang thanh toán' />
+                                    <TouchableOpacity onPress={HandleChatBox}>
+                                    <RowComponent>
+                                        <Message size={24} variant='Bold' color={COLORS.AZURE_BLUE} />
+                                        <TextComponent styles={{ marginLeft: 5 }} text={'Hỗ trợ khách hàng'} color={COLORS.AZURE_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
+                                    </RowComponent>
+                                </TouchableOpacity>
                                 </RowComponent>
                             </SectionComponent>
                         </View>

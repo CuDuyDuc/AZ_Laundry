@@ -277,6 +277,7 @@ const OrderStatisticsScreen = ({ navigation }: any) => {
                 text="Xem tất cả đánh giá"
                 type="link"
                 color={COLORS.AZURE_BLUE}
+                onPress={() => {navigation.navigate('ReviewShopScreen')}}
               />
             </RowComponent>
             <SpaceComponent height={20} />

@@ -7,16 +7,18 @@ import { useAxiosGetShops } from '../hooks/useAxiosGetShops'
 import { UserModel } from '../model/user_model'
 import RowComponent from './RowComponent'
 import TextComponent from './TextComponent'
+
 interface Props {
     currentLatitude?: number | null,
     currentLongitude?: number | null,
     limit?: number,
     onPress:(item:any)=>void,
-    id_product_type?:any
+    id_product_type?:any,
+    shops?:any
 }
 
 const CardShopComponent = (props: Props) => {
-    const { currentLatitude, currentLongitude, limit,onPress,id_product_type } = props
+    const { currentLatitude, currentLongitude, limit,onPress,id_product_type,shops } = props
     const {shop, loading}= useAxiosGetShops({currentLatitude,currentLongitude,limit,id_product_type})
     const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
         const R = 6371; // Bán kính của Trái Đất tính bằng km
@@ -66,7 +68,7 @@ const CardShopComponent = (props: Props) => {
                 <ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />
             ) : (
                 <FlatList
-                    data={shop}
+                    data={shops??shop}
                     renderItem={renderItem}
                     keyExtractor={(item) => item._id.toString()} />
             )}

@@ -14,7 +14,6 @@ import authenticationAPI from '../../apis/authAPI';
 const ReviewProductsScreen = ({ navigation, route }: any) => {
     const user = useSelector(authSelector);
     const { productData } = route.params;
-    console.log("Shop ID: ", productData.shopDetail.id_shop);
     const [details, setDetailShop] = useState<UserModel[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [rating, setRating] = useState(1);
@@ -43,19 +42,20 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
     const handleAddFile = async (type: string) => {
         try {
             const options = {
-                mediaType: type as 'photo' | 'video', // 'photo' hoặc 'video'
+                mediaType: type as 'photo' | 'video', 
                 selectionLimit: 1,
             };
 
             const result = await launchImageLibrary(options);
+            console.log('Image picker result:', result);
 
             if (result.assets && result.assets.length > 0) {
-                const newFile = {
+                let newFile = {
                     uri: result.assets[0].uri,
                     type: result.assets[0].type,
                     name: result.assets[0].fileName,
                 };
-
+                console.log(newFile)
                 setFiles((prevFiles) => [...prevFiles, newFile]);
             }
         } catch (error) {
@@ -78,7 +78,7 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                 files
             };
             const res = await reviewAPI.HandleReview('/add-review', reviewData, 'post');
-            console.log('Review added successfully:', res.data);
+            // console.log('Review added successfully:', res.data);
             Alert.alert('Thành công', 'Đánh giá đã được thêm.', [
                 {
                     text: 'OK',

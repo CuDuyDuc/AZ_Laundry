@@ -13,7 +13,7 @@ const MessageComponent = (props: Props) => {
     const { text, colorText, backgroundColor } = props;
     return (
         <RowComponent>
-            <View style={{ backgroundColor: backgroundColor, padding: 10, maxWidth: 170, borderRadius: 25, marginLeft: 8 }}>
+            <View style={{ backgroundColor: backgroundColor, padding: 10, maxWidth: 290, borderRadius: 25, marginLeft: 8 }}>
                 <TextComponent color={colorText} text={text} />
             </View>
         </RowComponent>

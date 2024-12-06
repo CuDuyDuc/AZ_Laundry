@@ -72,7 +72,7 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
         <StepProgress status={productData?.shopDetail?.confirmationStatus} />
       </SectionComponent>
 
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <SectionComponent styles={{ marginBottom: 400 }}>
           <TextComponent text={`Sản phẩm(${totalProducts})`} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} styles={{ marginBottom: 20, marginTop: 10 }} />
           <RowComponent>
@@ -91,7 +91,7 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
 
           </RowComponent>
 
-          <RowComponent justify="flex-start" styles={{ alignItems: 'flex-start', marginTop: 10, marginBottom: 10 }}>
+          <RowComponent styles={{ alignItems: 'flex-start', marginTop: 10, marginBottom: 10 }}>
             <ArchiveTick size="24" color="#FF8A65" style={{ marginRight: 3 }} />
             <View style={{ flex: 1 }}>
               <TextComponent text="Trạng thái đơn hàng" size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} />
@@ -104,8 +104,7 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
           <RowComponent justify="center" styles={{ marginBottom: 5, marginTop: 5 }}>
             <Image source={IMAGES.line} />
           </RowComponent>
-
-          <RowComponent justify="flex-start" styles={{ alignItems: 'flex-start', marginTop: 10, marginBottom: 10 }}>
+          <RowComponent styles={{ alignItems: 'flex-start', marginTop: 10, marginBottom: 10 }}>
             <Location size="24" color="#FF8A65" style={{ marginRight: 3 }} />
             <View style={{ flex: 1 }}>
               <TextComponent text="Địa chỉ nhận hàng" size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} />

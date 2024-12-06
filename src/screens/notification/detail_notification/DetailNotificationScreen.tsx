@@ -1,6 +1,6 @@
 import { Box, DiscountShape, NotificationBing, ShoppingBag } from "iconsax-react-native";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Image, StyleSheet } from "react-native";
+import { ActivityIndicator, FlatList, Image, StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-virtualized-view";
 import authenticationAPI from "../../../apis/authAPI";
 import paymentAPI from "../../../apis/paymentAPI";
@@ -188,10 +188,10 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
     };
 
     return (
-        <ContainerComponent >
+        <View>
             <HeaderComponent isBack onBack={() => navigation.goBack()} title="Thông báo chi tiết" />
 
-           <ScrollView>
+           <ScrollView showsVerticalScrollIndicator={false} style={{marginBottom: 70}}>
                 <SectionComponent styles={{alignItems:'center'}} >
                     <SectionComponent styles={{
                         margin: 20,
@@ -212,7 +212,7 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
                     {loading ? (<ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />) : renderNotificationContent()}
                 </SectionComponent>
            </ScrollView>
-        </ContainerComponent>
+        </View>
     );
 }
 

@@ -8,12 +8,12 @@ import {
   HeaderComponent,
   RowComponent,
   SectionComponent,
-  SpaceComponent,
   TextComponent,
 } from '../../components';
 import reviewAPI from '../../apis/reviewAPI';
 import { useSelector } from 'react-redux';
 import { authSelector } from '../../redux/reducers/authReducer';
+import { globalStyle } from '../../styles/globalStyle';
 
 const ReviewShopScreen = ({ navigation }: any) => {
   const user = useSelector(authSelector);
@@ -37,9 +37,8 @@ const ReviewShopScreen = ({ navigation }: any) => {
   }, []);
 
   const renderItem = ({ item }: any) => (
-    <SectionComponent styles={{ paddingHorizontal: 10, paddingVertical: 10 }}>
+    <SectionComponent styles={[{ paddingHorizontal: 10, paddingVertical: 10, marginBottom: 5, borderRadius: 15 }, globalStyle.shadow]}>
       <RowComponent>
-        {/* Avatar người dùng */}
         <Image
           source={item.id_user?.photo ? { uri: item.id_user.photo } : IMAGES.user}
           style={styles.profileImage}
@@ -76,7 +75,6 @@ const ReviewShopScreen = ({ navigation }: any) => {
       </RowComponent>
       <TextComponent text={item.comment} color={COLORS.HEX_BLACK} size={14} />
       <RowComponent styles={{ marginTop: 10 }}>
-        {/* Chỉ hiển thị ảnh nếu có */}
         {item.images && item.images.length > 0 && item.images.map((image: string, idx: number) => (
           <Image
             key={idx}
@@ -95,7 +93,7 @@ const ReviewShopScreen = ({ navigation }: any) => {
         isBack
         onBack={() => navigation.goBack()}
       />
-      <SectionComponent styles={{ marginTop: 20 }}>
+      <SectionComponent styles={{ marginTop: 20 , paddingBottom: 270}}>
         <FlatList
           data={reviews}
           renderItem={renderItem}

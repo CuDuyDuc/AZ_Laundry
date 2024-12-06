@@ -102,8 +102,7 @@ const SeeReviewsScreen = ({ navigation, route }: any) => {
         isBack
         onBack={() => navigation.goBack()}
       />
-      <ScrollView>
-        <SectionComponent styles={{ marginTop: 20, paddingBottom: 100 }}>
+        <SectionComponent styles={{ marginTop: 20, paddingBottom: 200 }}>
           <FlatList
             data={reviews}
             renderItem={renderItem}
@@ -111,7 +110,6 @@ const SeeReviewsScreen = ({ navigation, route }: any) => {
             showsVerticalScrollIndicator={false}
           />
         </SectionComponent>
-      </ScrollView>
     </View>
   );
 };
