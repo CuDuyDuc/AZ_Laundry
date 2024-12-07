@@ -86,6 +86,9 @@ const PaymentScreen = ({navigation, route}: any) => {
                 if(res){
                     const listShopId =  shopDetail.map((item: { id_shop: any }) => item?.id_shop);
                     if(res.paymentUrl){
+                        console.log('====================================');
+                        console.log(res.paymentUrl);
+                        console.log('====================================');
                         navigation.replace('VNPayPaymentScreen',{vnpayUrl:res.paymentUrl, orderId: res?.orderId, listShopId})
                     }else{
                         navigation.replace('SuccessPaymentScreen')
