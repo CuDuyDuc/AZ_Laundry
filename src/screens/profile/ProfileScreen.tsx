@@ -25,7 +25,6 @@ const ProfileScreen = ({ navigation }: any) => {
     const getUserById = async () => {
         try {
         const req : any = await authenticationAPI.HandleAuthentication(`/get-user-by-id?id_user=${user?.id}`);
-        console.log(req);
        if(req) {
         setPhone(req[0].phone_number);
         setPhoto(req[0].photo);
@@ -69,7 +68,6 @@ const ProfileScreen = ({ navigation }: any) => {
                 <HeaderComponent title="Tài khoản" isBack onBack={() => navigation.goBack()}/>
                 <RowComponent
                     onPress={() => {
-                        console.log('Test Account click!');
                         navigation.navigate('EditInfoAccount')
                     }}
                     justify="space-between"

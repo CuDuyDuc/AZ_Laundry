@@ -29,8 +29,6 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                 const res: any = await authenticationAPI.HandleAuthentication(`/get-user-by-id?id_user=${productData.shopDetail.id_shop}`);
                 if (Array.isArray(res)) {
                     setDetailShop(res);
-                } else {
-                    console.log("Invalid data format from API", res);
                 }
                 setLoading(false);
             } catch (error) {
@@ -47,7 +45,6 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
             };
 
             const result = await launchImageLibrary(options);
-            console.log('Image picker result:', result);
 
             if (result.assets && result.assets.length > 0) {
                 let newFile = {
@@ -55,7 +52,6 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                     type: result.assets[0].type,
                     name: result.assets[0].fileName,
                 };
-                console.log(newFile)
                 setFiles((prevFiles) => [...prevFiles, newFile]);
             }
         } catch (error) {
@@ -69,16 +65,27 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
 
     const addReview = async () => {
         try {
-            const reviewData = {
-                id_user: user?.id,
-                id_shop: productData.shopDetail.id_shop,
-                orderId: productData.products[0]._id,
-                rating,
-                comment,
-                files
-            };
-            const res = await reviewAPI.HandleReview('/add-review', reviewData, 'post');
-            // console.log('Review added successfully:', res.data);
+            const formData = new FormData();
+            formData.append('id_user', user?.id);
+            formData.append('id_shop', productData.shopDetail.id_shop);
+            formData.append('orderId', productData.products[0]._id);
+            formData.append('rating', rating.toString()); // Chuyển số thành chuỗi
+            formData.append('comment', comment);
+    
+            // Thêm các tệp tin (images/videos) vào FormData
+            files.forEach((file, index) => {
+                formData.append('files', {
+                    uri: file.uri,
+                    type: file.type,
+                    name: file.name || `file_${index}`,
+                });
+            });
+    
+            // Gọi API với dữ liệu dạng FormData
+            const res = await reviewAPI.HandleReview('/add-review', formData, 'post');
+            
+    
+            // Hiển thị thông báo thành công
             Alert.alert('Thành công', 'Đánh giá đã được thêm.', [
                 {
                     text: 'OK',
@@ -86,7 +93,8 @@ const ReviewProductsScreen = ({ navigation, route }: any) => {
                 },
             ]);
         } catch (error: any) {
-            console.log('Error adding review:', error);
+            console.error('Error adding review:', error);
+            Alert.alert('Lỗi', 'Có lỗi xảy ra khi thêm đánh giá.');
         }
     };
 

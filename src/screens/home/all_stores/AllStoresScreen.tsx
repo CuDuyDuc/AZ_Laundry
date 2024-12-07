@@ -16,7 +16,6 @@ const AllStoresScreen = ({ route, navigation }: any) => {
     if(shop.length>0){
       setFilteredData(shop)
     }
-    console.log('re-render');
     
   },[shop])
   const removeAccents = (str: string) => {

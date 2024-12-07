@@ -74,7 +74,6 @@ const Verification = ({ navigation, route }: any) => {
             setCurrentCode(res.data.code);
             setIsLoading(false);
 
-            console.log(res.data.code);
         } catch (error) {
             setIsLoading(false);
             console.log(`Unable to send authentication code ${error}`);

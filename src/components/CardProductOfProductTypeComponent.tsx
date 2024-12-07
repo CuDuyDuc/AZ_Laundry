@@ -58,7 +58,7 @@ const CardProductOfProductType = (props: Props) => {
                         </RowComponent>
                         <TextComponent styles={{ paddingVertical: 3 }} text={item.id_product.short_description} color={COLORS.HEX_LIGHT_GRAY} size={13} />
                         <RowComponent justify='space-between'>
-                            <TextComponent text={`${item.cart_subtotal} vnđ`} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} />
+                            <TextComponent text={`${item.cart_subtotal.toLocaleString('vi-VN')} vNĐ`} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} />
                             <RowComponent justify='space-between'>
                                 <TouchableOpacity onPress={()=>onPressMinus && onPressMinus(item)}>
                                     <Minus size={25} variant='Bold' color={COLORS.AZURE_BLUE} />

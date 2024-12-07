@@ -77,7 +77,6 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
     }, []);
     const HandleChatBox=async()=>{
         let currentChat = chat;
-        console.log(currentChat)
         if(!chat){
             const newchat=await createChat(user.id, data._id)
             if(newchat){

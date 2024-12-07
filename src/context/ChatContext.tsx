@@ -78,7 +78,6 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
     useEffect(() => {
         if (socket == null) return;
         const recipientId = currentChat?.members?.find((id: any) => id !== user?.id); 
-        console.log(recipientId);
         
         socket.emit('sendMessage', { ...newMessage, recipientId }); 
     }, [newMessage]);

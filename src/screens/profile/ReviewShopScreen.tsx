@@ -26,7 +26,6 @@ const ReviewShopScreen = ({ navigation }: any) => {
       const res: any = await reviewAPI.HandleReview(`/get-review-by-shop/${user?.id}`);
       const data = res.data;
       setReviews(data);
-      console.log('Reviewwwww: ', data);
     } catch (error) {
       console.log('Error: ', error);
     }

@@ -70,7 +70,6 @@ const Manage_Address = ({navigation}: any) => {
             }else{
                 setLoadingButton(false);
 
-                console.log('Sai dòng 118')
             }
             navigation.navigate('AddressSelectionScreen')
         } catch (error) {

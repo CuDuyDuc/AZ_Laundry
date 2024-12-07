@@ -147,7 +147,6 @@ const AddService = ({ navigation }: any) => {
         }));
         setValues({ ...values, images });
       } else {
-        console.log('No assets found');
         Alert.alert('Error', 'No image selected, please try again.');
       }
     } catch (error) {
@@ -191,7 +190,6 @@ const AddService = ({ navigation }: any) => {
       if (response.ok) {
         Alert.alert('Success', 'Data and images uploaded successfully.');
         setLoadingButton(false);
-        console.log({ dataPRODUCTADDED: data });
         NotificationService.sendNotificationToServer({
           title: "Dịch vụ mới",
           body: `Shop ${user?.fullname} vừa thêm dịch vụ!💎💎`,
@@ -283,8 +281,7 @@ const AddService = ({ navigation }: any) => {
         name: file.name,
       });
     });
-    console.log(shopBanner)
-    console.log(thumbnails)
+   
 
     try {
       setLoadingButton(true);

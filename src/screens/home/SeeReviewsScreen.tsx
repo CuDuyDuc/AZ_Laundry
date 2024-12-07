@@ -30,7 +30,6 @@ const SeeReviewsScreen = ({ navigation, route }: any) => {
       const res: any = await reviewAPI.HandleReview(`/get-review-by-shop/${id_shop}`);
       const data = res.data;
       setReviews(data);
-      console.log('Reviewwwww: ', data);
     } catch (error) {
       console.log('Error: ', error);
     }

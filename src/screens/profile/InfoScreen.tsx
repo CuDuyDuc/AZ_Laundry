@@ -17,7 +17,6 @@ const initValues = {
 };
 const InfoScreen = ({ navigation }: any) => {
   const user = useSelector(authSelector);
-  console.log(user);
   const { isShop } = useRole();
 
   const [fullname, setFullname] = useState(user?.fullname || '');
@@ -48,7 +47,6 @@ const InfoScreen = ({ navigation }: any) => {
             }));
             setValues({ ...values, images });
         } else {
-            console.log('No assets found');
             Alert.alert('Error', 'No image selected, please try again.');
         }
     } catch (error) {
@@ -116,7 +114,6 @@ const InfoScreen = ({ navigation }: any) => {
     if (response.status == 200 ) {
         Alert.alert('Success', 'Data and images uploaded successfully.');
     getUserById(user?.id);
-    console.log(response);
     setLoading(false);
     eventEmitterUpdateInfo.emit('updateInfo');
     } else {

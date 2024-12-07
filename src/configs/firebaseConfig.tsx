@@ -18,12 +18,10 @@ const firebaseConfig = {
 const VAPID_KEY = "BJq-T6nPdw3AvYLNTRVwDLWK6JlveLd0qGkp__eXgwnaJqMHUQxD3RGxa6tU1oRX9rXcLKkLnbYJhcFbK8-Pxbc"
 
 export default function Firebase(userId: string) {
-    console.log({userId});
    
     async function updateDeviceToken(device_token: String) {
         try {
             const res = await authenticationAPI.HandleAuthentication(`/update-device-token/${userId}`,{device_token:device_token},'put');
-            console.log('thành công',res);
             
         } catch (error) {
             console.log('Error fetching device_token info: ', error);
@@ -45,7 +43,6 @@ export default function Firebase(userId: string) {
                 await messaging().registerDeviceForRemoteMessages();
 
                 const fcmToken = await getFCMToken();
-                console.log({ fcmToken });
                 await AsyncStorage.setItem('fcmToken', JSON.stringify({ fcm_token: fcmToken }));
                 fcmToken && await updateDeviceToken(fcmToken);
             } else {
@@ -54,7 +51,6 @@ export default function Firebase(userId: string) {
         } else if (Platform.OS === 'android') {
             if (hasPermissions) {
                 const fcmToken = await getFCMToken();
-                console.log({ fcmToken });
                 await AsyncStorage.setItem('fcmToken', JSON.stringify({ fcm_token: fcmToken }));
                 fcmToken && await updateDeviceToken(fcmToken);
 

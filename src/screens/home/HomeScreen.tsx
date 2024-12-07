@@ -46,7 +46,6 @@ const HomeScreen = ({ route, navigation }: any) => {
     const [typeService, setTypeService] = useState<service_type[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [countUnread, setCountUnread] = useState<string>('0');
-    console.log({ countUnread });
 
     const [selectedTip, setSelectedTip] = useState<TipModel | null>(null);
     const bottomSheetRef = useRef<any>(null);
@@ -64,7 +63,6 @@ const HomeScreen = ({ route, navigation }: any) => {
     };
     const getUnreadNotificationCount = async () => {
         try {
-            console.log(user);
 
             const res = await notificationAPI.HandleNotification(`/get-count-unread?userId=${user?.id}`);
             setCountUnread(res.data);
@@ -141,9 +139,7 @@ const HomeScreen = ({ route, navigation }: any) => {
                     title: "Cập nhật địa chỉ",
 
                 });
-            } else {
-                console.log('Sai dòng 118')
-            }
+            } 
         } catch (error) {
             console.log(error);
 
@@ -156,7 +152,6 @@ const HomeScreen = ({ route, navigation }: any) => {
 
     useEffect(() => {
         if (currentLocation.longitude || currentLocation.latitude) {
-            console.log(currentLocation.longitude);
             addAddressByCoordinates()
         }
     }, [currentLocation.latitude, currentLocation.longitude, user])

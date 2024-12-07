@@ -32,7 +32,6 @@ const MessageScreen = ({navigation}:any) => {
         updateIsCountRead(item)
         navigation.navigate('ChatScreen');
     };
-    console.log(userChats);
     const updateIsCountRead= async(item:any)=>{
         try {
             const res:any = await chatAPI.HandleChat('/update-chat-isRead',{

@@ -106,7 +106,7 @@ const CartScreen = ({navigation}: any) => {
                 <SectionComponent>
                     <RowComponent justify='space-between'>
                         <TextComponent text={'Tổng đơn'} color={COLORS.DARK_BLUE} font={FONTFAMILY.montserrat_semibold}/>
-                        <TextComponent text={`${totalCartSubtotal} vnđ`} color={COLORS.RED} font={FONTFAMILY.montserrat_semibold}/>
+                        <TextComponent text={`${totalCartSubtotal.toLocaleString('vi-VN')} VNĐ`} color={COLORS.RED} font={FONTFAMILY.montserrat_semibold}/>
                     </RowComponent>                
                 </SectionComponent>
                 <SectionComponent>

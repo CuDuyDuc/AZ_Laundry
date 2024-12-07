@@ -63,7 +63,6 @@ const OrderHistoryScreen = ({ navigation, route }: any) => {
  
   const groupedProducts = (paymentData: any) => {
     if (!paymentData || !Array.isArray(paymentData.id_cart) || !Array.isArray(paymentData.shop_details)) {
-        console.log(paymentData);
         // Nếu paymentData không hợp lệ hoặc id_cart/shop_details không phải là mảng, trả về paymentData như ban đầu
         return paymentData;
     }

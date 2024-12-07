@@ -1,26 +1,32 @@
 import { Box, DiscountShape, NotificationBing, ShoppingBag } from "iconsax-react-native";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Image, StyleSheet, View } from "react-native";
-import { ScrollView } from "react-native-virtualized-view";
+import { ActivityIndicator, FlatList, Image, StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 import authenticationAPI from "../../../apis/authAPI";
 import paymentAPI from "../../../apis/paymentAPI";
 import productAPI from "../../../apis/productAPI";
 import COLORS from "../../../assets/colors/Colors";
 import { CardOrderComponent, ContainerComponent, HeaderComponent, RowComponent, SectionComponent, TextComponent } from "../../../components";
 import { useRole } from "../../../permission/permission";
+import { authSelector } from "../../../redux/reducers/authReducer";
 import { notification_type } from "../../../utils/constants";
 
 export default function DetailNotificationScreen({ navigation, route }: any) {
     const { item } = route.params;
     const { isUser, isShop, isAdmin } = useRole();
-
+    const user = useSelector(authSelector);
     const [dataPayment, setDataPayment] = useState<any>();
     const [product, setProduct] = useState<any>();
     const [shopName, setShopName] = useState<string>();
     const [loading, setLoading] = useState<boolean>(true);
-    console.log({dataPayment});
-    console.log({item});
-
+    const filterCartByUserId = (dataPayment: any, userId: string) => {
+        if (!dataPayment?.id_cart || !Array.isArray(dataPayment.id_cart)) {
+          console.warn("id_cart không tồn tại hoặc không phải là một mảng.");
+          return [];
+        }
+        
+        return dataPayment.id_cart.filter((item: any) => item?.id_product?.id_user === userId);
+      };
 
     const getPaymentById = async (idPayment: string) => {
         try {
@@ -39,7 +45,6 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
       const getProductById = async () => {
             try {
                 const req = await productAPI.HandleProduct(`/get-product-by-id-product?idProduct=${item?.object_type_id}`);
-                console.log({PRODUCT : req});
                 setProduct(req?.data[0]);
                setLoading(false);
             } catch (error) {
@@ -53,7 +58,6 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
         const data = await req[0];
           
        if(data) {
-        console.log({dataSHOP: data});
         setShopName(data?.fullname)
     }
         } catch (error) {
@@ -65,7 +69,6 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
      isAdmin ? getProductById() : getPaymentById(item?.object_type_id);
     }, [])
 
-    // Render nội dung dựa trên loại thông báo
     const renderNotificationContent = () => {
         switch (item?.notification_type) {
             case notification_type.ORDER_UPDATE:
@@ -100,8 +103,8 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
                         </RowComponent>
 
                         <TextComponent styles={{ fontWeight: 'bold'}}  color={COLORS.HEX_BLACK} size={16} text={`${isUser ? 'Dịch vụ bạn đã đặt' : 'Dịch vụ khách đặt'}:`} />
-                        <FlatList
-                            data={dataPayment?.id_cart || []}
+                       {isShop ?  <FlatList
+                            data={filterCartByUserId(dataPayment, user?.id) || []}
                             keyExtractor={(item: any) => item?._id.toString()}
                             renderItem={({ item }) => (
                                 <CardOrderComponent
@@ -114,7 +117,21 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
                                     id={""}
                                 />
                             )}
-                        />
+                        /> :  <FlatList
+                        data={dataPayment?.id_cart || []}
+                        keyExtractor={(item: any) => item?._id.toString()}
+                        renderItem={({ item }) => (
+                            <CardOrderComponent
+                                imgUrl={item?.id_product?.product_photo[0] || ''}
+                                name={item?.id_product?.product_name || ''}
+                                short_description={item?.id_product?.short_description || ""}
+                                status={""}
+                                total={item?.cart_subtotal || 0}
+                                quantity={item?.product_quantity || 0}
+                                id={""}
+                            />
+                        )}
+                    />}
 
                     </SectionComponent>
                 );
@@ -188,10 +205,9 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
     };
 
     return (
-        <View>
+        <ContainerComponent isScroll>
             <HeaderComponent isBack onBack={() => navigation.goBack()} title="Thông báo chi tiết" />
 
-           <ScrollView showsVerticalScrollIndicator={false} style={{marginBottom: 70}}>
                 <SectionComponent styles={{alignItems:'center'}} >
                     <SectionComponent styles={{
                         margin: 20,
@@ -211,8 +227,7 @@ export default function DetailNotificationScreen({ navigation, route }: any) {
                     </SectionComponent>
                     {loading ? (<ActivityIndicator size="large" color={COLORS.OCEAN_BLUE} />) : renderNotificationContent()}
                 </SectionComponent>
-           </ScrollView>
-        </View>
+        </ContainerComponent>
     );
 }
 

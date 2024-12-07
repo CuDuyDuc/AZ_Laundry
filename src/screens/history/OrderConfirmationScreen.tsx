@@ -25,7 +25,6 @@ const OrderConfirmationScreen = ({navigation, route}: any) => {
   );
   const user = useSelector(authSelector);
   const {paymentData} = route.params;
-  console.log(paymentData);
 
   const handleAction = async (newStatus: string, itemId: string) => {
     try {
@@ -212,13 +211,26 @@ const OrderConfirmationScreen = ({navigation, route}: any) => {
                 />
               )}
             />
+            
             <SectionComponent>
+              <RowComponent justify='space-between'>
+                <TextComponent text={'Tên khách hàng: '} size={15} color={COLORS.BLUE_GRAY} font={FONTFAMILY.montserrat_medium} />
+                <TextComponent text={paymentData.full_name} size={15} color={COLORS.BLUE_GRAY}  />
+              </RowComponent>
+              <RowComponent justify='flex-start' styles={{alignItems:'flex-start'}}>
+                <TextComponent text={'Địa chỉ: '} size={15} color={COLORS.BLUE_GRAY} font={FONTFAMILY.montserrat_medium} />
+                <TextComponent text={paymentData.address} size={15} color={COLORS.BLUE_GRAY} styles={{ flex: 1, flexWrap: 'wrap', marginLeft: 10, textAlign: 'right' }}/>
+              </RowComponent>
+              <RowComponent justify='space-between'>
+                <TextComponent text={'Số điện thoại: '} size={15} color={COLORS.BLUE_GRAY} font={FONTFAMILY.montserrat_medium} />
+                <TextComponent text={paymentData.number_phone} size={15} color={COLORS.BLUE_GRAY}  />
+              </RowComponent>
               <RowComponent>
                 <TextComponent
                   text="Thông tin thanh toán"
                   color={COLORS.BLUE_GRAY}
                   size={15}
-                  font={FONTFAMILY.montserrat_bold}
+                  font={FONTFAMILY.montserrat_medium}
                 />
               </RowComponent>
 
@@ -227,13 +239,13 @@ const OrderConfirmationScreen = ({navigation, route}: any) => {
                   text="Tiền dịch vụ"
                   color={COLORS.BLUE_GRAY}
                   size={15}
-                  font={FONTFAMILY.montserrat_bold}
+                  font={FONTFAMILY.montserrat_medium}
                 />
                 <TextComponent
                   text={`${paymentData.shop_details[0].service_fee.toLocaleString(
                     'vi-VN',
                   )} VND`}
-                  color={COLORS.HEX_BLACK}
+                  color={COLORS.BLUE_GRAY}
                   size={15}
                 />
               </RowComponent>
@@ -243,13 +255,13 @@ const OrderConfirmationScreen = ({navigation, route}: any) => {
                   text="Phí ship"
                   color={COLORS.BLUE_GRAY}
                   size={15}
-                  font={FONTFAMILY.montserrat_bold}
+                  font={FONTFAMILY.montserrat_medium}
                 />
                 <TextComponent
                   text={`${paymentData.shop_details[0].shipping_fee.toLocaleString(
                     'vi-VN',
                   )} VND`}
-                  color={COLORS.HEX_BLACK}
+                  color={COLORS.BLUE_GRAY}
                   size={15}
                 />
               </RowComponent>
@@ -258,14 +270,14 @@ const OrderConfirmationScreen = ({navigation, route}: any) => {
                   text="Tổng thanh toán"
                   color={COLORS.BLUE_GRAY}
                   size={15}
-                  font={FONTFAMILY.montserrat_bold}
+                  font={FONTFAMILY.montserrat_medium}
                 />
                 <TextComponent
                   text={`${mountServiceByIdShop(
                     paymentData.shop_details[0].shipping_fee,
                     paymentData.shop_details[0].service_fee,
                   ).toLocaleString('vi-VN')} VND`}
-                  color={COLORS.HEX_BLACK}
+                  color={COLORS.BLUE_GRAY}
                   size={15}
                 />
               </RowComponent>

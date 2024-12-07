@@ -45,7 +45,6 @@ const HistoryScreen = ({ navigation,route }: any) => {
     if (status === 'Tất cả') {
       setFilteredPayment(payment);
     } else {
-      console.log(`Selected status 1: ${selectedStatus}`);
       const filtered = payment.filter((item) => item.shop_details[0].confirmationStatus == status);
       setFilteredPayment(filtered);
     }

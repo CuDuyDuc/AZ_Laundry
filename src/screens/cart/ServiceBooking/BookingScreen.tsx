@@ -96,7 +96,7 @@ const BookingScreen = ({ navigation, route }: any) => {
           <TextComponent text={item?.shop_name} color={COLORS.HEX_BLACK} size={13} font={FONTFAMILY.montserrat_bold} />
           <TextComponent text={item?.service_type_name} color={COLORS.HEX_BLACK} size={14} />
           <TextComponent
-            text={`${item.cart_subtotal} VNĐ`}
+            text={`${item.cart_subtotal.toLocaleString('vi-VN')} VNĐ`}
             color={COLORS.AZURE_BLUE}
             size={12}
             styles={{ marginTop: 4 }}

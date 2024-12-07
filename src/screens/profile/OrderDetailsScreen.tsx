@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, FlatList, Image, View } from 'react-native';
 import { ScrollView } from 'react-native-virtualized-view';
 import { FONTFAMILY } from '../../../assets/fonts';
@@ -10,19 +10,31 @@ import { usePaymentMethod } from '../../context/PaymentMethodContext';
 import { PaymentModel } from '../../model/payment_model';
 import StepProgress from './StepProgress';
 import { ArchiveTick, Card, Location } from 'iconsax-react-native';
+import authenticationAPI from '../../apis/authAPI';
+import { UserModel } from '../../model/user_model';
 
 const OrderDetatailsScreen = ({ navigation, route }: any) => {
   const { selectedPaymentMethod } = usePaymentMethod()
   const [payment, setPayment] = useState<PaymentModel[]>([]);
   const { productData, paymentData } = route.params;
+  const [details, setDetailShop] = useState<UserModel[]>([]);
 
-
-
+  const getDataDetailShop = async () => {
+    try {
+        const res: any = await authenticationAPI.HandleAuthentication(`/get-user-by-id?id_user=${productData?.shopDetail.id_shop}`);
+        if (Array.isArray(res)) {
+            setDetailShop(res);
+        } else {
+            console.log("Invalid data format from API", res);
+        }
+    } catch (error) {
+        console.error('Error fetching shop: ', error);
+    }
+  };   
   const totalProducts = Array.isArray(productData?.products)
     ? productData?.products.length
     : 0;
 
-  console.log("Total products: ", totalProducts);
 
   const handleCancelOrder = () => {
     if (productData?.shopDetail?.confirmationStatus == 'Chờ duyệt') {
@@ -64,6 +76,9 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
   const mountServiceByIdShop = (service_fee: any, shipping_fee: any) => {
     return service_fee + shipping_fee
   }
+  useEffect(()=>{
+    getDataDetailShop()
+  },[])
   return (
 
     <ContainerComponent>
@@ -88,9 +103,7 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
                     price={cartItem.cart_subtotal} />
                 </View>
               )} />
-
           </RowComponent>
-
           <RowComponent styles={{ alignItems: 'flex-start', marginTop: 10, marginBottom: 10 }}>
             <ArchiveTick size="24" color="#FF8A65" style={{ marginRight: 3 }} />
             <View style={{ flex: 1 }}>
@@ -123,7 +136,6 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
           <RowComponent justify="center" styles={{ marginBottom: 5, marginTop: 5 }}>
             <Image source={IMAGES.line} />
           </RowComponent>
-
           <RowComponent justify="flex-start" styles={{ alignItems: 'flex-start', marginTop: 10, marginBottom: 10 }}>
             <Card size="24" color="#FF8A65" style={{ marginRight: 3 }} />
             <View style={{ flex: 1 }}>
@@ -136,6 +148,9 @@ const OrderDetatailsScreen = ({ navigation, route }: any) => {
           <View style = {{marginBottom: 20}}>
             <TextComponent text='Chi tiết đơn hàng' size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium} />
             <SectionComponent styles={{ backgroundColor: COLORS.WHITE, padding: 10, borderRadius: 15, marginTop: 10}}>
+            <RowComponent justify="space-between" styles={{ alignItems: 'center', marginBottom: 15 }}>
+                <TextComponent text={details[0]?.data_user?.shop_name} size={16} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_bold} />
+              </RowComponent>
               <RowComponent justify="space-between" styles={{ alignItems: 'center', marginBottom: 15 }}>
                 <TextComponent text="Mã đơn hàng" size={16} color={COLORS.HEX_BLACK} />
                 <TextComponent text={paymentData._id.toString().substring(0, 10)} size={16} color={COLORS.HEX_BLACK} />
