@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GestureResponderEvent, Image, TouchableOpacity, View } from 'react-native';
 import { FONTFAMILY } from '../../assets/fonts';
 import COLORS from '../assets/colors/Colors';
@@ -7,12 +7,10 @@ import { useChatContext } from '../context/ChatContext';
 import { useAxiosRecipient } from '../hooks/useAxiosRecipient';
 import { globalStyle } from '../styles/globalStyle';
 import { unreadNotificationsFunc } from '../utils/unreadNotificationsFunc';
+import { Validate } from '../utils/validate';
 import { useAxiosLastesMessage } from './../hooks/useAxiosLatestMessage';
 import RowComponent from './RowComponent';
 import TextComponent from './TextComponent';
-import messageAPI from '../apis/messageAPI';
-import { useAxiosPutIsRead } from '../hooks/useAxiosPutIsRead';
-import chatAPI from '../apis/chatAPI';
 
 interface Props {
     user: any;
@@ -30,8 +28,11 @@ const CardComponent = (props: Props) => {
     const isActive = onlineUsers.some((user: any) => user.userId === recipientUser?._id);
     const [count,setCount]=useState(null)
     const truncateText = (text: any) => {
-        let shortText = text.substring(0, 20);
-        if (text.length > 20) {
+        if(Validate.isURL(text)){
+            return 'Ảnh'
+        }
+        let shortText = text?.substring(0, 20);
+        if (text?.length > 20) {
             shortText = shortText + '...';
         }
         return shortText;
@@ -80,7 +81,10 @@ const CardComponent = (props: Props) => {
                 </View>
                 <View style={{ flex: 1 }}>
                     <RowComponent justify="space-between">
-                        <TextComponent text={recipientUser?.fullname} font={FONTFAMILY.montserrat_medium} color={COLORS.DARK_BLUE} />
+                        <TextComponent 
+                            text={recipientUser?.fullname}
+                            color={(count && count  > 0  ) ? COLORS.HEX_BLACK : COLORS.GRAY_WHITE}
+                            font={(count && count  > 0  ) ? FONTFAMILY.montserrat_semibold : FONTFAMILY.montserrat_regular}/>
                         <TextComponent
                             text={moment(lastestMessage?.createdAt).format('HH:mm')}
                             color={(count && count  > 0  ) ? COLORS.HEX_BLACK : COLORS.GRAY_WHITE}

@@ -10,16 +10,18 @@ import { useChatContext } from '../../../context/ChatContext';
 import { useAxiosRecipient } from '../../../hooks/useAxiosRecipient';
 import { authSelector } from '../../../redux/reducers/authReducer';
 import { globalStyle } from '../../../styles/globalStyle';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 
 const ChatBoxScreen = ({ navigation }: any) => {
     const user = useSelector(authSelector);
     const [sendMessage, setSendMessage] = useState('');
     const [isMessageSent, setIsMessageSent] = useState(false);
-    const { currentChat, messages, sendTextMessage, onlineUsers, markMessagesAsRead, setCurrentChat } = useChatContext();
+    const { currentChat, messages, sendTextMessage, onlineUsers, markMessagesAsRead, setCurrentChat,isMessgesLoading } = useChatContext();
     const { recipientUser } = useAxiosRecipient({ chats: currentChat, user });
     const flatListRef = useRef<FlatList>(null);
-
+    const [imageMessages,setImageMessages]= useState<{ uri: string | undefined; type: string | undefined; name: string | undefined; }[]>([])
+    
     useEffect(() => {
         if (currentChat && messages.some((msg: any) => msg.isRead === false)) {
             markMessagesAsRead(currentChat._id);
@@ -53,12 +55,36 @@ const ChatBoxScreen = ({ navigation }: any) => {
 
     const handleSendMessage = () => {
         if (sendMessage.trim()) {
-            sendTextMessage(sendMessage, user, currentChat?._id, sendTextMessage);
+            sendTextMessage(sendMessage, user, currentChat?._id, sendTextMessage,imageMessages);
             setSendMessage('');
             setIsMessageSent(true);
         }
     };
-
+    const handleImageMessage = async (type: string) => {
+        try {
+          const options = {
+            mediaType: type as 'photo',
+            selectionLimit: 1,
+          };
+    
+          const result = await launchImageLibrary(options);
+    
+          if (result.assets && result.assets.length > 0) {
+            let newFile = {
+              uri: result.assets[0].uri,
+              type: result.assets[0].type,
+              name: result.assets[0].fileName,
+            };
+            const imageMessage = [...imageMessages, newFile];
+            setImageMessages(imageMessages);
+            newFile = { uri: '', type: '', name: '', }
+            sendTextMessage(sendMessage, user, currentChat?._id, sendTextMessage,imageMessage);
+            
+          }
+        } catch (error) {
+          console.log('Error adding file:', error);
+        }
+    };
     useEffect(() => {
         if (isMessageSent) {
             setTimeout(() => {
@@ -68,12 +94,11 @@ const ChatBoxScreen = ({ navigation }: any) => {
         }
     }, [isMessageSent]);
     const formatDay = (date:any) => {
-        const dayOfWeek = moment(date).weekday(); // Lấy số ngày trong tuần (0 = Chủ Nhật, 1 = Thứ Hai, ..., 6 = Thứ Bảy)
-    
+        const dayOfWeek = moment(date).weekday();
         if (dayOfWeek === 0) {
             return "CN"; // Chủ Nhật
         } else {
-            return `T.${dayOfWeek + 1}`; // Thứ 2 -> Thứ 7
+            return `T.${dayOfWeek + 1}`;
         }
     };
     const isActive = onlineUsers.some((user: any) => user?.userId === recipientUser?._id);
@@ -189,7 +214,7 @@ const ChatBoxScreen = ({ navigation }: any) => {
                         <TouchableOpacity style={{ marginEnd: 20 }}>
                             <Camera size="25" color={COLORS.AZURE_BLUE} variant="Bold" />
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={()=>handleImageMessage('photo')}>
                             <Image1 size="25" color={COLORS.AZURE_BLUE} variant="Bold" />
                         </TouchableOpacity>
                         <InputComponent

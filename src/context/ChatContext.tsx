@@ -27,7 +27,7 @@ interface ChatContextType {
     markMessagesAsRead:any;
     setCurrentChat:any;
     markNotificationAsReadUpdate:any;
-    setUserChats:(ob:any)=>void
+    setUserChats:(ob:any)=>void;
     
 }
 
@@ -169,22 +169,38 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
         getMessages();
     }, [currentChat]);
     const sendTextMessage = useCallback(
-        async (textMessage: any, sender: any, currentChatId: any, setTextMessage: any) => {
-            if (!textMessage) return console.log('You must type something...');
+        async (textMessage: any, sender: any, currentChatId: any, setTextMessage: any,imageMessage:any) => {
             try {
-                const response = await messageAPI.HandleMessage(
-                    `/create-message`,
-                    {
-                        chatId: currentChatId,
-                        senderId: sender.id,
-                        text: textMessage,
-                    },
-                    'post',
-                );
+                setIsMessagesLoading(true)
+                let data:any
+                if(textMessage){
+                    data={
+                        chatId:currentChatId,
+                        senderId:sender.id,
+                        text:textMessage
+                    }
+                }
+                if(imageMessage.length>0){
+                    data = new FormData()
+                    data.append('chatId', currentChatId);
+                    data.append('senderId', sender.id);
+                    imageMessage.forEach((file:any) => {
+                        data.append(`image_messages`, {
+                          uri: file.uri,
+                          type: file.type,
+                          name: file.name,
+                        });
+                      });
+                      
+                }
+                
+                const response = await messageAPI.HandleMessage(`/create-message`,data,'post',);
+                setIsMessagesLoading(false)
                 setNewMessage(response);
                 setMessages((prev: any) => [...prev, response]);
                 setTextMessage('');
             } catch (error) {
+                setIsMessagesLoading(false)
                 return setSendTextMessagesError(error);
             }
         },
