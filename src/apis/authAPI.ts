@@ -6,7 +6,7 @@ class AuthAPI {
     HandleAuthentication = async (
         url: string,
         data?: any,
-        method?: 'get' | 'post' | 'put' | 'delete',
+        method?: 'get' | 'post' | 'put' | 'delete' | 'patch',
     ) => {
         return await axiosClient(`${appInfo.BASE_URL}/auth${url}`,{
             method: method ?? 'get',

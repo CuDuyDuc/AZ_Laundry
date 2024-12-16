@@ -16,7 +16,7 @@ const VNPayPaymentScreen = ({navigation, route}: any) => {
   const user = useSelector(authSelector);
     const [loading, setLoading] = useState(true);
     const { vnpayUrl, orderId, listShopId } = route.params
-    const handleNavigationStateChange = (navState: any) => {
+    const handleNavigationStateChange = async(navState: any) => {
         if (navState.url.includes('vnpay_return')) {
           // Lấy tham số từ URL trả về từ VNPay
             const urlParams = getQueryParams(navState.url);
@@ -28,7 +28,7 @@ const VNPayPaymentScreen = ({navigation, route}: any) => {
                 });
                 navigation.replace('SuccessPaymentScreen'); // Điều hướng đến màn hình thành công
                 if(orderId) {
-                  NotificationService.sendNotificationToServer({
+                  await  NotificationService.sendNotificationToServer({
                     title: "Bạn có một đơn hàng mới" ,
                     body: "Có đơn hàng mới Shop ơi💎💎",
                     listShopId,
@@ -36,7 +36,7 @@ const VNPayPaymentScreen = ({navigation, route}: any) => {
                     object_type_id: orderId,
                     notification_type: "order_update",
                 })
-                NotificationService.sendNotificationToServer({
+                await NotificationService.sendNotificationToServer({
                   title: "Đặt hàng thành công" ,
                   body: `Đơn hàng #${orderId} của bạn đang chờ xác nhận! 💎💎`,
                   userId: user?.id,

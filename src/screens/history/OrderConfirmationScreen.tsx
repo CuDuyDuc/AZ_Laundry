@@ -26,7 +26,7 @@ const OrderConfirmationScreen = ({navigation, route}: any) => {
   const user = useSelector(authSelector);
   const {paymentData} = route.params;
 
-  const handleAction = async (newStatus: string, itemId: string) => {
+  const handleAction = async (newStatus: string, itemId: string, notificationMessage: string) => {
     try {
       if (user.id) {
         const response = await paymentAPI.HandlePayment(
@@ -45,9 +45,9 @@ const OrderConfirmationScreen = ({navigation, route}: any) => {
         prevPayment.filter(item => item._id.toString() !== itemId),
       );
       navigation.navigate('History',{confirmStatus:newStatus})
-      NotificationService.sendNotificationToServer({
+      await NotificationService.sendNotificationToServer({
         title: 'Cập nhật đơn hàng',
-        body: 'Đơn hàng của bạn đã được xác nhận!💎💎',
+        body: notificationMessage || 'Có thông báo mới',
         sender: user?.id,
         userId: payment[0].id_user?._id,
         object_type_id: payment[0]._id,
@@ -78,19 +78,19 @@ const OrderConfirmationScreen = ({navigation, route}: any) => {
         return {
           text: 'Xác nhận',
           nextStatus: 'Đang giặt',
-          onPress: () => handleAction('Đang giặt', itemId),
+          onPress: () => handleAction('Đang giặt', itemId,'Đơn hàng của bạn đã được xác nhận! 💎💎'),
         };
       case 'Đang giặt':
         return {
           text: 'Giao hàng',
           nextStatus: 'Đang giao',
-          onPress: () => handleAction('Đang giao', itemId),
+          onPress: () => handleAction('Đang giao', itemId, 'Đơn hàng của bạn đang chờ giặt! 💎💎'),
         };
       case 'Đang giao':
         return {
           text: 'Hoàn thành',
           nextStatus: 'Hoàn thành',
-          onPress: () => handleAction('Hoàn thành', itemId),
+          onPress: () => handleAction('Hoàn thành', itemId, 'Đơn hàng của bạn đang được giao! 💎💎'),
         };
       default:
         return null;
@@ -118,7 +118,7 @@ const OrderConfirmationScreen = ({navigation, route}: any) => {
         setPayment(prevPayment =>
           prevPayment.filter(item => item._id.toString() !== itemId),
         );
-        NotificationService.sendNotificationToServer({
+        await NotificationService.sendNotificationToServer({
           title: 'Cập nhật đơn hàng',
           body: 'Đơn hàng của bạn đã bị huỷ!💎💎',
           sender: user?.id,

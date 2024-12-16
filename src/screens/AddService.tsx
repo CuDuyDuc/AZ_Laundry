@@ -28,6 +28,7 @@ import { service_type } from '../model/service_type';
 import { useRole } from '../permission/permission';
 import { authSelector } from '../redux/reducers/authReducer';
 import NotificationService from './notification/service/NotificationService';
+import productAPI from "../apis/productAPI";
 
 const initValues = {
   images: [] as { uri: string, type: string, name: string }[],
@@ -155,7 +156,7 @@ const AddService = ({ navigation }: any) => {
     }
   };
 
-  const handleUpload = async () => {
+  const handleAddProduct = async () => {
     setLoadingButton(true);
     if (values?.images?.length === 0) {
       Alert.alert('Error', 'Please select images before saving.');
@@ -179,27 +180,19 @@ const AddService = ({ navigation }: any) => {
     });
 
     try {
-      const response = await fetch(`${appInfo.BASE_URL}/product/addProduct`, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      const data = await response.json();
-      if (response.ok) {
+      const response = await productAPI.HandleProduct('/addProduct', formData, 'post');
+      if (response) {
         Alert.alert('Success', 'Data and images uploaded successfully.');
         setLoadingButton(false);
-        NotificationService.sendNotificationToServer({
+        await NotificationService.sendNotificationToServer({
           title: "Dịch vụ mới",
           body: `Shop ${user?.fullname} vừa thêm dịch vụ!💎💎`,
           sender: user?.id,
           userId: '670cdc31290fa9791067df19' as unknown as ObjectId,
-          object_type_id: data?.data?._id,
+          object_type_id: response?.data?._id,
           notification_type: "product",
         })
       } else {
-        console.error('Error uploading:', response.status);
         setLoadingButton(false);
         Alert.alert('Error', 'An error occurred during the upload.');
       }
@@ -281,7 +274,7 @@ const AddService = ({ navigation }: any) => {
         name: file.name,
       });
     });
-   
+
 
     try {
       setLoadingButton(true);
@@ -429,7 +422,7 @@ const AddService = ({ navigation }: any) => {
             {loadingButton ? <ActivityIndicator size={30} /> : <ButtonComponent
               text="Thêm dịch vụ"
               type="#00ADEF"
-              onPress={handleUpload}
+              onPress={handleAddProduct}
             />}
           </SectionComponent>
         </>

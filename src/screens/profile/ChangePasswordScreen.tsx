@@ -6,6 +6,7 @@ import authenticationAPI from '../../apis/authAPI';
 import COLORS from '../../assets/colors/Colors';
 import { ButtonComponent, ContainerComponent, HeaderComponent, InputComponent, SectionComponent } from '../../components';
 import { authSelector } from '../../redux/reducers/authReducer';
+import { Validate } from "../../utils/validate";
 const ChangePasswordSceen = ({ navigation }: any) => {
   const user = useSelector(authSelector);
 
@@ -23,6 +24,16 @@ const ChangePasswordSceen = ({ navigation }: any) => {
     if(newPassword !== confirmPassword) {
       return  Burnt.toast({
         title: 'Mật khẩu không khớp với mật khẩu mới!'
+      });
+    }
+    if(!Validate.Password(newPassword)) {
+      return  Burnt.toast({
+        title: 'Mật khẩu mới phải trên 6 số!'
+      });
+    }
+    if(!Validate.Password(confirmPassword)) {
+      return  Burnt.toast({
+        title: 'Xác nhận mật khẩu mới phải trên 6 số!'
       });
     }
    try {
