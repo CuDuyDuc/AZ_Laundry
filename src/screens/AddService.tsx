@@ -157,12 +157,42 @@ const AddService = ({ navigation }: any) => {
   };
 
   const handleAddProduct = async () => {
-    setLoadingButton(true);
-    if (values?.images?.length === 0) {
-      Alert.alert('Error', 'Please select images before saving.');
-      return;
+   
+   
+    if (!values.serviceName) {
+      return Burnt.toast({
+        title: 'Vui lòng nhập tên dịch vụ!',
+        message: 'Vui lòng nhập tên dịch vụ!',
+      });
     }
-
+  
+    if (!values.price) {
+      return Burnt.toast({
+        title: 'Vui lòng nhập giá dịch vụ!',
+        message: 'Vui lòng nhập giá dịch vụ!',
+      });
+    }
+  
+    if (!values.ShortDescription) {
+      return Burnt.toast({
+        title: 'Vui lòng nhập mô tả ngắn!',
+        message: 'Vui lòng nhập mô tả ngắn!',
+      });
+    }
+  
+    if (!values.DetailedDescription) {
+      return Burnt.toast({
+        title: 'Vui lòng nhập mô tả chi tiết!',
+        message: 'Vui lòng nhập mô tả chi tiết!',
+      });
+    }
+    if (!values.images || values.images.length === 0) {
+      return Burnt.toast({
+        title: 'Vui lòng chọn ít nhất một hình ảnh trước khi lưu!',
+        message: 'Vui lòng chọn ít nhất một hình ảnh trước khi lưu!',
+      });
+    }
+    setLoadingButton(true);
     const formData = new FormData();
     formData.append('product_name', values.serviceName);
     formData.append('product_price', values.price);
@@ -178,7 +208,6 @@ const AddService = ({ navigation }: any) => {
         name: image.name,
       });
     });
-
     try {
       const response = await productAPI.HandleProduct('/addProduct', formData, 'post');
       if (response) {
@@ -249,7 +278,10 @@ const AddService = ({ navigation }: any) => {
   const HandleAddShop = async () => {
 
     if (!formState.nameShop || !formState.emailShop || !formState.passwordShop) {
-      Alert.alert('Thông báo', 'Vui lòng nhập đầy đủ các trường bắt buộc.');
+      Burnt.toast({
+        title: 'Vui lòng nhập đầy đủ các trường bắt buộc!',
+        message: 'Vui lòng nhập đầy đủ các trường bắt buộc!',
+      });
       return;
     }
     // Kiểm tra địa chỉ để đảm bảo tất cả các phần được chọn
