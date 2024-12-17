@@ -80,6 +80,7 @@ const HistoryScreen = ({ navigation,route }: any) => {
 
   useEffect(() => {
     getDataPayment();
+    
   }, []);
 
   useFocusEffect(

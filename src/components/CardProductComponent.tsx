@@ -38,7 +38,7 @@ const CardProductComponent = (props:Props) => {
                     <TextComponent text={item.product_name} color={COLORS.DARK_BLUE} font={FONTFAMILY.montserrat_bold} size={13} />
                     <TextComponent styles={{ paddingVertical: 3 }} text={item.short_description} color={COLORS.HEX_LIGHT_GRAY} size={13} />
                     <RowComponent justify='space-between'>
-                        <TextComponent text={`${item.product_price.toLocaleString('vi-VN')} VNĐ`} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium}/>
+                        <TextComponent text={`${item.product_price?.toLocaleString('vi-VN')} VNĐ`} color={COLORS.HEX_BLACK} font={FONTFAMILY.montserrat_medium}/>
                         {isUser?(
                             <TouchableOpacity onPress={()=> useAxiosAddCart({id_product:item._id, id_user:user.id,cart_subtotal:item.product_price,product_quantity:1})}>
                                 <AddSquare size={25} variant='Bold' color={COLORS.AZURE_BLUE} />

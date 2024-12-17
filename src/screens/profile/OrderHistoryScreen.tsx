@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { authSelector } from '../../redux/reducers/authReducer';
 import { ScrollView } from 'react-native-virtualized-view';
 import { globalStyle } from '../../styles/globalStyle';
+import { eventEmitterStatus } from '../../..';
 
 const OrderHistoryScreen = ({ navigation, route }: any) => {
   const user = useSelector(authSelector);
@@ -116,6 +117,16 @@ const OrderHistoryScreen = ({ navigation, route }: any) => {
 };
   useEffect(() => {
     getDataPayment();
+    
+    // Lắng nghe sự kiện 'newStatusOrder'
+  const subscriptionUpdateStatus = eventEmitterStatus.on('newStatusOrder', getDataPayment);
+
+  // Cleanup để hủy lắng nghe sự kiện
+  return () => {
+    if (subscriptionUpdateStatus && subscriptionUpdateStatus.off) {
+      subscriptionUpdateStatus.off('newStatusOrder', getDataPayment);
+    }
+  }
   }, []);
   useFocusEffect(
     React.useCallback(() => {

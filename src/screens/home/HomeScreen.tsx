@@ -205,7 +205,7 @@ const HomeScreen = ({ route, navigation }: any) => {
                                 justifyContent: 'center',
                                 alignItems: 'center',
                             }}>
-                         <TextComponent color={COLORS.WHITE} size={12}  text={Number(countUnread) > 10 ? '10+' :  countUnread}/>
+                         <TextComponent color={COLORS.WHITE} size={12}  text={Number(countUnread) > 9 ? '9+' :  countUnread}/>
                             </RowComponent>}
                             </SectionComponent>
                         </TouchableOpacity>

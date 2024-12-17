@@ -149,7 +149,7 @@ const DetailsShopScreen = ({ navigation, route }: any) => {
                             <ButtonComponent type='link' text='Xem đánh giá' color={COLORS.AZURE_BLUE} onPress={() => { navigation.navigate("SeeReviewsScreen", { id_shop: data._id.toString() })}} />
                         </RowComponent>
                     </SectionComponent>
-                    <SectionComponent styles={{ position: 'relative', top: 120, paddingBottom: isUser?320:400 }}>
+                    <SectionComponent styles={{ position: 'relative', top: 120, paddingBottom: isUser?440:400 }}>
                         <CardProductComponent onPress={handleDetailProduct} groupProductsByServiceType={groupProductsByServiceType(products)} />
                     </SectionComponent>
                     {isUser?(

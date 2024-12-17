@@ -11,11 +11,20 @@ import { navigate } from './src/navigators/service/RootNavigation';
 var EventEmitter = require('eventemitter3');
 
 export const eventEmitter = new EventEmitter();
+export const eventEmitterStatus = new EventEmitter();
 
 const onMessageReceived = async message => {
 
   await NotificationService.requestPermissions();
   await NotificationService.displayLocalNotification(message.notification.title, message.notification.body);
+  try {
+    if(message.notification.body.includes("Đơn hàng của bạn")) {
+      eventEmitterStatus.emit('newStatusOrder');
+    }
+  } catch (error) {
+    console.log(error);
+    
+  }
   eventEmitter.emit('newNotification');
   Burnt.toast({
     title: 'Có thông báo mới'

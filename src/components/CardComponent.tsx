@@ -29,7 +29,10 @@ const CardComponent = (props: Props) => {
     const [count,setCount]=useState(null)
     const truncateText = (text: any) => {
         if(Validate.isURL(text)){
-            return 'Ảnh'
+            if (user.id != recipientUser?._id)
+                return `${recipientUser.fullname} đã gửi ảnh`
+            else
+                return `Bạn đã gửi ảnh`
         }
         let shortText = text?.substring(0, 20);
         if (text?.length > 20) {
