@@ -32,7 +32,7 @@ const IMAGES = {
     loading_image: require("./loading_image.jpg"),
     SuccessPayment:require('./success_payment.png'),
     AnhBia: require('./anhbia.jpg'),
-    user: require('./user.png')
-    
+    user: require('./user.png'),
+    ChangePassword:require('./reset_password_rafiki.png')
 }
 export default IMAGES

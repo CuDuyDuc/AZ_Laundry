@@ -15,17 +15,18 @@ export const eventEmitterStatus = new EventEmitter();
 
 const onMessageReceived = async message => {
 
-  await NotificationService.requestPermissions();
-  await NotificationService.displayLocalNotification(message.notification.title, message.notification.body);
+  
   try {
-    if(message.notification.body.includes("Đơn hàng của bạn")) {
-      eventEmitterStatus.emit('newStatusOrder');
+    await NotificationService.requestPermissions();
+    await NotificationService.displayLocalNotification(message?.notification?.title, message?.notification?.body);
+    if(message?.notification?.body.includes("Đơn hàng của bạn")) {
+      await eventEmitterStatus.emit('newStatusOrder');
     }
   } catch (error) {
     console.log(error);
     
   }
-  eventEmitter.emit('newNotification');
+  await eventEmitter.emit('newNotification');
   Burnt.toast({
     title: 'Có thông báo mới'
   })

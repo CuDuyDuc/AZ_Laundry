@@ -7,6 +7,8 @@ import COLORS from '../../assets/colors/Colors';
 import { ButtonComponent, ContainerComponent, HeaderComponent, InputComponent, SectionComponent } from '../../components';
 import { authSelector } from '../../redux/reducers/authReducer';
 import { Validate } from "../../utils/validate";
+import { Image, View } from "react-native";
+import IMAGES from "../../assets/images/Images";
 const ChangePasswordSceen = ({ navigation }: any) => {
   const user = useSelector(authSelector);
 
@@ -55,6 +57,9 @@ const ChangePasswordSceen = ({ navigation }: any) => {
   return (
     <ContainerComponent>
       <HeaderComponent title='Đổi mật khẩu' isBack onBack={() => navigation.goBack()} />
+      <View style={{alignItems:'center'}}>
+        <Image source={IMAGES.ChangePassword} style={{width:300, height:300}}/>
+      </View>
       <SectionComponent styles={{
         display: 'flex',
         alignItems: 'center',

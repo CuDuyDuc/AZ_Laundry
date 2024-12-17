@@ -30,22 +30,27 @@ class NotificationService {
             importance: AndroidImportance.HIGH,
         });
 
-        
-        await notifee.displayNotification({
-            title,
-            body,
-            android: {
-                channelId,
-                smallIcon: 'ic_launcher',
-                largeIcon: 'https://cdn-icons-png.flaticon.com/256/5103/5103880.png',
-                pressAction: {
-                    id: 'default'
-                },              
-                importance: AndroidImportance.HIGH,
-                timestamp: Date.now(),
-                showTimestamp:true,
-            },
-        });
+        try {
+            
+            await notifee.displayNotification({
+                title,
+                body,
+                android: {
+                    channelId,
+                    smallIcon: 'ic_launcher',
+                    largeIcon: 'https://cdn-icons-png.flaticon.com/256/5103/5103880.png',
+                    pressAction: {
+                        id: 'default'
+                    },              
+                    importance: AndroidImportance.HIGH,
+                    timestamp: Date.now(),
+                    showTimestamp:true,
+                },
+            });
+        } catch (error) {
+            console.log(error);
+            
+        }
     }
 
     // Send a notification to the server
