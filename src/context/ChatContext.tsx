@@ -105,6 +105,8 @@ export const ChatContextProvider = (props: ChatContextProviderProps) => {
             socket.off('getNotification');
         };
     }, [socket, currentChat]);
+
+    
     const markNotificationAsReadUpdate = useCallback(async (chats:any) => {
         if (!chats) {
             console.error('Error');
